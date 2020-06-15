@@ -1,0 +1,6 @@
+include ':data'
+include ':local'
+include ':remote'
+include ':domain'
+include ':app'
+rootProject.name = "MyGallery"
