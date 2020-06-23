@@ -1,17 +1,14 @@
-package com.martdev.android.domain.videomodel
+package com.martdev.android.local.entity
 
-data class VideoData(
-    val page: Int,
-    val per_page: Int,
-    val total_results: Int,
-    val url: String,
-    val videos: List<Video>
-)
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 
-data class Video(
-    val full_res: Any?,
-    val tags: List<Any>,
-    val id: Long,
+@Entity(tableName = "video_data")
+data class VideoDataEntity(
+    @Ignore val full_res: Any?,
+    @Ignore val tags: List<Any>,
+    @PrimaryKey val id: Long,
     val width: Int,
     val height: Int,
     val url: String,

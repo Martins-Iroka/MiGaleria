@@ -1,25 +1,24 @@
-package com.martdev.android.domain.photomodel
+package com.martdev.android.local.entity
 
-data class PhotoData(
-    val total_result: Int = 0,
-    val page: Int,
-    val per_page: Int,
-    val photos: List<Photo>
-)
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 
-data class Photo(
-    val id: Long,
+@Entity(tableName = "photo_data")
+data class PhotoDataEntity(
+    @PrimaryKey val id: Long,
     val width: Int,
     val height: Int,
     val url: String,
     val photographer: String,
     val photographer_url: String,
     val photographer_id: Int,
-    val src: PhotoSrc,
-    val liked: Boolean
+    @Embedded val src: PhotoSrcEntity,
+    @Ignore val liked: Boolean
 )
 
-data class PhotoSrc(
+data class PhotoSrcEntity(
     val original: String,
     val large2x: String,
     val large: String,
