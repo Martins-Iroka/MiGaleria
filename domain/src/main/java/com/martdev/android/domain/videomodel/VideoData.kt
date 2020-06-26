@@ -1,10 +1,10 @@
 package com.martdev.android.domain.videomodel
 
 data class VideoData(
-    val page: Int,
-    val per_page: Int,
-    val total_results: Int,
-    val url: String,
+    @Transient val page: Int,
+    @Transient val per_page: Int,
+    @Transient val total_results: Int,
+    @Transient val url: String,
     val videos: List<Video>
 )
 

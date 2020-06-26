@@ -14,8 +14,8 @@ data class PhotoDataEntity(
     val photographer: String,
     val photographer_url: String,
     val photographer_id: Int,
-    @Embedded val src: PhotoSrcEntity,
-    @Ignore val liked: Boolean
+    val src: PhotoSrcEntity,
+    val liked: Boolean
 )
 
 data class PhotoSrcEntity(

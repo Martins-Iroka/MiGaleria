@@ -6,26 +6,26 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "video_data")
 data class VideoDataEntity(
-    @Ignore val full_res: Any?,
-    @Ignore val tags: List<Any>,
+    @Ignore val full_res: Any? = null,
+    @Ignore val tags: List<Any> = emptyList(),
     @PrimaryKey val id: Long,
     val width: Int,
     val height: Int,
     val url: String,
     val image: String,
     val duration: Int,
-    val user: User,
-    val video_files: List<VideoFile>,
-    val video_pictures: List<VideoPicture>
+    val user: UserEntity,
+    val video_files: List<VideoFileEntity>,
+    val video_pictures: List<VideoPictureEntity>
 )
 
-data class User(
+data class UserEntity(
     val id: Int,
     val name: String,
     val url: String
 )
 
-data class VideoFile(
+data class VideoFileEntity(
     val id: Int,
     val quality: String,
     val file_type: String,
@@ -34,7 +34,7 @@ data class VideoFile(
     val link: String
 )
 
-data class VideoPicture(
+data class VideoPictureEntity(
     val id: Int,
     val picture: String,
     val nr: Int
