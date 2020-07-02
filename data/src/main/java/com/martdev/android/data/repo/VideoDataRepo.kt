@@ -7,6 +7,7 @@ import com.martdev.android.data.SourceResult
 import com.martdev.android.data.pagedListConfig
 import com.martdev.android.data.pagingfactory.VideoPageDataSourceFactory
 import com.martdev.android.data.toVideo
+import com.martdev.android.domain.videomodel.Video
 import com.martdev.android.domain.videomodel.VideoData
 import com.martdev.android.local.LocalDataSource
 import com.martdev.android.local.entity.VideoDataEntity
@@ -16,17 +17,17 @@ import kotlinx.coroutines.CoroutineScope
 class VideoDataRepo(
     private val remoteDataSource: RemoteDataSource<VideoData>,
     private val localDataSource: LocalDataSource<VideoDataEntity>
-) : Repository<VideoData> {
+) : Repository<Video> {
 
     override fun getData(
         query: String?,
         scope: CoroutineScope,
         networkConnected: Boolean
-    ): SourceResult<VideoData> {
+    ): SourceResult<Video> {
         return if (networkConnected) getRemoteVideoData(query, scope) else getLocalVideoData()
     }
 
-    private fun getRemoteVideoData(query: String?, scope: CoroutineScope): SourceResult<VideoData> {
+    private fun getRemoteVideoData(query: String?, scope: CoroutineScope): SourceResult<Video> {
 
         val factory = VideoPageDataSourceFactory(query, localDataSource, remoteDataSource, scope)
 
@@ -37,13 +38,14 @@ class VideoDataRepo(
             it.networkState
         }
 
-        return SourceResult(pageList, networkState)
+        val retryCallback = factory.liveData.value?.retryCallback
+        return SourceResult(pageList, networkState, retryCallback)
     }
 
-    private fun getLocalVideoData(): SourceResult<VideoData> {
+    private fun getLocalVideoData(): SourceResult<Video> {
         val dataSource =
             localDataSource.getData().map {
-            VideoData(0, 0, 0, "", mutableListOf(it.toVideo()))
+            it.toVideo()
         }
 
         val pageList =

@@ -10,24 +10,24 @@ import com.martdev.android.data.toPhoto
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.domain.photomodel.PhotoData
 import com.martdev.android.local.LocalDataSource
-import com.martdev.android.local.entity.PhotoDataEntity
+import com.martdev.android.local.entity.PhotoEntity
 import com.martdev.android.remote.RemoteDataSource
 import kotlinx.coroutines.CoroutineScope
 
 class PhotoDataRepo(
     private val remoteDataSource: RemoteDataSource<PhotoData>,
-    private val localDataSource: LocalDataSource<PhotoDataEntity>
-) : Repository<PhotoData>{
+    private val localDataSource: LocalDataSource<PhotoEntity>
+) : Repository<Photo>{
 
     override fun getData(
         query: String?,
         scope: CoroutineScope,
         networkConnected: Boolean
-    ): SourceResult<PhotoData> {
+    ): SourceResult<Photo> {
         return if (networkConnected) getRemotePhotoData(query, scope) else getLocalPhotoData()
     }
 
-    private fun getRemotePhotoData(query: String?, scope: CoroutineScope): SourceResult<PhotoData> {
+    private fun getRemotePhotoData(query: String?, scope: CoroutineScope): SourceResult<Photo> {
         val factory = PhotoPageDataSourceFactory(query, localDataSource, remoteDataSource, scope)
 
         val pageList =
@@ -37,13 +37,15 @@ class PhotoDataRepo(
             it.networkState
         }
 
-        return SourceResult(pageList, networkState)
+        val retryCallback = factory.liveData.value?.retry
+
+        return SourceResult(pageList, networkState, retryCallback)
     }
 
-    private fun getLocalPhotoData(): SourceResult<PhotoData> {
+    private fun getLocalPhotoData(): SourceResult<Photo> {
         val dataSource =
             localDataSource.getData().map {
-                PhotoData(0, 0, 0, mutableListOf(it.toPhoto()))
+                it.toPhoto()
             }
 
         val pageList =

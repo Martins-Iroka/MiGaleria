@@ -1,6 +1,7 @@
 package com.martdev.android.domain.photomodel
 
-data class PhotoData(
+data class
+PhotoData(
     @Transient val total_result: Int = 0,
     @Transient val page: Int,
     @Transient val per_page: Int,

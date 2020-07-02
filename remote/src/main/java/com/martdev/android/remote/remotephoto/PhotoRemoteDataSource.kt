@@ -14,11 +14,11 @@ class PhotoRemoteDataSource(private val apiService: ApiService)
         query: String?,
         per_page: Int?,
         page: Int?
-    ): Result<List<PhotoData>> {
+    ): Result<PhotoData> {
         return getResult { apiService.searchPhotoAsync(query, per_page, page).await() }
     }
 
-    override suspend fun load(per_page: Int, page: Int): Result<List<PhotoData>> {
+    override suspend fun load(per_page: Int, page: Int): Result<PhotoData> {
         return getResult { apiService.loadPhotoAsync(per_page, page).await() }
     }
 

@@ -2,14 +2,14 @@ package com.martdev.android.local
 
 import androidx.paging.DataSource
 import com.martdev.android.local.dao.PhotoDataDao
-import com.martdev.android.local.entity.PhotoDataEntity
+import com.martdev.android.local.entity.PhotoEntity
 
-class PhotoDataSource(private val photoData: PhotoDataDao) : LocalDataSource<PhotoDataEntity> {
-    override fun getData(): DataSource.Factory<Int, PhotoDataEntity> {
+class PhotoDataSource(private val photoData: PhotoDataDao) : LocalDataSource<PhotoEntity> {
+    override fun getData(): DataSource.Factory<Int, PhotoEntity> {
         return photoData.getPhotoData()
     }
 
-    override suspend fun saveData(data: PhotoDataEntity) {
+    override suspend fun saveData(data: PhotoEntity) {
         photoData.savePhotoData(data)
     }
 

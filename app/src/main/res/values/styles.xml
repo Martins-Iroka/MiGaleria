@@ -1,10 +1,28 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Base.Theme.MyGallery" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/blueGrey_100</item>
+        <item name="colorOnPrimary">@color/blueGrey_900</item>
+        <item name="colorPrimaryDark">@color/blueGrey_100_dark</item>
+        <item name="colorAccent">@color/blueGrey_900</item>
+        <item name="colorSecondary">@color/blueGrey_900</item>
+        <item name="android:colorBackground">@color/blueGrey_100</item>
+        <item name="android:textColor">@color/blueGrey_900</item>
+    </style>
+
+    <style name="Theme.MyGallery" parent="Base.Theme.MyGallery"/>
+
+    <style name="Theme.MyGallery.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.MyGallery.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
+
+    <style name="Button_Appearance" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:backgroundTint">?attr/colorAccent</item>
     </style>
 
 </resources>

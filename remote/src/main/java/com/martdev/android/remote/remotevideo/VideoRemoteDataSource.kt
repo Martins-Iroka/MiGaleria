@@ -13,11 +13,11 @@ class VideoRemoteDataSource(private val api: ApiService)
         query: String?,
         per_page: Int?,
         page: Int?
-    ): Result<List<VideoData>> {
+    ): Result<VideoData> {
         return getResult { api.searchVideoAsync(query, per_page, page).await() }
     }
 
-    override suspend fun load(per_page: Int, page: Int): Result<List<VideoData>> {
+    override suspend fun load(per_page: Int, page: Int): Result<VideoData> {
         return getResult { api.loadVideoAsync(per_page, page).await() }
     }
 }

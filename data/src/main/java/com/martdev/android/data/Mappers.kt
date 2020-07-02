@@ -17,9 +17,9 @@ fun pagedListConfig() = PagedList.Config.Builder()
     .build()
 
 /**
- * Extension function that maps [Photo] to [PhotoDataEntity] for local storage
+ * Extension function that maps [Photo] to [PhotoEntity] for local storage
  */
-fun Photo.toEntity() = PhotoDataEntity(
+fun Photo.toEntity() = PhotoEntity(
     id, width, height, url, photographer, photographer_url,
     photographer_id, src.toSrcEntity(), liked
 )
@@ -64,10 +64,10 @@ private fun List<VideoPicture>.toVideoPictureEntity(): List<VideoPictureEntity> 
 }
 
 /**
- * Extension function that maps [PhotoDataEntity] from local storage to [Photo]
+ * Extension function that maps [PhotoEntity] from local storage to [Photo]
  */
 
-fun PhotoDataEntity.toPhoto() = Photo(
+fun PhotoEntity.toPhoto() = Photo(
     id, width, height, url, photographer, photographer_url, photographer_id, src.toPhotoSrc(), liked
 )
 

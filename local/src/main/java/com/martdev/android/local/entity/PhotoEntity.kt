@@ -1,12 +1,10 @@
 package com.martdev.android.local.entity
 
-import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "photo_data")
-data class PhotoDataEntity(
+data class PhotoEntity(
     @PrimaryKey val id: Long,
     val width: Int,
     val height: Int,

@@ -9,8 +9,8 @@ data class VideoData(
 )
 
 data class Video(
-    val full_res: Any?,
-    val tags: List<Any>,
+    @Transient val full_res: Any?,
+    @Transient val tags: List<Any>,
     val id: Long,
     val width: Int,
     val height: Int,
@@ -19,7 +19,7 @@ data class Video(
     val duration: Int,
     val user: User,
     val video_files: List<VideoFile>,
-    val video_pictures: List<VideoPicture>
+    @Transient val video_pictures: List<VideoPicture>
 )
 
 data class User(

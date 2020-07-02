@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.martdev.android.data.toEntity
 import com.martdev.android.domain.Result
+import com.martdev.android.domain.videomodel.Video
 import com.martdev.android.domain.videomodel.VideoData
 import com.martdev.android.local.LocalDataSource
 import com.martdev.android.local.entity.VideoDataEntity
@@ -18,31 +19,47 @@ class VideoDataPageSource(
     private val localDataSource: LocalDataSource<VideoDataEntity>,
     private val remoteDataSource: RemoteDataSource<VideoData>,
     private val scope: CoroutineScope
-) : PageKeyedDataSource<Int, VideoData>() {
+) : PageKeyedDataSource<Int, Video>() {
 
-    var networkState = MutableLiveData<Result<List<VideoData>>>()
+    var networkState = MutableLiveData<Result<List<Video>>>()
+
+    var retryCallback: RetryCallback? = null
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
-        callback: LoadInitialCallback<Int, VideoData>
+        callback: LoadInitialCallback<Int, Video>
     ) {
-        fetchData(1) {videoData ->
+        fetchData(1, { videoData ->
+            retryCallback = null
             callback.onResult(videoData, null, 2)
-        }
+        }, {
+            retryCallback = object : RetryCallback {
+                override fun invoke() {
+                    loadInitial(params, callback)
+                }
+            }
+        })
     }
 
-    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, VideoData>) {
+    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Video>) {
         val page = params.key
-        fetchData(page) { videoData ->
+        fetchData(page, { videoData ->
+            retryCallback = null
             callback.onResult(videoData, page + 1)
-        }
+        }, {
+            retryCallback = object : RetryCallback {
+                override fun invoke() {
+                    loadAfter(params, callback)
+                }
+            }
+        })
     }
 
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, VideoData>) {
+    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Video>) {
         TODO("Not yet implemented")
     }
 
-    private fun fetchData(page: Int, callback: (List<VideoData>) -> Unit) {
+    private fun fetchData(page: Int, callback: (List<Video>) -> Unit, retry: () -> Unit) {
         scope.launch {
             withContext(Dispatchers.IO) {
                 val result
@@ -53,16 +70,17 @@ class VideoDataPageSource(
                     Result.Status.LOADING -> networkState.value = Result.loading()
                     Result.Status.SUCCESS -> {
                         localDataSource.deleteData()
-                        val data = result.data!!
+                        val data = result.data?.videos!!
                         networkState.postValue(Result.success(data))
-                        data.forEach {
-                            it.videos.forEach {video ->
+                        data.forEach {video ->
                                 localDataSource.saveData(video.toEntity())
                             }
-                        }
                         callback(data)
                     }
-                    Result.Status.ERROR -> networkState.postValue(Result.error(result.message))
+                    Result.Status.ERROR -> {
+                        networkState.postValue(Result.error(result.message))
+                        retry()
+                    }
                 }
             }
         }
