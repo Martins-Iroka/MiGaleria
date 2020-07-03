@@ -3,12 +3,11 @@ package com.martdev.android.mygallery.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModel
-import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.martdev.android.domain.Result
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.domain.videomodel.Video
-import com.martdev.android.mygallery.databinding.ItemNetworkStateBinding
+import com.martdev.android.mygallery.databinding.NetworkStateViewBinding
 import com.martdev.android.mygallery.databinding.PhotoListItemBinding
 import com.martdev.android.mygallery.databinding.VideoListItemBinding
 import com.martdev.android.mygallery.viewmodel.PhotoViewModel
@@ -50,7 +49,7 @@ class VideoDataHolder(private val binding: VideoListItemBinding) : RecyclerView.
 }
 
 class NetworkStateViewHolder(
-    private val binding: ItemNetworkStateBinding,
+    private val binding: NetworkStateViewBinding,
     private val viewModel: ViewModel
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -68,7 +67,7 @@ class NetworkStateViewHolder(
     companion object {
         fun create(parent: ViewGroup, viewModel: ViewModel): NetworkStateViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
-            val binding = ItemNetworkStateBinding.inflate(layoutInflater, parent, false)
+            val binding = NetworkStateViewBinding.inflate(layoutInflater, parent, false)
 
             return NetworkStateViewHolder(binding, viewModel)
         }

@@ -1,6 +1,10 @@
 package com.martdev.android.mygallery.fragment
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
@@ -20,14 +24,8 @@ class PhotoListFragment : Fragment() {
     private lateinit var binding: PhotoRecyclerViewBinding
     private val viewModel: PhotoViewModel by viewModels { getViewModelFactory() }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setupRecyclerView()
-        viewModel.networkState.observe(viewLifecycleOwner, Observer {
-            (binding.photoRecyclerView.adapter as PhotoDataAdapter).setNetworkState(it)
-        })
-        viewModel.isNetworkAvailable = checkNetworkState()
-    }
+    private var isConnected = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,12 +35,25 @@ class PhotoListFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.photoVM = viewModel
 
+        isConnected = requireActivity().checkNetworkState()
+
+        setupRecyclerView()
+
         setHasOptionsMenu(true)
         return binding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.i(PhotoListFragment::class.java.simpleName, "onStart in PhotoListFragment")
+    }
+
     private fun setupRecyclerView() {
         binding.photoRecyclerView.adapter = PhotoDataAdapter(viewModel)
+
+        viewModel.networkState.observe(viewLifecycleOwner, Observer {
+            (binding.photoRecyclerView.adapter as PhotoDataAdapter).setNetworkState(it)
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -51,7 +62,7 @@ class PhotoListFragment : Fragment() {
         val searchItem = menu.findItem(R.id.menu_item_search)
         val searchView = searchItem.actionView as SearchView
 
-        searchView.query(viewModel)
+        searchView.query(viewModel, isConnected)
 
         return super.onCreateOptionsMenu(menu, inflater)
     }

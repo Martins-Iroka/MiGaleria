@@ -1,7 +1,13 @@
 package com.martdev.android.mygallery.utils
 
+import android.app.Activity
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.dev.adnetworkm.CheckNetworkStatus
@@ -11,22 +17,22 @@ import com.martdev.android.mygallery.viewmodel.PhotoViewModel
 import com.martdev.android.mygallery.viewmodel.VideoViewModel
 
 fun Fragment.getViewModelFactory(): ViewModelFactory {
-    val application = (requireActivity().application as MyGalleryApp)
+    val application = (requireContext().applicationContext as MyGalleryApp)
     val photoDataUseCase = application.photoUseCase
     val videoDataUseCase = application.videoUseCase
 
     return ViewModelFactory(photoDataUseCase, videoDataUseCase)
 }
 
-fun Fragment.checkNetworkState(): Boolean {
+fun FragmentActivity.checkNetworkState(): Boolean {
     var isNetworkConnected: Boolean = false
-    CheckNetworkStatus.getNetworkLiveData(requireContext()).observe(this, Observer {
+    CheckNetworkStatus.getNetworkLiveData(applicationContext).observe(this, Observer {
         isNetworkConnected = when(it) {
             true -> {
                 it
             }
             false -> {
-                Snackbar.make(this.requireView(), "Please check network connection", Snackbar.LENGTH_SHORT).show()
+                Toast.makeText(this, "No network connection", Toast.LENGTH_LONG).show()
                 it
             }
         }
@@ -34,12 +40,14 @@ fun Fragment.checkNetworkState(): Boolean {
     return isNetworkConnected
 }
 
-fun SearchView.query(viewModel: ViewModel) {
+fun SearchView.query(viewModel: ViewModel, isNetwork: Boolean) {
     setOnQueryTextListener(object : SearchView.OnQueryTextListener  {
         override fun onQueryTextSubmit(query: String?): Boolean {
             return if (query != null) {
                 when(viewModel) {
-                    is PhotoViewModel -> viewModel.search(query)
+                    is PhotoViewModel -> {
+                        viewModel.isConnected = isNetwork
+                        viewModel.search(query)}
                     is VideoViewModel -> viewModel.search(query)
                 }
                 this@query.onActionViewCollapsed()

@@ -1,5 +1,8 @@
 package com.martdev.android.mygallery.fragment
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
@@ -20,14 +23,9 @@ class VideoListFragment : Fragment() {
     private lateinit var binding: VideoRecyclerViewBinding
     private val viewModel: VideoViewModel by viewModels { getViewModelFactory() }
 
+    private var isConnected = false
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        viewModel.isNetworkAvailable = checkNetworkState()
-        setupRecyclerView()
-        viewModel.networkState.observe(viewLifecycleOwner, Observer {
-            (binding.videoRecyclerView.adapter as VideoDataAdapter).setNetworkState(it)
-        })
     }
 
     override fun onCreateView(
@@ -39,11 +37,20 @@ class VideoListFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.videoVM = viewModel
 
+        isConnected = requireActivity().checkNetworkState()
+
+        setupRecyclerView()
+
+        setHasOptionsMenu(true)
         return binding.root
     }
 
     private fun setupRecyclerView() {
         binding.videoRecyclerView.adapter = VideoDataAdapter(viewModel)
+
+        viewModel.networkState.observe(viewLifecycleOwner, Observer {
+            (binding.videoRecyclerView.adapter as VideoDataAdapter).setNetworkState(it)
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -52,7 +59,7 @@ class VideoListFragment : Fragment() {
         val searchItem = menu.findItem(R.id.menu_item_search)
         val searchView = searchItem.actionView as SearchView
 
-        searchView.query(viewModel)
+        searchView.query(viewModel, isConnected)
 
         return super.onCreateOptionsMenu(menu, inflater)
     }

@@ -4,6 +4,7 @@ import android.content.Context
 import com.martdev.android.data.repo.PhotoDataRepo
 import com.martdev.android.data.repo.VideoDataRepo
 import com.martdev.android.data.usecase.PhotoDataUseCase
+import com.martdev.android.data.usecase.UseCase
 import com.martdev.android.data.usecase.VideoDataUseCase
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.domain.photomodel.PhotoData
@@ -13,8 +14,7 @@ import com.martdev.android.local.LocalDataSource
 import com.martdev.android.local.MyGalleryDB
 import com.martdev.android.local.PhotoDataSource
 import com.martdev.android.local.VideoDataSource
-import com.martdev.android.local.entity.PhotoEntity
-import com.martdev.android.local.entity.VideoDataEntity
+import com.martdev.android.local.entity.*
 import com.martdev.android.remote.RemoteDataSource
 import com.martdev.android.remote.getApiService
 import com.martdev.android.remote.remotephoto.PhotoRemoteDataSource
@@ -22,19 +22,19 @@ import com.martdev.android.remote.remotevideo.VideoRemoteDataSource
 
 object Injector {
 
-    private val apiService = getApiService()
-
     private var dataBase: MyGalleryDB? = null
 
-    fun provideRepos(context: Context, photoUseCase: () -> Unit, videoUseCase: () -> Unit) {
+    fun providePhotoDataUseCase(context: Context): UseCase<Photo>{
         dataBase = MyGalleryDB.getInstance(context)
-        photoUseCase()
-        videoUseCase()
+
+        return PhotoDataUseCase(providePhotoRepo())
     }
 
-    fun providePhotoDataUseCase() = PhotoDataUseCase(providePhotoRepo())
+    fun provideVideoDataUseCase(context: Context): UseCase<Video> {
+        dataBase = MyGalleryDB.getInstance(context)
 
-    fun provideVideoDataUseCase() = VideoDataUseCase(provideVideoRepo())
+        return VideoDataUseCase(provideVideoRepo())
+    }
 
     private fun providePhotoRepo(): Repository<Photo>
             = PhotoDataRepo(provideRemotePhotoData(), provideLocalPhotoData())
@@ -43,18 +43,21 @@ object Injector {
             = VideoDataRepo(provideRemoteVideoData(), provideLocalVideoData())
 
     private fun provideRemotePhotoData(): RemoteDataSource<PhotoData>
-            = PhotoRemoteDataSource(apiService)
+            = PhotoRemoteDataSource(getApiService())
 
-    private fun provideLocalPhotoData(): LocalDataSource<PhotoEntity> {
+    private fun provideLocalPhotoData(): LocalDataSource<PhotoEntity, PhotoDataEntity> {
         val dao = dataBase?.photoData()!!
-        return PhotoDataSource(dao)
+        val srcDao = dataBase?.photoSrc()!!
+        return PhotoDataSource(dao, srcDao)
     }
 
     private fun provideRemoteVideoData(): RemoteDataSource<VideoData>
-            = VideoRemoteDataSource(apiService)
+            = VideoRemoteDataSource(getApiService())
 
-    private fun provideLocalVideoData(): LocalDataSource<VideoDataEntity> {
+    private fun provideLocalVideoData(): LocalDataSource<VideoEntity, VideoDataEntity> {
         val dao = dataBase?.videoData()!!
-        return VideoDataSource(dao)
+        val userDao = dataBase?.userDao()!!
+        val videoFileDao = dataBase?.videoFileDao()!!
+        return VideoDataSource(dao, userDao, videoFileDao)
     }
 }

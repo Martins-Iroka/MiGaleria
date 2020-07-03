@@ -4,21 +4,16 @@ import android.app.Application
 import com.martdev.android.data.Injector
 import com.martdev.android.data.usecase.UseCase
 import com.martdev.android.domain.photomodel.Photo
-import com.martdev.android.domain.photomodel.PhotoData
 import com.martdev.android.domain.videomodel.Video
-import com.martdev.android.domain.videomodel.VideoData
 
 class MyGalleryApp : Application() {
 
-    lateinit var photoUseCase: UseCase<Photo>
-    lateinit var videoUseCase: UseCase<Video>
+    val photoUseCase: UseCase<Photo>
+        get() = Injector.providePhotoDataUseCase(this)
+    val videoUseCase: UseCase<Video>
+        get() = Injector.provideVideoDataUseCase(this)
 
-    init {
-        Injector.provideRepos(this, {
-            photoUseCase = Injector.providePhotoDataUseCase()
-        }, {
-            videoUseCase = Injector.provideVideoDataUseCase()
-        })
+    override fun onCreate() {
+        super.onCreate()
     }
-
 }

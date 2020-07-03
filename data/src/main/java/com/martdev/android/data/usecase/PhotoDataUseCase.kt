@@ -1,5 +1,6 @@
 package com.martdev.android.data.usecase
 
+import android.util.Log
 import com.martdev.android.data.Repository
 import com.martdev.android.data.SourceResult
 import com.martdev.android.domain.photomodel.Photo
@@ -11,5 +12,8 @@ class PhotoDataUseCase(private val photoRepo: Repository<Photo>) :
         query: String?,
         scope: CoroutineScope,
         networkConnected: Boolean
-    ): SourceResult<Photo> = photoRepo.getData(query, scope, networkConnected)
+    ): SourceResult<Photo> {
+        Log.i(PhotoDataUseCase::class.java.simpleName, "Photo invoke called")
+        return photoRepo.getData(query, scope, networkConnected)
+    }
 }

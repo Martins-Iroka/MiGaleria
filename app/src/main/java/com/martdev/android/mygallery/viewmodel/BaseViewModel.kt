@@ -11,8 +11,6 @@ abstract class BaseViewModel<T> : ViewModel() {
 
     protected abstract val _searchKeyword: MutableLiveData<String>
 
-    protected abstract val searchKeyword: LiveData<String>
-
     open var isNetworkAvailable: Boolean = false
 
     abstract val result: LiveData<SourceResult<T>>
@@ -21,7 +19,7 @@ abstract class BaseViewModel<T> : ViewModel() {
 
     abstract val networkState: LiveData<Result<List<T>>>
 
-    abstract fun search(query: String)
+    abstract fun search(query: String? = null)
 
     open fun retryQuery() {
         result.value?.retryCallback?.invoke()

@@ -6,18 +6,15 @@ import com.martdev.android.data.SourceResult
 import com.martdev.android.data.usecase.UseCase
 import com.martdev.android.domain.Result
 import com.martdev.android.domain.photomodel.Photo
-import com.martdev.android.domain.photomodel.PhotoData
 
 class PhotoViewModel(private val photoUseCase: UseCase<Photo>) : BaseViewModel<Photo>() {
 
     override val _searchKeyword: MutableLiveData<String> = MutableLiveData()
 
-    override val searchKeyword: LiveData<String>
-        get() = _searchKeyword
+    var isConnected = true
 
-    override val result: LiveData<SourceResult<Photo>>
-        get() = Transformations.map(_searchKeyword) {
-            photoUseCase(it, viewModelScope, isNetworkAvailable)
+    override val result: LiveData<SourceResult<Photo>> = Transformations.map(_searchKeyword) {
+            photoUseCase(it, viewModelScope, isConnected)
         }
 
     override val data: LiveData<PagedList<Photo>>
@@ -30,7 +27,8 @@ class PhotoViewModel(private val photoUseCase: UseCase<Photo>) : BaseViewModel<P
             it.networkState
         }
 
-    override fun search(query: String) {
+    override fun search(query: String?) {
         _searchKeyword.value = query
     }
+
 }

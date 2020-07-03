@@ -11,12 +11,13 @@ import com.martdev.android.domain.videomodel.Video
 import com.martdev.android.domain.videomodel.VideoData
 import com.martdev.android.local.LocalDataSource
 import com.martdev.android.local.entity.VideoDataEntity
+import com.martdev.android.local.entity.VideoEntity
 import com.martdev.android.remote.RemoteDataSource
 import kotlinx.coroutines.CoroutineScope
 
 class VideoDataRepo(
     private val remoteDataSource: RemoteDataSource<VideoData>,
-    private val localDataSource: LocalDataSource<VideoDataEntity>
+    private val localDataSource: LocalDataSource<VideoEntity, VideoDataEntity>
 ) : Repository<Video> {
 
     override fun getData(

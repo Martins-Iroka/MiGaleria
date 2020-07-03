@@ -17,7 +17,7 @@ class PhotoDataAdapter(private val photoViewModel: PhotoViewModel) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             R.layout.photo_list_item -> PhotoDataHolder.create(parent)
-            R.layout.item_network_state -> NetworkStateViewHolder.create(parent, photoViewModel)
+            R.layout.network_state_view -> NetworkStateViewHolder.create(parent, photoViewModel)
             else -> throw IllegalArgumentException("Unknown view type $viewType")
         }
     }
@@ -25,12 +25,12 @@ class PhotoDataAdapter(private val photoViewModel: PhotoViewModel) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             R.layout.photo_list_item -> (holder as PhotoDataHolder).bindTo(getItem(position))
-            R.layout.item_network_state -> (holder as NetworkStateViewHolder).bindTo(result)
+            R.layout.network_state_view -> (holder as NetworkStateViewHolder).bindTo(result)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (hasExtraRow() and (position == itemCount - 1)) R.layout.item_network_state
+        return if (hasExtraRow() and (position == itemCount - 1)) R.layout.network_state_view
         else R.layout.photo_list_item
     }
 

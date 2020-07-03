@@ -17,7 +17,7 @@ class VideoDataAdapter(private val videoViewModel: VideoViewModel) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType) {
             R.layout.video_list_item -> VideoDataHolder.create(parent)
-            R.layout.item_network_state -> NetworkStateViewHolder.create(parent, videoViewModel)
+            R.layout.network_state_view -> NetworkStateViewHolder.create(parent, videoViewModel)
             else -> throw IllegalArgumentException("Unknown view type $viewType")
         }
     }
@@ -25,12 +25,12 @@ class VideoDataAdapter(private val videoViewModel: VideoViewModel) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(getItemViewType(position)) {
             R.layout.video_list_item -> (holder as VideoDataHolder).bindTo(getItem(position))
-            R.layout.item_network_state -> (holder as NetworkStateViewHolder).bindTo(result)
+            R.layout.network_state_view -> (holder as NetworkStateViewHolder).bindTo(result)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (hasExtraRow() and (position == itemCount - 1)) R.layout.item_network_state
+        return if (hasExtraRow() and (position == itemCount - 1)) R.layout.network_state_view
         else R.layout.video_list_item
     }
 

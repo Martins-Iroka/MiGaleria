@@ -2,7 +2,6 @@ package com.martdev.android.mygallery.utils
 
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.paging.PagedList
@@ -40,6 +39,6 @@ fun bindImage(imageView: ImageView, imageUrl: String) {
 }
 
 @BindingAdapter("visibilityState")
-fun setVisibilityState(textView: TextView, isVisible: Boolean) {
-    if (isVisible) textView.visibility = View.VISIBLE else textView.visibility = View.GONE
+fun setVisibilityState(view: View, isVisible: Boolean) {
+    if (isVisible) view.visibility = View.VISIBLE else view.visibility = View.GONE
 }

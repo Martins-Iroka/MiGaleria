@@ -1,41 +1,61 @@
 package com.martdev.android.local.entity
 
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
+import androidx.room.*
+
+data class VideoDataEntity(
+    @Embedded val videoEntity: VideoEntity,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "userId"
+    ) val user: UserEntity,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "videoId"
+    ) val videoFiles: List<VideoFileEntity>
+)
 
 @Entity(tableName = "video_data")
-data class VideoDataEntity(
-    @Ignore val full_res: Any? = null,
-    @Ignore val tags: List<Any> = emptyList(),
+data class VideoEntity(
     @PrimaryKey val id: Long,
     val width: Int,
     val height: Int,
     val url: String,
     val image: String,
-    val duration: Int,
-    val user: UserEntity,
-    val video_files: List<VideoFileEntity>,
-    val video_pictures: List<VideoPictureEntity>
+    val duration: Int
 )
 
+@Entity(
+    tableName = "user",
+    foreignKeys = [ForeignKey(
+        entity = VideoEntity::class,
+        parentColumns = ["id"],
+        childColumns = ["userId"],
+        onDelete = ForeignKey.CASCADE,
+        onUpdate = ForeignKey.CASCADE
+    )])
 data class UserEntity(
+    @PrimaryKey val userId: Long,
     val id: Int,
     val name: String,
     val url: String
 )
 
+@Entity(
+    tableName = "video_file",
+    foreignKeys = [ForeignKey(
+        entity = VideoEntity::class,
+        parentColumns = ["id"],
+        childColumns = ["videoId"],
+        onDelete = ForeignKey.CASCADE,
+        onUpdate = ForeignKey.CASCADE
+    )])
 data class VideoFileEntity(
+    @PrimaryKey val videoId: Long,
     val id: Int,
     val quality: String,
     val file_type: String,
     val width: Int,
     val height: Int,
     val link: String
-)
-
-data class VideoPictureEntity(
-    val id: Int,
-    val picture: String,
-    val nr: Int
 )

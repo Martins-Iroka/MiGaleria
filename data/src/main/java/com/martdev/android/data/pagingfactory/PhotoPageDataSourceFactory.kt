@@ -6,13 +6,14 @@ import com.martdev.android.data.paging.PhotoDataPageSource
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.domain.photomodel.PhotoData
 import com.martdev.android.local.LocalDataSource
+import com.martdev.android.local.entity.PhotoDataEntity
 import com.martdev.android.local.entity.PhotoEntity
 import com.martdev.android.remote.RemoteDataSource
 import kotlinx.coroutines.CoroutineScope
 
 class PhotoPageDataSourceFactory(
     private val query: String?,
-    private val localDataSource: LocalDataSource<PhotoEntity>,
+    private val localDataSource: LocalDataSource<PhotoEntity, PhotoDataEntity>,
     private val remoteDataSource: RemoteDataSource<PhotoData>,
     private val scope: CoroutineScope
 ) : DataSource.Factory<Int, Photo>(){

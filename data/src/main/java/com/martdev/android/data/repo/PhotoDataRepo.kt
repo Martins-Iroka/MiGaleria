@@ -10,13 +10,15 @@ import com.martdev.android.data.toPhoto
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.domain.photomodel.PhotoData
 import com.martdev.android.local.LocalDataSource
+import com.martdev.android.local.entity.PhotoDataEntity
 import com.martdev.android.local.entity.PhotoEntity
 import com.martdev.android.remote.RemoteDataSource
+import com.martdev.android.remote.remotephoto.PhotoRemoteDataSource
 import kotlinx.coroutines.CoroutineScope
 
 class PhotoDataRepo(
     private val remoteDataSource: RemoteDataSource<PhotoData>,
-    private val localDataSource: LocalDataSource<PhotoEntity>
+    private val localDataSource: LocalDataSource<PhotoEntity, PhotoDataEntity>
 ) : Repository<Photo>{
 
     override fun getData(
