@@ -1,9 +1,8 @@
 package com.martdev.android.data.usecase
 
-import com.martdev.android.data.SourceResult
-import kotlinx.coroutines.CoroutineScope
+import com.martdev.android.domain.Result
 
 interface UseCase<T> {
 
-    operator fun invoke(query: String?, scope: CoroutineScope, networkConnected: Boolean): SourceResult<T>
+    suspend operator fun invoke(query: String, networkConnected: Boolean): Result<List<T>>
 }

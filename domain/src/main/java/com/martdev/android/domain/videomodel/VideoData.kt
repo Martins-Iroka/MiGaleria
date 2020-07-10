@@ -1,16 +1,16 @@
 package com.martdev.android.domain.videomodel
 
 data class VideoData(
-    @Transient val page: Int,
-    @Transient val per_page: Int,
-    @Transient val total_results: Int,
-    @Transient val url: String,
+    val page: Int,
+    val per_page: Int,
+    val total_results: Int,
+    val url: String,
     val videos: List<Video>
 )
 
 data class Video(
-    @Transient val full_res: Any? = null,
-    @Transient val tags: List<Any> = emptyList(),
+    val full_res: Any? = null,
+    val tags: List<Any> = emptyList(),
     val id: Long,
     val width: Int,
     val height: Int,
@@ -32,8 +32,8 @@ data class VideoFile(
     val id: Int,
     val quality: String,
     val file_type: String,
-    val width: Int,
-    val height: Int,
+    val width: Int?,
+    val height: Int?,
     val link: String
 )
 

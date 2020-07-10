@@ -1,10 +1,11 @@
 package com.martdev.android.local
 
-import androidx.paging.DataSource
+import com.martdev.android.domain.Result
+
 
 interface LocalDataSource<T, R> {
 
-    fun getData(): DataSource.Factory<Int, R>
+    suspend fun getData(): Result<List<R>>
 
     suspend fun saveData(data: T)
 

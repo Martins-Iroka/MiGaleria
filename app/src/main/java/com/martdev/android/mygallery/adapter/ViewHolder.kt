@@ -13,63 +13,76 @@ import com.martdev.android.mygallery.databinding.VideoListItemBinding
 import com.martdev.android.mygallery.viewmodel.PhotoViewModel
 import com.martdev.android.mygallery.viewmodel.VideoViewModel
 
-class PhotoDataHolder(private val binding: PhotoListItemBinding) :
+class PhotoDataHolder(
+    private val binding: PhotoListItemBinding,
+    private val viewModel: PhotoViewModel
+) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bindTo(photo: Photo?) {
+    fun bindTo(photo: Photo, listener: (Photo) -> Unit) {
         binding.photoSrc = photo
+        binding.downloadPhoto.setOnClickListener {
+            listener(photo)
+        }
         binding.executePendingBindings()
     }
 
     companion object {
-        fun create(parent: ViewGroup): PhotoDataHolder {
+        fun create(parent: ViewGroup, viewModel: PhotoViewModel): PhotoDataHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = PhotoListItemBinding.inflate(layoutInflater, parent, false)
 
-            return PhotoDataHolder(binding)
+            return PhotoDataHolder(binding, viewModel)
         }
     }
 }
 
-class VideoDataHolder(private val binding: VideoListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+class VideoDataHolder(
+    private val binding: VideoListItemBinding,
+    private val clickListener: OnClickListener
+) :
+    RecyclerView.ViewHolder(binding.root) {
 
-    fun bindTo(video: Video?) {
+    fun bindTo(video: Video, listener: (Video) -> Unit) {
         binding.video = video
+        binding.playVideo.setOnClickListener {
+            clickListener.onClick(video.video_files[0].link)
+        }
+        binding.downloadVideo.setOnClickListener {
+            listener(video)
+        }
         binding.executePendingBindings()
     }
 
     companion object {
-        fun create(parent: ViewGroup): VideoDataHolder {
+        fun create(parent: ViewGroup, clickListener: OnClickListener): VideoDataHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = VideoListItemBinding.inflate(layoutInflater, parent, false)
 
-            return VideoDataHolder(binding)
+            return VideoDataHolder(binding, clickListener)
         }
     }
 }
 
-class NetworkStateViewHolder(
-    private val binding: NetworkStateViewBinding,
-    private val viewModel: ViewModel
-) : RecyclerView.ViewHolder(binding.root) {
-
-    fun <T> bindTo(result: T) {
-        binding.result = result as Result<*>
-        binding.retryButton.setOnClickListener {
-            when(viewModel) {
-                is PhotoViewModel -> viewModel.retryQuery()
-                is VideoViewModel -> viewModel.retryQuery()
-            }
-        }
-        binding.executePendingBindings()
-    }
-
-    companion object {
-        fun create(parent: ViewGroup, viewModel: ViewModel): NetworkStateViewHolder {
-            val layoutInflater = LayoutInflater.from(parent.context)
-            val binding = NetworkStateViewBinding.inflate(layoutInflater, parent, false)
-
-            return NetworkStateViewHolder(binding, viewModel)
-        }
-    }
+class OnClickListener(private val clickListener: (String) -> Unit) {
+    fun onClick(stringUri: String) = clickListener(stringUri)
 }
+
+//class NetworkStateViewHolder(
+//    private val binding: NetworkStateViewBinding
+//) : RecyclerView.ViewHolder(binding.root) {
+//
+//    fun <T> bindTo(result: T) {
+//        binding.result = result as Result<*>
+//        binding.executePendingBindings()
+//    }
+//
+//    companion object {
+//        fun create(parent: ViewGroup): NetworkStateViewHolder {
+//            val layoutInflater = LayoutInflater.from(parent.context)
+//            val binding = NetworkStateViewBinding.inflate(layoutInflater, parent, false)
+//
+//            return NetworkStateViewHolder(binding)
+//        }
+//    }
+//}

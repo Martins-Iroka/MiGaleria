@@ -1,27 +1,22 @@
 package com.martdev.android.mygallery.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.paging.PagedList
-import com.martdev.android.data.SourceResult
 import com.martdev.android.domain.Result
+import com.martdev.android.mygallery.utils.Event
 
 abstract class BaseViewModel<T> : ViewModel() {
 
-    protected abstract val _searchKeyword: MutableLiveData<String>
+    abstract val searchKeyword: MutableLiveData<String>
 
-    open var isNetworkAvailable: Boolean = false
+    abstract val data: MutableLiveData<List<T>>
 
-    abstract val result: LiveData<SourceResult<T>>
+    abstract val snackBarMessage: MutableLiveData<Event<Int>>
 
-    abstract val data: LiveData<PagedList<T>>
+    protected abstract val networkState: MutableLiveData<Result<List<T>>>
 
-    abstract val networkState: LiveData<Result<List<T>>>
+    open var isInternetAvailable: Boolean = true
 
-    abstract fun search(query: String? = null)
+    abstract fun getData(query: String = "")
 
-    open fun retryQuery() {
-        result.value?.retryCallback?.invoke()
-    }
 }

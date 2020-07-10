@@ -12,6 +12,7 @@ buildscript {
     ext.navigationVersion = '2.2.2'
     ext.glideVersion = '4.10.0'
     ext.roomVersion = '2.2.5'
+    ext.ver = '2.7.0'
     repositories {
         google()
         jcenter()

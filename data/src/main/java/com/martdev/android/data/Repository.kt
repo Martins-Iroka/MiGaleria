@@ -8,11 +8,5 @@ import kotlinx.coroutines.CoroutineScope
 
 interface Repository<T> {
 
-    fun getData(query: String?, scope: CoroutineScope, networkConnected: Boolean): SourceResult<T>
+    suspend fun getData(query: String = "", networkConnected: Boolean): Result<List<T>>
 }
-
-data class SourceResult<T>(
-    val data: LiveData<PagedList<T>>,
-    val networkState: LiveData<Result<List<T>>>? = null,
-    val retryCallback: RetryCallback? = null
-)

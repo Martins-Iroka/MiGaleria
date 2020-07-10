@@ -24,17 +24,14 @@ object Injector {
 
     private var dataBase: MyGalleryDB? = null
 
-    fun providePhotoDataUseCase(context: Context): UseCase<Photo>{
+    fun provideDatabaseContext(context: Context) {
         dataBase = MyGalleryDB.getInstance(context)
-
-        return PhotoDataUseCase(providePhotoRepo())
     }
+    fun providePhotoDataUseCase(): UseCase<Photo>
+            = PhotoDataUseCase(providePhotoRepo())
 
-    fun provideVideoDataUseCase(context: Context): UseCase<Video> {
-        dataBase = MyGalleryDB.getInstance(context)
-
-        return VideoDataUseCase(provideVideoRepo())
-    }
+    fun provideVideoDataUseCase(): UseCase<Video>
+            = VideoDataUseCase(provideVideoRepo())
 
     private fun providePhotoRepo(): Repository<Photo>
             = PhotoDataRepo(provideRemotePhotoData(), provideLocalPhotoData())

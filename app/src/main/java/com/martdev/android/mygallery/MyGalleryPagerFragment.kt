@@ -1,23 +1,42 @@
 package com.martdev.android.mygallery
 
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.*
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityCompat
 import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.martdev.android.mygallery.adapter.MyGalleryPagerAdapter
 import com.martdev.android.mygallery.adapter.PHOTO_PAGE_INDEX
 import com.martdev.android.mygallery.adapter.VIDEO_PAGE_INDEX
 import com.martdev.android.mygallery.databinding.FragmentViewPagerBinding
+import com.martdev.android.mygallery.utils.*
+import com.martdev.android.mygallery.viewmodel.PhotoViewModel
+import com.martdev.android.mygallery.viewmodel.SharedViewModel
+import com.martdev.android.mygallery.viewmodel.VideoViewModel
+import kotlinx.android.synthetic.main.fragment_view_pager.view.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import java.lang.IndexOutOfBoundsException
 
-class MyGalleryPagerFragment : Fragment() {
+class MyGalleryPagerFragment : Fragment(), AnkoLogger {
 
     private lateinit var binding: FragmentViewPagerBinding
+    private val photoViewModel: PhotoViewModel by activityViewModels { getViewModelFactory() }
+    private val videoViewModel: VideoViewModel by activityViewModels { getViewModelFactory() }
+
+    private lateinit var tabLayout: TabLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,7 +44,7 @@ class MyGalleryPagerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_pager, container, false)
-        val tabLayout = binding.tabs
+        tabLayout = binding.tabs
         val viewPager = binding.viewPager
 
 
@@ -36,8 +55,12 @@ class MyGalleryPagerFragment : Fragment() {
             tab.text = getTabTitle(position)
         }.attach()
 
-        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        val toolbar = binding.toolbar
+        (activity as AppCompatActivity).run {
+            setSupportActionBar(toolbar)
+        }
 
+        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -51,5 +74,35 @@ class MyGalleryPagerFragment : Fragment() {
         PHOTO_PAGE_INDEX -> "Photo"
         VIDEO_PAGE_INDEX -> "Video"
         else -> null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.keyword_search, menu)
+
+        val searchItem = menu.findItem(R.id.menu_item_search)
+        val searchView = searchItem.actionView as SearchView
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                info {
+                    tabLayout.selectedTabPosition
+                }
+                return if (query != null) {
+                    when(tabLayout.selectedTabPosition) {
+                        PHOTO_PAGE_INDEX -> photoViewModel.getData(query)
+                        VIDEO_PAGE_INDEX -> videoViewModel.getData(query)
+                    }
+                    searchView.onActionViewCollapsed()
+                    true
+                } else false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+        })
+
+        return super.onCreateOptionsMenu(menu, inflater)
     }
 }

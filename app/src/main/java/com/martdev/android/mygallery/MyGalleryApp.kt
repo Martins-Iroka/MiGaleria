@@ -5,15 +5,18 @@ import com.martdev.android.data.Injector
 import com.martdev.android.data.usecase.UseCase
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.domain.videomodel.Video
+import timber.log.Timber
 
 class MyGalleryApp : Application() {
 
     val photoUseCase: UseCase<Photo>
-        get() = Injector.providePhotoDataUseCase(this)
+        get() = Injector.providePhotoDataUseCase()
     val videoUseCase: UseCase<Video>
-        get() = Injector.provideVideoDataUseCase(this)
+        get() = Injector.provideVideoDataUseCase()
 
     override fun onCreate() {
         super.onCreate()
+        Injector.provideDatabaseContext(this)
+        Timber.plant(Timber.DebugTree())
     }
 }

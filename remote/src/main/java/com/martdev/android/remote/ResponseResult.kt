@@ -7,6 +7,7 @@ open class ResponseResult {
 
     protected suspend fun <T> getResult(call: suspend () -> Response<T>): Result<T> {
         try {
+            Result.loading(null)
             val response = call()
             if (response.isSuccessful) {
                 val body = response.body()

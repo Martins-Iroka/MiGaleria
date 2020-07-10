@@ -1,18 +1,23 @@
 package com.martdev.android.local
 
-import androidx.paging.DataSource
+import com.martdev.android.domain.Result
 import com.martdev.android.local.dao.PhotoDataDao
 import com.martdev.android.local.dao.PhotoSrcDao
 import com.martdev.android.local.entity.PhotoEntity
 import com.martdev.android.local.entity.PhotoDataEntity
 import com.martdev.android.local.entity.PhotoSrcEntity
+import kotlinx.coroutines.withContext
 
 class PhotoDataSource(
     private val photoData: PhotoDataDao,
     private val photoSrcDao: PhotoSrcDao
 ) : LocalDataSource<PhotoEntity, PhotoDataEntity> {
-    override fun getData(): DataSource.Factory<Int, PhotoDataEntity> {
-        return photoData.getPhotoData()
+    override suspend fun getData(): Result<List<PhotoDataEntity>> {
+        return try {
+            Result.success(photoData.getPhotoData())
+        } catch (e: Exception) {
+            Result.error(e.message)
+        }
     }
 
     override suspend fun saveData(data: PhotoEntity) {
