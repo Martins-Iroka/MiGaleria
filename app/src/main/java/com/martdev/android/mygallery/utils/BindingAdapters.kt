@@ -12,7 +12,6 @@ import com.martdev.android.mygallery.R
 import com.martdev.android.mygallery.adapter.PhotoDataAdapter
 import com.martdev.android.mygallery.adapter.VideoDataAdapter
 
-
 @BindingAdapter("photoListData")
 fun bindPhotoView(recyclerView: RecyclerView, data: List<Photo>?) {
     val adapter = recyclerView.adapter as PhotoDataAdapter

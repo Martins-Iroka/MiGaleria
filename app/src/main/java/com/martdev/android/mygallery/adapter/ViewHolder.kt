@@ -2,20 +2,14 @@ package com.martdev.android.mygallery.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
-import com.martdev.android.domain.Result
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.domain.videomodel.Video
-import com.martdev.android.mygallery.databinding.NetworkStateViewBinding
 import com.martdev.android.mygallery.databinding.PhotoListItemBinding
 import com.martdev.android.mygallery.databinding.VideoListItemBinding
-import com.martdev.android.mygallery.viewmodel.PhotoViewModel
-import com.martdev.android.mygallery.viewmodel.VideoViewModel
 
 class PhotoDataHolder(
-    private val binding: PhotoListItemBinding,
-    private val viewModel: PhotoViewModel
+    private val binding: PhotoListItemBinding
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
@@ -28,11 +22,11 @@ class PhotoDataHolder(
     }
 
     companion object {
-        fun create(parent: ViewGroup, viewModel: PhotoViewModel): PhotoDataHolder {
+        fun create(parent: ViewGroup): PhotoDataHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = PhotoListItemBinding.inflate(layoutInflater, parent, false)
 
-            return PhotoDataHolder(binding, viewModel)
+            return PhotoDataHolder(binding)
         }
     }
 }

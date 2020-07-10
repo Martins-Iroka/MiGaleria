@@ -8,25 +8,16 @@ import android.os.Environment
 import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.core.content.FileProvider
-import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import com.dev.adnetworkm.CheckNetworkStatus
 import com.google.android.material.snackbar.Snackbar
-import com.martdev.android.domain.Result
 import com.martdev.android.mygallery.BuildConfig
 import com.martdev.android.mygallery.MyGalleryApp
-import com.martdev.android.mygallery.R
-import com.martdev.android.mygallery.viewmodel.PhotoViewModel
-import com.martdev.android.mygallery.viewmodel.SharedViewModel
-import com.martdev.android.mygallery.viewmodel.VideoViewModel
-import kotlinx.android.synthetic.main.fragment_view_pager.*
 import java.io.File
 
 val PERMISSIONS = listOf(
@@ -43,7 +34,7 @@ fun Fragment.getViewModelFactory(): ViewModelFactory {
     return ViewModelFactory(photoDataUseCase, videoDataUseCase)
 }
 
-fun Fragment.setDownloadSource(fileName: String) {
+fun Fragment.setDownloadedFileName(fileName: String) {
     val folder = context?.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
     val file = File(folder, fileName)
     val uri = context?.let {
@@ -91,35 +82,21 @@ fun FragmentActivity.checkNetworkState(): Boolean {
     return isNetworkConnected
 }
 
-fun SearchView.query(viewModel: SharedViewModel, currentTab: Int) {
-    setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-        override fun onQueryTextSubmit(query: String?): Boolean {
-            return if (query != null) {
-                viewModel.search(currentTab, query)
-                this@query.onActionViewCollapsed()
-                true
-            } else false
-        }
-
-        override fun onQueryTextChange(newText: String?): Boolean {
-            return false
-        }
-
-    })
-}
-
 /**
  * Triggers a snackbar message when the value contained by snackbarTaskMessageLiveEvent is modified.
  */
 fun View.setupSnackbar(
     lifecycleOwner: LifecycleOwner,
-    snackbarEvent: LiveData<Event<Int>>,
+    snackbarEvent: LiveData<Event<Any>>,
     timeLength: Int
 ) {
 
     snackbarEvent.observe(lifecycleOwner, Observer { event ->
         event.getContentIfNotHandled()?.let {
-            showSnackbar(context.getString(it), timeLength)
+            when(it) {
+                is Int -> showSnackbar(context.getString(it), timeLength)
+                is String -> showSnackbar(it, timeLength)
+            }
         }
     })
 }

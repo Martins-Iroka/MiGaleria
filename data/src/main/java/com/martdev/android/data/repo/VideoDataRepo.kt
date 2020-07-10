@@ -64,7 +64,7 @@ class VideoDataRepo(
         } ?: emptyList()
 
         info {
-            "local -> ${localResult.toString()}"
+            "local -> $localResult"
         }
         return Result.success(localResult)
     }
@@ -82,39 +82,4 @@ class VideoDataRepo(
             }
         }
     }
-
-//    fun getData(
-//        query: String?,
-//        scope: CoroutineScope,
-//        networkConnected: Boolean
-//    ): SourceResult<Video> {
-//        return if (networkConnected) getRemoteVideoData(query, scope) else getLocalVideoData()
-//    }
-//
-//    private fun getRemoteVideoData(query: String?, scope: CoroutineScope): SourceResult<Video> {
-//
-//        val factory = VideoPageDataSourceFactory(query, localDataSource, remoteDataSource, scope)
-//
-//        val pageList =
-//            LivePagedListBuilder(factory, pagedListConfig()).build()
-//
-//        val networkState = Transformations.switchMap(factory.liveData) {
-//            it.networkState
-//        }
-//
-//        val retryCallback = factory.liveData.value?.retryCallback
-//        return SourceResult(pageList, networkState, retryCallback)
-//    }
-//
-//    private fun getLocalVideoData(): SourceResult<Video> {
-//        val dataSource =
-//            localDataSource.getData().map {
-//            it.toVideo()
-//        }
-//
-//        val pageList =
-//            LivePagedListBuilder(dataSource, pagedListConfig()).build()
-//
-//        return SourceResult(pageList)
-//    }
 }

@@ -1,19 +1,11 @@
 package com.martdev.android.data
 
-import androidx.paging.PagedList
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.domain.photomodel.PhotoSrc
 import com.martdev.android.domain.videomodel.User
 import com.martdev.android.domain.videomodel.Video
 import com.martdev.android.domain.videomodel.VideoFile
 import com.martdev.android.local.entity.*
-
-private const val PAGE_SIZE = 15
-
-fun pagedListConfig() = PagedList.Config.Builder()
-    .setInitialLoadSizeHint(PAGE_SIZE)
-    .setPageSize(PAGE_SIZE)
-    .build()
 
 /**
  * Extension function that maps [Photo] to [PhotoEntity] and [PhotoSrc] to [PhotoSrcEntity] for local storage

@@ -3,14 +3,10 @@ package com.martdev.android.mygallery.adapter
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.martdev.android.domain.Result
 import com.martdev.android.domain.videomodel.Video
-import com.martdev.android.mygallery.R
-import com.martdev.android.mygallery.viewmodel.VideoViewModel
 import kotlinx.android.synthetic.main.video_list_item.view.*
 
 class VideoDataAdapter(private val clickListener: OnClickListener,

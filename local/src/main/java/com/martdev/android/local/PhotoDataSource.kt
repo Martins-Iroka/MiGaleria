@@ -6,7 +6,6 @@ import com.martdev.android.local.dao.PhotoSrcDao
 import com.martdev.android.local.entity.PhotoEntity
 import com.martdev.android.local.entity.PhotoDataEntity
 import com.martdev.android.local.entity.PhotoSrcEntity
-import kotlinx.coroutines.withContext
 
 class PhotoDataSource(
     private val photoData: PhotoDataDao,

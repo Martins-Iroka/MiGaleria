@@ -1,17 +1,9 @@
 package com.martdev.android.mygallery
 
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.*
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.app.ActivityCompat
-import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -23,14 +15,12 @@ import com.martdev.android.mygallery.adapter.VIDEO_PAGE_INDEX
 import com.martdev.android.mygallery.databinding.FragmentViewPagerBinding
 import com.martdev.android.mygallery.utils.*
 import com.martdev.android.mygallery.viewmodel.PhotoViewModel
-import com.martdev.android.mygallery.viewmodel.SharedViewModel
 import com.martdev.android.mygallery.viewmodel.VideoViewModel
-import kotlinx.android.synthetic.main.fragment_view_pager.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import java.lang.IndexOutOfBoundsException
 
-class MyGalleryPagerFragment : Fragment(), AnkoLogger {
+class MyGalleryPagerFragment : Fragment(){
 
     private lateinit var binding: FragmentViewPagerBinding
     private val photoViewModel: PhotoViewModel by activityViewModels { getViewModelFactory() }
@@ -84,9 +74,6 @@ class MyGalleryPagerFragment : Fragment(), AnkoLogger {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                info {
-                    tabLayout.selectedTabPosition
-                }
                 return if (query != null) {
                     when(tabLayout.selectedTabPosition) {
                         PHOTO_PAGE_INDEX -> photoViewModel.getData(query)

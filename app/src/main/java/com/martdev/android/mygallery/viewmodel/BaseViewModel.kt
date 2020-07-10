@@ -1,8 +1,9 @@
 package com.martdev.android.mygallery.viewmodel
 
+import android.net.Uri
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.martdev.android.domain.Result
 import com.martdev.android.mygallery.utils.Event
 
 abstract class BaseViewModel<T> : ViewModel() {
@@ -11,9 +12,17 @@ abstract class BaseViewModel<T> : ViewModel() {
 
     abstract val data: MutableLiveData<List<T>>
 
-    abstract val snackBarMessage: MutableLiveData<Event<Int>>
+    abstract val snackBarMessage: MutableLiveData<Event<Any>>
 
-    protected abstract val networkState: MutableLiveData<Result<List<T>>>
+    abstract val loading: LiveData<Event<Boolean>>
+
+    abstract val downloadProgress: LiveData<Event<Int>>
+
+    abstract val fileUri: LiveData<Event<Uri>>
+
+    abstract val fileName: LiveData<Event<String>>
+
+    abstract val byteArray: LiveData<Event<ByteArray>>
 
     open var isInternetAvailable: Boolean = true
 
