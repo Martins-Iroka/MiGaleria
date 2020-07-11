@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/exoplayerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:use_artwork="true"
+        app:default_artwork="@drawable/loading_animation"
+        app:show_timeout="5000"
+        app:fastforward_increment="10000"
+        app:rewind_increment="10000"
+        app:controller_layout_id="@layout/custom_playback_control_minimal"/>
+</layout>

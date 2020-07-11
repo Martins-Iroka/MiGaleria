@@ -33,11 +33,11 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@string/photo"
+                app:imageUrl="@{photoSrc.src.original}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/no_image"
-                app:imageUrl="@{photoSrc.src.medium}"/>
+                app:srcCompat="@drawable/no_image" />
 
             <TextView
                 android:id="@+id/photographer"
@@ -46,10 +46,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:textSize="14sp"
                 android:text="@{@string/photographer(photoSrc.photographer)}"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@+id/download_photo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/photo"
@@ -61,12 +59,35 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
                 android:padding="@dimen/image_padding"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/photo"
                 app:srcCompat="@drawable/ic_baseline_cloud_download" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@android:style/Widget.Material.ProgressBar.Horizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="24dp"
+                android:indeterminate="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/progress_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/download_photo" />
+
+            <TextView
+                android:id="@+id/progress_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="24dp"
+                android:text="@string/progress"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>

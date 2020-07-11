@@ -1,6 +1,6 @@
 package com.martdev.android.local
 
-import androidx.paging.DataSource
+import com.martdev.android.domain.Result
 import com.martdev.android.local.dao.UserDao
 import com.martdev.android.local.dao.VideoDataDao
 import com.martdev.android.local.dao.VideoFileDao
@@ -14,8 +14,12 @@ class VideoDataSource(
     private val userDao: UserDao,
     private val videoFileDao: VideoFileDao
 ) : LocalDataSource<VideoEntity, VideoDataEntity> {
-    override fun getData(): DataSource.Factory<Int, VideoDataEntity> {
-        return videoData.getVideoData()
+    override suspend fun getData(): Result<List<VideoDataEntity>> {
+        return try {
+            Result.success(videoData.getVideoData())
+        } catch (e: Exception) {
+            Result.error(e.message)
+        }
     }
 
     override suspend fun saveData(data: VideoEntity) {

@@ -2,10 +2,14 @@
     <string name="app_name">MiGaleria</string>
     <string name="no_photos_to_display">No Photos to display</string>
     <string name="no_videos_to_display">No Videos to display</string>
+    <string name="cant_load_data">Can\'t load new data</string>
+    <string name="no_internet">Check your internet connection</string>
+    <string name="download_failed">Unable to download file</string>
     <string name="action_retry">Retry</string>
     <string name="photo">Photo</string>
     <string name="photographer">Photo by %s</string>
     <string name="videographer">Video by %s</string>
     <string name="unknown_error">Unknown Error</string>
-    <string name="search_hint">e.g Nature</string>
+    <string name="search_hint">Search e.g Nature</string>
+    <string name="progress">0%</string>
 </resources>

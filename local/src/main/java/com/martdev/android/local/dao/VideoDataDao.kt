@@ -1,6 +1,5 @@
 package com.martdev.android.local.dao
 
-import androidx.paging.DataSource
 import androidx.room.*
 import com.martdev.android.local.entity.VideoDataEntity
 import com.martdev.android.local.entity.VideoEntity
@@ -10,7 +9,7 @@ interface VideoDataDao {
 
     @Transaction
     @Query("SELECT * FROM video_data")
-    fun getVideoData(): DataSource.Factory<Int, VideoDataEntity>
+    fun getVideoData(): List<VideoDataEntity>
 
     @Insert(onConflict =  OnConflictStrategy.REPLACE)
     suspend fun saveVideoData(videoEntity: VideoEntity)
