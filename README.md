@@ -6,7 +6,7 @@ search for Batman or The Avengers, you will be disappointed. The application is 
 architecture in mind.
 
 ##ScreenShots
-<img src="screenshot/Photo_tab_screen_shot.jpg" vspace="5" align="left" width=275>
+![Photo Tab](screenshot/Photo_tab_screen_shot.jpg)
 <img src="screenshot/Video_tab_screen_shot.jpg" vspace="5" align="left" width=275>
 <img src="screenshot/VideoPlayer_screen_shot.jpg" vspace="5" align="left" width=275>
 <img src="screenshot/VideoPlayer_screen_shot2.jpg" vspace="5" align="left" width=275>
