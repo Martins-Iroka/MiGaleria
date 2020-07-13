@@ -19,8 +19,8 @@ architecture in mind.
  But contents can't be downloaded or streamed.
 * Download contents from the application to local storage
 
-##Libraries
-* MVVM with Android Architectural Components([Room](https://developer.android.com/topic/libraries/architecture/room), [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel), [LiveData](https://developer.android.com/topic/libraries/architecture/livedata))
+## Libraries
+* MVVM with Android Architectural Components ([Room](https://developer.android.com/topic/libraries/architecture/room), [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel), [LiveData](https://developer.android.com/topic/libraries/architecture/livedata))
 * [Retrofit](https://github.com/square/retrofit)
 * [Glide](https://github.com/bumptech/glide)
 * [Moshi](https://github.com/square/moshi)
