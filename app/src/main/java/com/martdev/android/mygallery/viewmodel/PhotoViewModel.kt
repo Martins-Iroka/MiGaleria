@@ -2,7 +2,7 @@ package com.martdev.android.mygallery.viewmodel
 
 import android.net.Uri
 import androidx.lifecycle.*
-import com.martdev.android.data.usecase.UseCase
+import com.martdev.android.domain.usecase.UseCase
 import com.martdev.android.domain.Result
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.mygallery.R
@@ -48,18 +48,12 @@ class PhotoViewModel(private val photoUseCase: UseCase<Photo>) : BaseViewModel<P
         _loading.value = Event(true)
         viewModelScope.launch {
             val result = photoUseCase(query, isInternetAvailable)
-            when (result.status) {
-                Result.Status.SUCCESS -> {
-                    _loading.value = Event(false)
-                    val photos = result.data!!
-                    data.value = photos
-                    if (result.data?.isEmpty()!!) {
-                        snackBarMessage.value = Event(R.string.no_photos_to_display)
-                    }
-                }
-                Result.Status.ERROR -> {
-                    _loading.value = Event(false)
-                    snackBarMessage.value = Event(R.string.cant_load_data)
+            if (result.status == Result.Status.SUCCESS) {
+                _loading.value = Event(false)
+                val photos = result.data!!
+                data.value = photos
+                if (result.data?.isEmpty()!!) {
+                    snackBarMessage.value = Event(R.string.no_photos_to_display)
                 }
             }
         }

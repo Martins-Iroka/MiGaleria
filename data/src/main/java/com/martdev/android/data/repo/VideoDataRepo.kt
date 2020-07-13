@@ -1,11 +1,7 @@
 package com.martdev.android.data.repo
 
-import android.util.Log
-import androidx.lifecycle.Transformations
-import androidx.paging.LivePagedListBuilder
 import com.martdev.android.data.*
-//import com.martdev.android.data.paging.VideoDataPageSource
-//import com.martdev.android.data.pagingfactory.VideoPageDataSourceFactory
+import com.martdev.android.domain.Repository
 import com.martdev.android.domain.Result
 import com.martdev.android.domain.videomodel.Video
 import com.martdev.android.domain.videomodel.VideoData
@@ -14,17 +10,13 @@ import com.martdev.android.local.VideoDataSource
 import com.martdev.android.local.entity.VideoDataEntity
 import com.martdev.android.local.entity.VideoEntity
 import com.martdev.android.remote.RemoteDataSource
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.error
-import org.jetbrains.anko.info
 
 class VideoDataRepo(
     private val remoteDataSource: RemoteDataSource<VideoData>,
     private val localDataSource: LocalDataSource<VideoEntity, VideoDataEntity>
-) : Repository<Video>, AnkoLogger {
+) : Repository<Video> {
 
     override suspend fun getData(query: String, networkConnected: Boolean): Result<List<Video>> {
         return withContext(Dispatchers.IO) {
@@ -40,22 +32,14 @@ class VideoDataRepo(
             val result =
                 if (query.isEmpty()) remoteDataSource.load() else remoteDataSource.search(query)
 
-            info {
-               "Remote -> ${result.status} : ${result.data?.videos.toString()}"
-            }
             when (result.status) {
                 Result.Status.LOADING -> Result.loading(null)
                 Result.Status.SUCCESS -> {
-                    Log.d(VideoDataRepo::class.java.simpleName, result.data.toString())
                     val videos = result.data?.videos!!
                     refreshLocalDataSource(videos)
                     return Result.success(videos)
                 }
-                Result.Status.ERROR -> {
-                    error {
-                        result.message
-                    }
-                    Result.error(result.message)}
+                Result.Status.ERROR -> Result.error(result.message)
             }
         }
 
@@ -63,9 +47,6 @@ class VideoDataRepo(
             it.toVideo()
         } ?: emptyList()
 
-        info {
-            "local -> $localResult"
-        }
         return Result.success(localResult)
     }
 

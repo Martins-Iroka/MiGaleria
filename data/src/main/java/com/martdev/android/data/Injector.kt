@@ -3,9 +3,10 @@ package com.martdev.android.data
 import android.content.Context
 import com.martdev.android.data.repo.PhotoDataRepo
 import com.martdev.android.data.repo.VideoDataRepo
-import com.martdev.android.data.usecase.PhotoDataUseCase
-import com.martdev.android.data.usecase.UseCase
-import com.martdev.android.data.usecase.VideoDataUseCase
+import com.martdev.android.domain.usecase.PhotoDataUseCase
+import com.martdev.android.domain.usecase.UseCase
+import com.martdev.android.domain.usecase.VideoDataUseCase
+import com.martdev.android.domain.Repository
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.domain.photomodel.PhotoData
 import com.martdev.android.domain.videomodel.Video
@@ -28,10 +29,12 @@ object Injector {
         dataBase = MyGalleryDB.getInstance(context)
     }
     fun providePhotoDataUseCase(): UseCase<Photo>
-            = PhotoDataUseCase(providePhotoRepo())
+            =
+        PhotoDataUseCase(providePhotoRepo())
 
     fun provideVideoDataUseCase(): UseCase<Video>
-            = VideoDataUseCase(provideVideoRepo())
+            =
+        VideoDataUseCase(provideVideoRepo())
 
     private fun providePhotoRepo(): Repository<Photo>
             = PhotoDataRepo(provideRemotePhotoData(), provideLocalPhotoData())

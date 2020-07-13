@@ -2,7 +2,7 @@ package com.martdev.android.mygallery.utils
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.martdev.android.data.usecase.UseCase
+import com.martdev.android.domain.usecase.UseCase
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.domain.videomodel.Video
 import com.martdev.android.mygallery.viewmodel.PhotoViewModel

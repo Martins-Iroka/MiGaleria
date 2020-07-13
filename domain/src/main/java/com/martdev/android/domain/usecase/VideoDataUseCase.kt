@@ -1,6 +1,6 @@
-package com.martdev.android.data.usecase
+package com.martdev.android.domain.usecase
 
-import com.martdev.android.data.Repository
+import com.martdev.android.domain.Repository
 import com.martdev.android.domain.Result
 import com.martdev.android.domain.videomodel.Video
 

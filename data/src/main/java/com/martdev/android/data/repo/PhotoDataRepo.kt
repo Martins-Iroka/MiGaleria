@@ -1,6 +1,7 @@
 package com.martdev.android.data.repo
 
 import com.martdev.android.data.*
+import com.martdev.android.domain.Repository
 import com.martdev.android.domain.Result
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.domain.photomodel.PhotoData
@@ -11,9 +12,6 @@ import com.martdev.android.local.entity.PhotoEntity
 import com.martdev.android.remote.RemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.error
-import org.jetbrains.anko.info
 
 class PhotoDataRepo(
     private val remoteDataSource: RemoteDataSource<PhotoData>,

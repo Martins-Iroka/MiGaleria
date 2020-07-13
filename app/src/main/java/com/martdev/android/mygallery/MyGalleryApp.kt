@@ -2,7 +2,7 @@ package com.martdev.android.mygallery
 
 import android.app.Application
 import com.martdev.android.data.Injector
-import com.martdev.android.data.usecase.UseCase
+import com.martdev.android.domain.usecase.UseCase
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.domain.videomodel.Video
 import timber.log.Timber

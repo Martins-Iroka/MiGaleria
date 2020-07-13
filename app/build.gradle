@@ -64,7 +64,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
-    implementation "androidx.paging:paging-runtime:$pagingVersion"
     implementation "com.google.android.material:material:$materialVersion"
     implementation "com.github.bumptech.glide:glide:$glideVersion"
 

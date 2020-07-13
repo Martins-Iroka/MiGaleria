@@ -1,6 +1,4 @@
-package com.martdev.android.data
-
-import com.martdev.android.domain.Result
+package com.martdev.android.domain
 
 interface Repository<T> {
 

@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.martdev.android.data.usecase.UseCase
+import com.martdev.android.domain.usecase.UseCase
 import com.martdev.android.domain.Result
 import com.martdev.android.domain.videomodel.Video
 import com.martdev.android.mygallery.R
@@ -52,18 +52,12 @@ class VideoViewModel(private val videoUseCase: UseCase<Video>) : BaseViewModel<V
         viewModelScope.launch {
             val result = videoUseCase(query, isInternetAvailable)
 
-            when (result.status) {
-                Result.Status.SUCCESS -> {
-                    _loading.value = Event(false)
-                    val videos = result.data!!
-                    data.postValue(videos)
-                    if (result.data?.isEmpty()!!) {
-                        snackBarMessage.value = Event(R.string.no_videos_to_display)
-                    }
-                }
-                Result.Status.ERROR -> {
-                    _loading.value = Event(false)
-                    snackBarMessage.postValue(Event(R.string.cant_load_data))
+            if (result.status == Result.Status.SUCCESS) {
+                _loading.value = Event(false)
+                val videos = result.data!!
+                data.postValue(videos)
+                if (result.data?.isEmpty()!!) {
+                    snackBarMessage.value = Event(R.string.no_videos_to_display)
                 }
             }
         }

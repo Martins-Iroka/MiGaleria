@@ -1,4 +1,4 @@
-package com.martdev.android.mygallery
+package com.martdev.android.mygallery.fragment
 
 import android.os.Bundle
 import android.view.*
@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.martdev.android.mygallery.R
 import com.martdev.android.mygallery.adapter.MyGalleryPagerAdapter
 import com.martdev.android.mygallery.adapter.PHOTO_PAGE_INDEX
 import com.martdev.android.mygallery.adapter.VIDEO_PAGE_INDEX
@@ -16,8 +17,6 @@ import com.martdev.android.mygallery.databinding.FragmentViewPagerBinding
 import com.martdev.android.mygallery.utils.*
 import com.martdev.android.mygallery.viewmodel.PhotoViewModel
 import com.martdev.android.mygallery.viewmodel.VideoViewModel
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 import java.lang.IndexOutOfBoundsException
 
 class MyGalleryPagerFragment : Fragment(){
@@ -33,7 +32,8 @@ class MyGalleryPagerFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_pager, container, false)
+        binding = DataBindingUtil.inflate(inflater,
+            R.layout.fragment_view_pager, container, false)
         tabLayout = binding.tabs
         val viewPager = binding.viewPager
 

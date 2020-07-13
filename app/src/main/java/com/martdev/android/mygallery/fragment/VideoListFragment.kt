@@ -34,6 +34,7 @@ class VideoListFragment : Fragment() {
 
         viewModel.isInternetAvailable = requireActivity().checkNetworkState()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,7 +56,7 @@ class VideoListFragment : Fragment() {
     private fun getData() {
         viewModel.searchKeyword.value?.let {
             viewModel.getData(it)
-        } ?: viewModel.getData("nature")
+        } ?: viewModel.getData()
     }
 
     private fun observers() {

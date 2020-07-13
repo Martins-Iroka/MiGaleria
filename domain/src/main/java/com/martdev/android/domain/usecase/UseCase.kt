@@ -1,4 +1,4 @@
-package com.martdev.android.data.usecase
+package com.martdev.android.domain.usecase
 
 import com.martdev.android.domain.Result
 
