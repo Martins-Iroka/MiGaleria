@@ -6,10 +6,10 @@ search for Batman or The Avengers, you will be disappointed. The application is 
 architecture in mind.
 
 ##ScreenShots
-![Photo tab](screenshot/Photo_tab_screen_shot.jpg)
-![Video tab](screenshot/Video_tab_screen_shot.jpg)
-![VideoPlayer](screenshot/VideoPlayer_screen_shot.jpg)
-![VideoPlayer](screenshot/VideoPlayer_screen_shot2.jpg)
+<img src="screenshot/Photo_tab_screen_shot.jpg" vspace="5" align="left" width=275>
+<img src="screenshot/Video_tab_screen_shot.jpg" vspace="5" align="left" width=275>
+<img src="screenshot/VideoPlayer_screen_shot.jpg" vspace="5" align="left" width=275>
+<img src="screenshot/VideoPlayer_screen_shot2.jpg" vspace="5" align="left" width=275>
 
 ## Features
 * Get curated and popular photos and videos
