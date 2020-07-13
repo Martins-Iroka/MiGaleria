@@ -5,7 +5,7 @@ A user can also search for photos and videos using a keyword, e.g nature or prog
 search for Batman or The Avengers, you will be disappointed. The application is written with clean 
 architecture in mind.
 
-##ScreenShots
+## ScreenShots
 ![Photo Tab](screenshot/Photo_tab_screen_shot.jpg)
 ![Video Tab](screenshot/Video_tab_screen_shot.jpg)
 ![VideoPlayer](screenshot/VideoPlayer_screen_shot.jpg)
