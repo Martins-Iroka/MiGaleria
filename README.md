@@ -7,9 +7,9 @@ architecture in mind.
 
 ##ScreenShots
 ![Photo Tab](screenshot/Photo_tab_screen_shot.jpg)
-<img src="screenshot/Video_tab_screen_shot.jpg" vspace="5" align="left" width=275>
-<img src="screenshot/VideoPlayer_screen_shot.jpg" vspace="5" align="left" width=275>
-<img src="screenshot/VideoPlayer_screen_shot2.jpg" vspace="5" align="left" width=275>
+![Video Tab](screenshot/Video_tab_screen_shot.jpg)
+![VideoPlayer](screenshot/VideoPlayer_screen_shot.jpg)
+![VideoPlayer](screenshot/VideoPlayer_screen_shot2.jpg)
 
 ## Features
 * Get curated and popular photos and videos
