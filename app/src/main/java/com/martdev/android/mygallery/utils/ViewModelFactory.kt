@@ -14,7 +14,7 @@ class ViewModelFactory(
 ) : ViewModelProvider.Factory{
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(PhotoViewModel::class.java) -> PhotoViewModel(photoUseCase)
             modelClass.isAssignableFrom(VideoViewModel::class.java) -> VideoViewModel(videoUseCase)

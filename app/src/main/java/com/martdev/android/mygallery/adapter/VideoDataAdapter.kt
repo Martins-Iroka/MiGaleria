@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.martdev.android.domain.videomodel.Video
-import kotlinx.android.synthetic.main.video_list_item.view.*
 
 class VideoDataAdapter(private val clickListener: OnClickListener,
 private val listener: (Video) -> Unit) :
@@ -34,9 +33,7 @@ private val listener: (Video) -> Unit) :
         if (payloads.firstOrNull() != null) {
             with(holder.itemView) {
                 (payloads.first() as Bundle).getInt("progress").also {
-                    progressBar.progress = it
-                    progress_text.isVisible = it < 99
-                    progress_text.text = "$it%"
+                    (holder as VideoDataHolder).setProgressStatus(it)
                 }
             }
         }

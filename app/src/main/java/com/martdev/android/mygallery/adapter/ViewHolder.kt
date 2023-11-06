@@ -2,6 +2,7 @@ package com.martdev.android.mygallery.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.domain.videomodel.Video
@@ -19,6 +20,11 @@ class PhotoDataHolder(
             listener(photo)
         }
         binding.executePendingBindings()
+    }
+
+    fun setProgressStatus(progress: Int) {
+        binding.progressBar.progress = progress
+        binding.progressText.text = "$progress%"
     }
 
     companion object {
@@ -46,6 +52,14 @@ class VideoDataHolder(
             listener(video)
         }
         binding.executePendingBindings()
+    }
+
+    fun setProgressStatus(progress: Int) {
+        binding.run {
+            progressBar.progress = progress
+            progressText.isVisible = progress < 99
+            progressText.text = "$progress%"
+        }
     }
 
     companion object {

@@ -11,7 +11,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
-import com.martdev.android.mygallery.MyGalleryPagerFragmentDirections
 import com.martdev.android.mygallery.R
 import com.martdev.android.mygallery.adapter.OnClickListener
 import com.martdev.android.mygallery.adapter.VideoDataAdapter

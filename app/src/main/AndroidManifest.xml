@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyGallery">
         <activity android:name=".MainActivity"
-            android:theme="@style/Theme.MyGallery.NoActionBar">
+            android:theme="@style/Theme.MyGallery.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
