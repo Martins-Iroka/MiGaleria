@@ -12,7 +12,7 @@ import com.martdev.android.mygallery.R
 import com.martdev.android.mygallery.adapter.PhotoDataAdapter
 import com.martdev.android.mygallery.adapter.VideoDataAdapter
 
-@BindingAdapter("photoListData")
+/*@BindingAdapter("photoListData")
 fun bindPhotoView(recyclerView: RecyclerView, data: List<Photo>?) {
     val adapter = recyclerView.adapter as PhotoDataAdapter
     data?.let { adapter.submitList(it) }
@@ -33,4 +33,4 @@ fun bindImage(imageView: ImageView, imageUrl: String) {
             .placeholder(R.drawable.loading_animation)
             .error(R.drawable.no_image))
         .into(imageView)
-}
+}*/

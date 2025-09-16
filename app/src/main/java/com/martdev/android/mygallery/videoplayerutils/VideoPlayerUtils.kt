@@ -2,16 +2,6 @@ package com.martdev.android.mygallery.videoplayerutils
 
 import android.content.Context
 import android.net.Uri
-import com.google.android.exoplayer2.DefaultLoadControl
-import com.google.android.exoplayer2.DefaultRenderersFactory
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 
 data class PlayerState(
     var window: Int = 0,
@@ -20,6 +10,7 @@ data class PlayerState(
     var source: String
 )
 
+/*
 class PlayerHolder(
     private val context: Context,
     private val playerView: PlayerView,
@@ -75,4 +66,4 @@ class PlayerHolder(
         ExtractorMediaSource.Factory(
             DefaultDataSourceFactory(context, "videoapp")
         ).createMediaSource(uri)
-}
+}*/

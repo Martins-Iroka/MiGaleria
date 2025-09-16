@@ -3,13 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="photoSrc"
-            type="com.martdev.android.domain.photomodel.Photo" />
-    </data>
-
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
@@ -33,7 +26,6 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@string/photo"
-                app:imageUrl="@{photoSrc.src.original}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -46,7 +38,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginEnd="16dp"
-                android:text="@{@string/photographer(photoSrc.photographer)}"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@+id/download_photo"
                 app:layout_constraintStart_toStartOf="parent"

@@ -21,7 +21,7 @@ import java.lang.IndexOutOfBoundsException
 
 class MyGalleryPagerFragment : Fragment(){
 
-    private lateinit var binding: FragmentViewPagerBinding
+   /* private lateinit var binding: FragmentViewPagerBinding
     private val photoViewModel: PhotoViewModel by activityViewModels { getViewModelFactory() }
     private val videoViewModel: VideoViewModel by activityViewModels { getViewModelFactory() }
 
@@ -91,5 +91,5 @@ class MyGalleryPagerFragment : Fragment(){
         })
 
         return super.onCreateOptionsMenu(menu, inflater)
-    }
+    }*/
 }

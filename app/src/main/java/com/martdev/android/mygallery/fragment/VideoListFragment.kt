@@ -22,7 +22,7 @@ import io.ktor.client.engine.android.Android
 
 class VideoListFragment : Fragment() {
 
-    private lateinit var binding: VideoRecyclerViewBinding
+   /* private lateinit var binding: VideoRecyclerViewBinding
     private val viewModel: VideoViewModel by activityViewModels { getViewModelFactory() }
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -119,5 +119,5 @@ class VideoListFragment : Fragment() {
             val keyword = viewModel.searchKeyword.value
             keyword?.let { viewModel.getData(it) }?: viewModel.getData("nature")
         }
-    }
+    }*/
 }

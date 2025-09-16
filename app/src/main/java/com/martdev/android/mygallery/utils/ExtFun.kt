@@ -16,11 +16,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.dev.adnetworkm.CheckNetworkStatus
 import com.google.android.material.snackbar.Snackbar
-import com.martdev.android.mygallery.BuildConfig
 import com.martdev.android.mygallery.MyGalleryApp
 import java.io.File
 
-val PERMISSIONS = listOf(
+/*val PERMISSIONS = listOf(
     Manifest.permission.READ_EXTERNAL_STORAGE,
     Manifest.permission.WRITE_EXTERNAL_STORAGE
 )
@@ -82,9 +81,9 @@ fun FragmentActivity.checkNetworkState(): Boolean {
     return isNetworkConnected
 }
 
-/**
+*//**
  * Triggers a snackbar message when the value contained by snackbarTaskMessageLiveEvent is modified.
- */
+ *//*
 fun View.setupSnackbar(
     lifecycleOwner: LifecycleOwner,
     snackbarEvent: LiveData<Event<Any>>,
@@ -101,12 +100,12 @@ fun View.setupSnackbar(
     })
 }
 
-/**
+*//**
  * Transforms static java function Snackbar.make() to an extension function on View.
- */
+ *//*
 private fun View.showSnackbar(
     snackbarText: String,
     timeLength: Int
 ) {
     Snackbar.make(this, snackbarText, timeLength).show()
-}
+}*/

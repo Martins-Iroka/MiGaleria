@@ -20,7 +20,7 @@ import java.io.OutputStream
 
 class VideoViewModel(private val videoUseCase: UseCase<Video>) : BaseViewModel<Video>() {
 
-    private var bytes: ByteArray? = null
+    /*private var bytes: ByteArray? = null
 
     override val searchKeyword: MutableLiveData<String> = MutableLiveData()
 
@@ -111,5 +111,5 @@ class VideoViewModel(private val videoUseCase: UseCase<Video>) : BaseViewModel<V
                 _fileUri.postValue(Event(uri))
             }
         }
-    }
+    }*/
 }
