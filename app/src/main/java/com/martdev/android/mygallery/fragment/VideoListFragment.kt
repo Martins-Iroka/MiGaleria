@@ -11,7 +11,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
-import com.martdev.android.mygallery.MyGalleryPagerFragmentDirections
 import com.martdev.android.mygallery.R
 import com.martdev.android.mygallery.adapter.OnClickListener
 import com.martdev.android.mygallery.adapter.VideoDataAdapter
@@ -23,7 +22,7 @@ import io.ktor.client.engine.android.Android
 
 class VideoListFragment : Fragment() {
 
-    private lateinit var binding: VideoRecyclerViewBinding
+   /* private lateinit var binding: VideoRecyclerViewBinding
     private val viewModel: VideoViewModel by activityViewModels { getViewModelFactory() }
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -120,5 +119,5 @@ class VideoListFragment : Fragment() {
             val keyword = viewModel.searchKeyword.value
             keyword?.let { viewModel.getData(it) }?: viewModel.getData("nature")
         }
-    }
+    }*/
 }

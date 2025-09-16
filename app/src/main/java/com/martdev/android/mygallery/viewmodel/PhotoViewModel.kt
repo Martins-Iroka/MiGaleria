@@ -18,7 +18,7 @@ import java.io.OutputStream
 
 class PhotoViewModel(private val photoUseCase: UseCase<Photo>) : BaseViewModel<Photo>() {
 
-    override val searchKeyword: MutableLiveData<String> = MutableLiveData()
+    /*override val searchKeyword: MutableLiveData<String> = MutableLiveData()
 
     override val data: MutableLiveData<List<Photo>> = MutableLiveData()
 
@@ -107,5 +107,5 @@ class PhotoViewModel(private val photoUseCase: UseCase<Photo>) : BaseViewModel<P
                 _fileUri.postValue(Event(uri))
             }
         }
-    }
+    }*/
 }

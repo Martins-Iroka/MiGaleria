@@ -9,7 +9,7 @@ import timber.log.Timber
 
 class MyGalleryApp : Application() {
 
-    val photoUseCase: UseCase<Photo>
+    /*val photoUseCase: UseCase<Photo>
         get() = Injector.providePhotoDataUseCase()
     val videoUseCase: UseCase<Video>
         get() = Injector.provideVideoDataUseCase()
@@ -18,5 +18,5 @@ class MyGalleryApp : Application() {
         super.onCreate()
         Injector.provideDatabaseContext(this)
         Timber.plant(Timber.DebugTree())
-    }
+    }*/
 }

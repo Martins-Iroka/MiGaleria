@@ -7,13 +7,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import com.martdev.android.mygallery.videoplayerutils.PlayerHolder
 import com.martdev.android.mygallery.videoplayerutils.PlayerState
 import com.martdev.android.mygallery.R
 import com.martdev.android.mygallery.databinding.FragmentPlayerViewBinding
 
 class VideoPlayerFragment : Fragment() {
-
+/*
     private val args: VideoPlayerFragmentArgs by navArgs()
     private lateinit var playerHolder: PlayerHolder
 
@@ -49,5 +48,5 @@ class VideoPlayerFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         playerHolder.release()
-    }
+    }*/
 }

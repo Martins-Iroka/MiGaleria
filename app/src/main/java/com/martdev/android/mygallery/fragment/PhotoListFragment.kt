@@ -20,7 +20,7 @@ import io.ktor.client.engine.android.Android
 
 class PhotoListFragment : Fragment() {
 
-    private lateinit var binding: PhotoRecyclerViewBinding
+  /*  private lateinit var binding: PhotoRecyclerViewBinding
     private val viewModel: PhotoViewModel by activityViewModels { getViewModelFactory() }
 
     private lateinit var adapter: PhotoDataAdapter
@@ -114,5 +114,5 @@ class PhotoListFragment : Fragment() {
             val keyword = viewModel.searchKeyword.value
             keyword?.let { viewModel.getData(it) } ?: viewModel.getData()
         }
-    }
+    }*/
 }

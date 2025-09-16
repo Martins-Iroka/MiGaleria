@@ -3,13 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="video"
-            type="com.martdev.android.domain.videomodel.Video" />
-    </data>
-
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
@@ -29,7 +22,6 @@
                 android:id="@+id/photo"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/image_height"
-                app:imageUrl="@{video.image}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -42,7 +34,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginEnd="16dp"
-                android:text="@{@string/videographer(video.user.name)}"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@+id/play_video"
                 app:layout_constraintStart_toStartOf="parent"

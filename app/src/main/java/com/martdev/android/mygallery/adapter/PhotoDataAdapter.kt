@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.martdev.android.domain.photomodel.Photo
-import kotlinx.android.synthetic.main.photo_list_item.view.*
 
 class PhotoDataAdapter(private val listener: (Photo) -> Unit) :
     ListAdapter<Photo, RecyclerView.ViewHolder>(DiffCallback) {
@@ -32,8 +31,7 @@ class PhotoDataAdapter(private val listener: (Photo) -> Unit) :
         if (payloads.firstOrNull() != null) {
             with(holder.itemView) {
                 (payloads.first() as Bundle).getInt("progress").also {
-                    progressBar.progress = it
-                    progress_text.text = "$it%"
+                    (holder as PhotoDataHolder).setProgressStatus(it)
                 }
             }
         }

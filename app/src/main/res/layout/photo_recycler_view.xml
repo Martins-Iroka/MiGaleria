@@ -3,18 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="photoVM"
-            type="com.martdev.android.mygallery.viewmodel.PhotoViewModel" />
-    </data>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        <!--<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -30,6 +23,6 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:photoListData="@{photoVM.data}"
                 tools:listitem="@layout/photo_list_item" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
     </FrameLayout>
 </layout>

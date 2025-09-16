@@ -12,8 +12,7 @@
         tools:layout="@layout/fragment_view_pager">
         <action
             android:id="@+id/action_myGalleryPagerFragment_to_videoPlayerFragment"
-            app:destination="@id/videoPlayerFragment"
-            app:enterAnim="@anim/fragment_open_enter" />
+            app:destination="@id/videoPlayerFragment" />
     </fragment>
     <fragment
         android:id="@+id/videoPlayerFragment"
