@@ -1,6 +1,9 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
 
+/*android {
+    namespace "com.martdev.android.domain"
+}*/
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

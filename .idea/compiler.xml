@@ -3,10 +3,10 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.8">
       <module name="domain" target="1.7" />
-      <module name="MyGallery.app" target="17" />
-      <module name="MyGallery.data" target="17" />
-      <module name="MyGallery.local" target="17" />
-      <module name="MyGallery.remote" target="17" />
+      <module name="MyGallery.app" target="21" />
+      <module name="MyGallery.data" target="21" />
+      <module name="MyGallery.local" target="21" />
+      <module name="MyGallery.remote" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>

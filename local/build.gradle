@@ -6,6 +6,7 @@ plugins {
 
 android {
     compileSdk 33
+    namespace "com.martdev.android.local"
 
     defaultConfig {
         minSdkVersion 21

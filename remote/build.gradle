@@ -5,7 +5,7 @@ plugins {
 
 android {
     compileSdk 33
-
+    namespace "com.martdev.android.remote"
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 33
