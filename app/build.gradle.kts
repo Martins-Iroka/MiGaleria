@@ -28,7 +28,7 @@ android {
     }
 
     packaging {
-        excludes.add("META-INF/*.kotlin_module")
+        resources.excludes.add("META-INF/*.kotlin_module")
     }
 
     compileOptions {
