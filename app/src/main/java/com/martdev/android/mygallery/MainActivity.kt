@@ -6,8 +6,6 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
-import com.martdev.android.mygallery.utils.PERMISSIONS
-import com.martdev.android.mygallery.utils.PERMISSION_REQUEST_CODE
 
 class MainActivity : AppCompatActivity() {
 
