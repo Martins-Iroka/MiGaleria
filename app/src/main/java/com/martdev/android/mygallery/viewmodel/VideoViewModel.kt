@@ -3,10 +3,6 @@ package com.martdev.android.mygallery.viewmodel
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.martdev.android.domain.usecase.UseCase
-import com.martdev.android.domain.Result
-import com.martdev.android.domain.videomodel.Video
 import com.martdev.android.mygallery.R
 import com.martdev.android.mygallery.downloaderutils.DownloadResult
 import com.martdev.android.mygallery.downloaderutils.downloadFile
@@ -18,9 +14,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.OutputStream
 
+/*
 class VideoViewModel(private val videoUseCase: UseCase<Video>) : BaseViewModel<Video>() {
 
-    /*private var bytes: ByteArray? = null
+    */
+/*private var bytes: ByteArray? = null
 
     override val searchKeyword: MutableLiveData<String> = MutableLiveData()
 
@@ -111,5 +109,6 @@ class VideoViewModel(private val videoUseCase: UseCase<Video>) : BaseViewModel<V
                 _fileUri.postValue(Event(uri))
             }
         }
-    }*/
-}
+    }*//*
+
+}*/
