@@ -23,3 +23,22 @@ dependencies {
     compileOnly(libs.kotlin.gradle.plugin)
     compileOnly(libs.ksp.gradle.plugin)
 }
+
+gradlePlugin {
+    plugins {
+        register("androidApplication") {
+            id = "com.martdev.android.application"
+            implementationClass = "AndroidApplicationConventionPlugin"
+        }
+
+        register("androidLibrary") {
+            id = "com.martdev.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
+        }
+
+        register("androidFeature") {
+            id = "com.martdev.android.feature"
+            implementationClass = "AndroidFeatureConventionPlugin"
+        }
+    }
+}

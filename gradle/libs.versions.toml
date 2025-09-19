@@ -8,7 +8,6 @@ kotlin_version = "2.0.0"
 ksp_version = "2.0.0-1.0.23"
 ktorVersion = "3.3.0"
 timber = "5.0.1"
-jetbrainsKotlinJvm = "2.0.0"
 
 [libraries]
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -31,4 +30,9 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_version" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin_version"}
-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_version" }
+
+# Plugins defined by this project
+com-martdev-android-application = { id = "com.martdev.android.application", version = "unspecified"}
+com-martdev-android-library = { id = "com.martdev.android.library", version = "unspecified"}
+com-martdev-android-feature = { id = "com.martdev.android.feature", version = "unspecified"}
