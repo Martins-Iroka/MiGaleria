@@ -2,9 +2,6 @@ package com.martdev.android.mygallery.viewmodel
 
 import android.net.Uri
 import androidx.lifecycle.*
-import com.martdev.android.domain.usecase.UseCase
-import com.martdev.android.domain.Result
-import com.martdev.android.domain.photomodel.Photo
 import com.martdev.android.mygallery.R
 import com.martdev.android.mygallery.downloaderutils.DownloadResult
 import com.martdev.android.mygallery.downloaderutils.downloadFile
@@ -16,9 +13,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.OutputStream
 
+/*
 class PhotoViewModel(private val photoUseCase: UseCase<Photo>) : BaseViewModel<Photo>() {
 
-    /*override val searchKeyword: MutableLiveData<String> = MutableLiveData()
+    */
+/*override val searchKeyword: MutableLiveData<String> = MutableLiveData()
 
     override val data: MutableLiveData<List<Photo>> = MutableLiveData()
 
@@ -107,5 +106,6 @@ class PhotoViewModel(private val photoUseCase: UseCase<Photo>) : BaseViewModel<P
                 _fileUri.postValue(Event(uri))
             }
         }
-    }*/
-}
+    }*//*
+
+}*/

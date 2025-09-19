@@ -14,8 +14,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.dev.adnetworkm.CheckNetworkStatus
-import com.google.android.material.snackbar.Snackbar
 import com.martdev.android.mygallery.MyGalleryApp
 import java.io.File
 
