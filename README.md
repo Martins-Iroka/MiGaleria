@@ -1,3 +1,7 @@
+<p align="center">
+   <a href="https://github.com/Martins-Iroka/MiGaleria/actions"><img alt="Build Status" src="https://github.com/Martins-Iroka/MiGaleria/workflows/Android%20CI/badge.svg"/></a>
+</p>
+
 # MiGaleria
 MiGaleria is a spanish word for My Gallery (according to Google of course). The application retrieves 
 curated and popular photos and videos from [Pexels](https://www.pexels.com/) to be displayed to a user.
