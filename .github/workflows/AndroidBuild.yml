@@ -2,9 +2,9 @@ name: MiGaleria Build
 
 on:
   pull_request:
-    branches: ["master", "develop"]
+    branches: ["master", "developer"]
   push:
-    branches: ["master", "develop"]
+    branches: ["master", "developer"]
 
 jobs:
   build:
