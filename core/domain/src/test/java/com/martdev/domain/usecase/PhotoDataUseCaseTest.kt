@@ -3,10 +3,10 @@ package com.martdev.domain.usecase
 import com.martdev.domain.Photo
 import com.martdev.domain.Repository
 import io.mockk.clearMocks
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
+import io.mockk.verify
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -53,24 +53,22 @@ class PhotoDataUseCaseTest {
 
         val result = photoUseCase.invoke("").first()
 
-        coVerify {
+        verify {
             repository.getData()
         }
 
         assert(result.isNotEmpty())
-        assertEquals(result.first(), r.first())
+        assertEquals(r.first(), result.first())
     }
 
     @Test
     fun getPhotoList_returnsEmptyList() = runTest {
 
-        val r = emptyList<Photo>()
-
-        every { repository.getData() } returns flowOf(r)
+        every { repository.getData() } returns flowOf(emptyList())
 
         val result = photoUseCase.invoke("").first()
 
-        coVerify {
+        verify {
             repository.getData()
         }
 
