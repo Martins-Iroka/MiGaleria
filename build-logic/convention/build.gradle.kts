@@ -31,14 +31,19 @@ gradlePlugin {
             implementationClass = "AndroidApplicationConventionPlugin"
         }
 
-        register("androidLibrary") {
-            id = "com.martdev.android.library"
-            implementationClass = "AndroidLibraryConventionPlugin"
+        register("androidComposeLibrary") {
+            id = "com.martdev.android.compose.library"
+            implementationClass = "AndroidComposeLibraryConventionPlugin"
         }
 
         register("androidFeature") {
             id = "com.martdev.android.feature"
             implementationClass = "AndroidFeatureConventionPlugin"
+        }
+
+        register("androidLibrary") {
+            id = "com.martdev.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
         }
     }
 }

@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.martdev.android.mygallery"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.martdev.android.mygallery"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
