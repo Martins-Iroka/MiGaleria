@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.martdev.android.mygallery.R
 import com.martdev.android.mygallery.downloaderutils.DownloadResult
-import com.martdev.android.mygallery.downloaderutils.downloadFile
-import com.martdev.android.mygallery.utils.Event
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect

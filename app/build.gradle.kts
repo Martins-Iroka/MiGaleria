@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.martdev.android.mygallery"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -35,10 +35,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 }
 
 dependencies {
@@ -55,4 +51,6 @@ dependencies {
     implementation("io.ktor:ktor-client-android:1.2.5")
 
     implementation("com.jakewharton.timber:timber:5.0.1")
+    implementation(projects.core.domain)
+    implementation(projects.core.remote)
 }

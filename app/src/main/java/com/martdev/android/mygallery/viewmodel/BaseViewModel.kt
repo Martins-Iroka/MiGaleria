@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.martdev.android.mygallery.utils.Event
 
 abstract class BaseViewModel<T> : ViewModel() {
 
