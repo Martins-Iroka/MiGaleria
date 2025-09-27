@@ -2,6 +2,7 @@
 import com.android.build.gradle.LibraryExtension
 import com.martdev.extension.androidTestImplementation
 import com.martdev.extension.com_android_library
+import com.martdev.extension.configureBuild
 import com.martdev.extension.implementation
 import com.martdev.extension.libs
 import com.martdev.extension.org_jetbrains_kotlin_android
@@ -41,9 +42,15 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                     targetCompatibility = JavaVersion.VERSION_17
                 }
 
+                configureBuild(this)
+                buildFeatures {
+                    buildConfig = true
+                }
+
                 dependencies {
                     androidTestImplementation(libs.findBundle("androidTestLibs").get())
                     androidTestImplementation(libs.findBundle("mockLibs").get())
+                    implementation(libs.findLibrary("androidx-core-ktx").get())
                     implementation(libs.findLibrary("coroutines-android").get())
                     implementation(libs.findLibrary("coroutines-test").get())
                     implementation(libs.findLibrary("timber").get())

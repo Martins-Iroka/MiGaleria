@@ -11,8 +11,10 @@ junitVersion = "4.13.2"
 kotlin_version = "2.2.20"
 ksp_version = "2.0.0-1.0.23"
 ktorVersion = "3.3.0"
+logbackVersion = "1.5.18"
 mockkVersion = "1.14.5"
 robolectricVersion = "4.16"
+slf4jAndroidVersion = "1.7.36"
 timber = "5.0.1"
 junit = "4.12"
 coreKtx = "1.17.0"
@@ -21,7 +23,10 @@ appcompat = "1.7.1"
 material = "1.13.0"
 
 [libraries]
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-arch-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "archCoreVersion"}
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidJunitVersion"}
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesAndroidVersion"}
@@ -29,10 +34,14 @@ coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-
 hamcrest = { group = "org.hamcrest", name = "hamcrest-all", version.ref = "hamcrestVersion"}
 junit = { group = "junit", name = "junit", version.ref = "junitVersion"}
 ktor-client = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktorVersion"}
-ktor-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktorVersion"}
-ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktorVersion"}
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktorVersion"}
+ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktorVersion"}
 ktor-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktorVersion"}
+#ktor-logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logbackVersion"}
+ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktorVersion"}
+ktor-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktorVersion"}
 ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktorVersion"}
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockkVersion"}
 mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockkVersion"}
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectricVersion"}
@@ -40,14 +49,12 @@ android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", ve
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools"}
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin_version"}
 ksp-gradle-plugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp_version"}
+slf4j-android = { group = "org.slf4j", name = "slf4j-android", version.ref = "slf4jAndroidVersion" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber"}
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [bundles]
 androidTestLibs = ["androidx-junit", "androidx-arch-testing", "coroutines-test"]
+ktorLibs = ["ktor-client", "ktor-client-cio", "ktor-client-mock", "ktor-content-negotiation", "ktor-logging", "ktor-okhttp", "ktor-serialization", "slf4j-android"]
 mockLibs = ["mockk-android", "mockk-agent"]
 testLibs = ["coroutines-test", "junit", "hamcrest", "robolectric"]
 
