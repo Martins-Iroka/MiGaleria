@@ -36,5 +36,5 @@ jobs:
         with:
           name: unit-test-reports
           path: |
-            domain/build/reports/tests/testDebugUnitTest
-            remote/build/reports/tests/testDebugUnitTest
+            core/domain/build/reports/tests/testDebugUnit
+            core/remote/build/reports/tests/testDebugUnit
