@@ -82,7 +82,7 @@ class VideoRemoteDataSourceTest {
     }
 
     @Test
-    fun loadAllPhotos_responseCode400_throwBadRequestException() = runTest {
+    fun loadAllVideos_responseCode400_throwBadRequestException() = runTest {
 
         val client = getMockClient(statusCode = HttpStatusCode.BadRequest)
         mockkConstructor(VideoRemoteDataSource::class)
@@ -100,7 +100,7 @@ class VideoRemoteDataSourceTest {
     }
 
     @Test
-    fun loadAllPhotos_responseCode401_throwUnauthorizedException() = runTest {
+    fun loadAllVideos_responseCode401_throwUnauthorizedException() = runTest {
 
         val client = getMockClient(statusCode = HttpStatusCode.Unauthorized)
         mockkConstructor(VideoRemoteDataSource::class)
@@ -118,7 +118,7 @@ class VideoRemoteDataSourceTest {
     }
 
     @Test
-    fun loadAllPhotos_responseCode404_throwNotFoundException() = runTest {
+    fun loadAllVideos_responseCode404_throwNotFoundException() = runTest {
 
         val client = getMockClient(statusCode = HttpStatusCode.NotFound)
         mockkConstructor(VideoRemoteDataSource::class)
