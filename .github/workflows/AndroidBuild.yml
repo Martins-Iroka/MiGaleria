@@ -36,6 +36,5 @@ jobs:
         with:
           name: unit-test-reports
           path: |
-            domain/build/reports/tests/testDebugUnitTest/index.html
-            remote/build/reports/tests/testDebugUnitTest/index.html
-            **/coverage-reports/**/*.html
+            domain/build/reports/tests/testDebugUnitTest
+            remote/build/reports/tests/testDebugUnitTest
