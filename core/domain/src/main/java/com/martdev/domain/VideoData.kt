@@ -17,15 +17,8 @@ data class Video(
     val url: String = "",
     val image: String = "",
     val duration: Int = 0,
-    val user: User = User(),
     val video_files: List<VideoFile> = emptyList(),
     val video_pictures: List<VideoPicture> = emptyList()
-)
-
-data class User(
-    val id: Int = 0,
-    val name: String = "",
-    val url: String = ""
 )
 
 data class VideoFile(

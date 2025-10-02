@@ -9,5 +9,4 @@ android {
 
 dependencies {
     implementation(libs.bundles.ktorLibs)
-    testImplementation(kotlin("test"))
 }

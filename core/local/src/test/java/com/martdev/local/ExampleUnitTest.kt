@@ -1,4 +1,4 @@
-package com.martdev.remote
+package com.martdev.local
 
 import org.junit.Test
 
