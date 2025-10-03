@@ -59,7 +59,7 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 [bundles]
 androidTestLibs = ["androidx-junit", "androidx-arch-testing", "coroutines-test", "androidx-espresso-core", "mockk-android"]
 ktorLibs = ["ktor-client", "ktor-client-cio", "ktor-client-mock", "ktor-content-negotiation", "ktor-logging", "ktor-okhttp", "ktor-serialization", "slf4j-android"]
-testLibs = ["coroutines-test", "junit", "hamcrest", "robolectric", "mockk-agent"]
+testLibs = ["coroutines-test", "junit", "hamcrest", "robolectric", "mockk-android", "mockk-agent"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
