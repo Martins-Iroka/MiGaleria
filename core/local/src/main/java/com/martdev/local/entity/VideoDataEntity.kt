@@ -3,6 +3,7 @@ package com.martdev.local.entity
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import java.util.UUID
@@ -34,7 +35,8 @@ data class VideoEntity(
         childColumns = ["videoId"],
         onDelete = ForeignKey.CASCADE,
         onUpdate = ForeignKey.CASCADE
-    )])
+    )],
+    indices = [Index(value = ["videoId"])])
 data class VideoFileEntity(
     @PrimaryKey val uuid: String = UUID.randomUUID().toString(),
     val videoId: Long,

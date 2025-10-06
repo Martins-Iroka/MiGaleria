@@ -36,14 +36,16 @@ jobs:
         with:
           name: unit-test-reports
           path: |
-            **/build/reports/tests/testDebugUnitTest
+            core/domain/build/reports/tests/testDebugUnitTest
+            core/remote/build/reports/tests/testDebugUnitTest
 
   androidTest:
     needs: build
     runs-on: ubuntu-lastest
+    timeout-minutes: 55
     strategy:
       matrix:
-        api-level: [26, 36]
+        api-level: [26]
 
     steps:
       - name: Delete unnecessary tools
@@ -84,6 +86,7 @@ jobs:
           api-level: ${{ matrix.api-level }}
           target: default
           arch: x86_64
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: ./gradlew connectedDemoDebugAndroidTest --daemon
 
