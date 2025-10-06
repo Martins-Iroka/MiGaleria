@@ -5,7 +5,7 @@ import com.martdev.local.entity.VideoFileEntity
 import com.martdev.local.entity.VideoImageUrlAndID
 import kotlinx.coroutines.flow.Flow
 
-interface VideoDataSource {
+interface VideoLocalDataSource {
 
     suspend fun deleteVideoEntity()
 

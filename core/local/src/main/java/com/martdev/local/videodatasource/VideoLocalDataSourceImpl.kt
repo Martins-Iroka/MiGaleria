@@ -7,9 +7,9 @@ import com.martdev.local.entity.VideoFileEntity
 import com.martdev.local.entity.VideoImageUrlAndID
 import kotlinx.coroutines.flow.Flow
 
-class VideoDataSourceImpl(
+class VideoLocalDataSourceImpl(
     private val videoEntityDao: VideoEntityDao
-) : VideoDataSource{
+) : VideoLocalDataSource {
     override suspend fun deleteVideoEntity() {
         doIOOperation { videoEntityDao.deleteVideoEntity() }
     }

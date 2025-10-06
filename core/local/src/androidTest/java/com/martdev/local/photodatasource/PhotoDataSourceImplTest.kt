@@ -26,7 +26,7 @@ class PhotoDataSourceImplTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var photoDataSource: PhotoDataSource
+    private lateinit var photoDataSource: PhotoLocalDataSource
     private lateinit var database: MyGalleryDB
 
     @Before

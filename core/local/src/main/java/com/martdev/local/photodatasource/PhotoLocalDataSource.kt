@@ -4,7 +4,7 @@ import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.entity.PhotoUrlAndID
 import kotlinx.coroutines.flow.Flow
 
-interface PhotoDataSource {
+interface PhotoLocalDataSource {
 
     suspend fun deletePhotoEntity(): Int
 

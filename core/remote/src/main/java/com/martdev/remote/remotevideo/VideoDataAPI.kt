@@ -38,7 +38,8 @@ data class VideoFileAPI(
     val file_type: String = "",
     val width: Int? = 0,
     val height: Int? = 0,
-    val link: String = ""
+    val link: String = "",
+    val size: Long = 0
 )
 
 @Serializable

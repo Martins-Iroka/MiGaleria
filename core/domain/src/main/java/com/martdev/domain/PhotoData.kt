@@ -1,7 +1,6 @@
 package com.martdev.domain
 
-data class
-PhotoData(
+data class PhotoData(
     val total_result: Int = 0,
     val page: Int = 0,
     val per_page: Int = 0,
@@ -30,4 +29,24 @@ data class PhotoSrc(
     val portrait: String = "",
     val landscape: String = "",
     val tiny: String = ""
+)
+
+data class PhotoDataClass(
+    val photoId: Long = 0,
+    val photographer: String = "",
+    val photographerUrl: String = "",
+    val original: String = "",
+    val large2x: String = "",
+    val large: String = "",
+    val medium: String = "",
+    val small: String = "",
+    val portrait: String = "",
+    val landscape: String = "",
+    val tiny: String = "",
+    val bookmarked: Boolean = false
+)
+
+data class PhotoUrlAndIdData(
+    val photoId: Long,
+    val original: String
 )

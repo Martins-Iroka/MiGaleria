@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 class PhotoDataSourceImpl(
     private val photoEntityDao: PhotoEntityDao
-) : PhotoDataSource {
+) : PhotoLocalDataSource {
     override suspend fun deletePhotoEntity(): Int {
         return doIOOperation { photoEntityDao.deletePhotoEntity() }
     }

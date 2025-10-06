@@ -35,3 +35,22 @@ data class VideoPicture(
     val picture: String = "",
     val nr: Int = 0
 )
+
+data class VideoDataInfo(
+    val id: Long,
+    val url: String,
+    val duration: Int,
+    val bookmarked: Boolean,
+    val videoFiles: List<VideoFileData>
+)
+
+data class VideoFileData(
+    val quality: String,
+    val link: String,
+    val size: Long
+)
+
+data class VideoImageUrlAndIdData(
+    val id: Long,
+    val image: String
+)

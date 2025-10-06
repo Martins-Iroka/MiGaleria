@@ -24,7 +24,7 @@ class VideoDataSourceImplTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var videoDataSource: VideoDataSource
+    private lateinit var videoDataSource: VideoLocalDataSource
 
     private lateinit var database: MyGalleryDB
 
@@ -35,7 +35,7 @@ class VideoDataSourceImplTest {
             MyGalleryDB::class.java
         ).build()
 
-        videoDataSource = VideoDataSourceImpl(database.videoDataDao())
+        videoDataSource = VideoLocalDataSourceImpl(database.videoDataDao())
     }
 
     @After
