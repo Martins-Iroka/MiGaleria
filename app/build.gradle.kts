@@ -53,4 +53,5 @@ dependencies {
     implementation("com.jakewharton.timber:timber:5.0.1")
     implementation(projects.core.domain)
     implementation(projects.core.remote)
+    implementation(projects.core.local)
 }

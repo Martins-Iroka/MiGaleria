@@ -12,6 +12,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.kotlin
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -49,13 +50,12 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
 
                 dependencies {
                     androidTestImplementation(libs.findBundle("androidTestLibs").get())
-                    androidTestImplementation(libs.findBundle("mockLibs").get())
                     implementation(libs.findLibrary("androidx-core-ktx").get())
-                    implementation(libs.findLibrary("coroutines-android").get())
+                    implementation(libs.findLibrary("coroutines-core").get())
                     implementation(libs.findLibrary("coroutines-test").get())
                     implementation(libs.findLibrary("timber").get())
-                    testImplementation(libs.findBundle("mockLibs").get())
                     testImplementation(libs.findBundle("testLibs").get())
+                    testImplementation(kotlin("test"))
                 }
             }
         }
