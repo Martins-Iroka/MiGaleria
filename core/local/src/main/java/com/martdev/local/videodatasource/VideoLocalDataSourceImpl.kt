@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.Flow
 class VideoLocalDataSourceImpl(
     private val videoEntityDao: VideoEntityDao
 ) : VideoLocalDataSource {
-    override suspend fun deleteVideoEntity() {
-        doIOOperation { videoEntityDao.deleteVideoEntity() }
+    override suspend fun deleteVideoEntity(): Int {
+        return doIOOperation { videoEntityDao.deleteVideoEntity() }
     }
 
     override fun getVideoEntityByID(id: Long): Flow<Map<VideoEntity, List<VideoFileEntity>>> {

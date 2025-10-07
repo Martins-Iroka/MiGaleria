@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface VideoLocalDataSource {
 
-    suspend fun deleteVideoEntity()
+    suspend fun deleteVideoEntity(): Int
 
     fun getVideoEntityByID(id: Long): Flow<Map<VideoEntity, List<VideoFileEntity>>>
 

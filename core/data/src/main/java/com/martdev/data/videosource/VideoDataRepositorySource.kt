@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface VideoDataRepositorySource {
 
-    fun getVideoEntityById(id: Long): Flow<VideoDataInfo>
+    fun getVideoDataById(id: Long): Flow<VideoDataInfo>
 
     fun getVideoImageUrlAndId(): Flow<List<VideoImageUrlAndIdData>>
 

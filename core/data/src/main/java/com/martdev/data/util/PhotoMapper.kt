@@ -1,7 +1,9 @@
 package com.martdev.data.util
 
 import com.martdev.domain.PhotoDataClass
+import com.martdev.domain.PhotoUrlAndIdData
 import com.martdev.local.entity.PhotoEntity
+import com.martdev.local.entity.PhotoUrlAndID
 import com.martdev.remote.remotephoto.PhotoDataAPI
 
 fun PhotoEntity.toPhotoData() = PhotoDataClass(
@@ -33,4 +35,8 @@ fun PhotoDataAPI.toPhotoEntity() = this.photos.map {
         it.src.landscape,
         it.src.tiny
     )
+}
+
+fun List<PhotoUrlAndID>.toPhotoUrlAndIdData() = map { (photoId, original) ->
+    PhotoUrlAndIdData(photoId, original)
 }

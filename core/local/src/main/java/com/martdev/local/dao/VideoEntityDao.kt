@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 interface VideoEntityDao {
 
     @Query("DELETE FROM video_data")
-    suspend fun deleteVideoEntity()
+    suspend fun deleteVideoEntity(): Int
 
     @Query("SELECT * FROM video_data JOIN video_file ON videoId = id WHERE id = :id ")
     fun getVideoEntityByID(id: Long): Flow<Map<VideoEntity, List<VideoFileEntity>>>
