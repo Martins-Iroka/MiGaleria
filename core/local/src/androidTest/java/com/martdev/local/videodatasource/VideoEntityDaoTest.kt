@@ -47,11 +47,9 @@ class VideoEntityDaoTest {
 
         Assert.assertTrue(videoImageUrlAndID.isNotEmpty())
 
-        database.videoDataDao().deleteVideoEntity()
+        val deletedRows = database.videoDataDao().deleteVideoEntity()
 
-        val videoImageUrlAndID2 = database.videoDataDao().getVideoImageURLAndID().first()
-
-        Assert.assertTrue(videoImageUrlAndID2.isEmpty())
+        Assert.assertTrue(deletedRows == 2)
     }
 
     @Test

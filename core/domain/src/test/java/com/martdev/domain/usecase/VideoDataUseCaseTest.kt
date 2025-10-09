@@ -1,17 +1,22 @@
 package com.martdev.domain.usecase
 
-import com.martdev.domain.Repository
-import com.martdev.domain.Video
+import com.martdev.domain.VideoData
+import com.martdev.domain.VideoFileData
+import com.martdev.domain.VideoImageUrlAndIdData
+import com.martdev.domain.videodata.VideoDataSource
+import com.martdev.domain.videodata.VideoDataUseCase
 import io.mockk.clearMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
+import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -24,101 +29,114 @@ class VideoDataUseCaseTest {
     val mockK = MockKRule(this)
 
     @MockK
-    private lateinit var repository: Repository<Video>
+    private lateinit var videoDataSource: VideoDataSource
 
-    private lateinit var videoUseCase: VideoDataUseCase
+    private lateinit var videoUC: VideoDataUseCase
 
     @Before
     fun setUp() {
-        clearMocks(repository)
-        videoUseCase = VideoDataUseCase(repository)
+        clearMocks(videoDataSource)
+        videoUC = VideoDataUseCase(videoDataSource)
     }
 
     @Test
-    fun getVideoList_returnsListOfVideos() = runTest {
+    fun getVideoDataById_returnVideoData_verifyCall() = runTest {
 
-        val r = listOf(
-            Video(
-                id = 1
-            ),
-            Video(
-                id = 2
-            ),
-            Video(
-                id = 3
-            ),
-            Video(
-                id = 4
+
+        val videoData = VideoData(
+            id = 1,
+            videoFiles = listOf(
+                VideoFileData(),
+                VideoFileData()
             )
         )
 
-        every { repository.getData() } returns flowOf(r)
+        val id = slot<Long>()
 
-        val result = videoUseCase.invoke("").first()
-
-        verify {
-            repository.getData()
+        every { videoDataSource.getVideoDataById(capture(id)) } answers {
+            assertEquals(1, id.captured)
+            flowOf(videoData)
         }
 
-        assert(result.isNotEmpty())
-        assertEquals(r.first(), result.first())
+        val result = videoUC.getVideoDataById(1).first()
+
+        verify {
+            videoDataSource.getVideoDataById(1)
+        }
+
+        assertEquals(1, result.id)
+        assertTrue(result.videoFiles.isNotEmpty())
+        assertEquals(2, result.videoFiles.size)
     }
 
     @Test
-    fun searchVideo_returnVideoListForSearch() = runTest {
-        val r = listOf(
-            Video(
-                id = 1,
-                url = "batman"
-            ),
-            Video(
-                id = 2,
-                url = "superman"
-            ),
-            Video(
-                id = 3,
-                url = "batman"
-            ),
-            Video(
-                id = 4,
-                url = "superman"
-            )
+    fun getVideoImageUrlAndId_returnList_verifyCallAndList() = runTest {
+
+        val l = listOf(
+            VideoImageUrlAndIdData(1, "image1"),
+            VideoImageUrlAndIdData(2, "image2"),
         )
 
-        every { repository.getData(any()) } returns flowOf(r.filter { it.url == "batman" })
+        every { videoDataSource.getVideoImageUrlAndId() } returns flowOf(l)
 
-        val result = videoUseCase.invoke("batman").first()
+        val result = videoUC.getVideoImageUrlAndId().first()
 
         verify {
-            repository.getData(any())
+            videoDataSource.getVideoImageUrlAndId()
         }
 
-        assert(result.isNotEmpty())
+        assertTrue(result.isNotEmpty())
         assertEquals(2, result.size)
-        assertEquals("batman", result.find { it.id == 3L }?.url)
+        assertEquals(1, result.component1().id)
+        assertEquals(2, result.component2().id)
     }
 
     @Test
-    fun getVideoList_returnsEmptyList() = runTest {
+    fun refreshVideos_assertQueryParameterIsEmpty_verifyCall() = runTest {
 
-        every { repository.getData() } returns flowOf(emptyList())
+        val query = slot<String>()
 
-        val result = videoUseCase.invoke("").first()
-
-        verify {
-            repository.getData()
+        coEvery { videoDataSource.refreshOrSearchVideos(capture(query)) } answers {
+            assertTrue(query.captured.isEmpty())
         }
 
-        assertTrue(result.isEmpty())
+        videoUC.refreshOrSearchVideos("")
+
+        coVerify { videoDataSource.refreshOrSearchVideos("") }
     }
 
     @Test
-    fun getVideoList_throwException() = runTest {
+    fun refreshVideos_assertQueryParameterIsNotEmpty_equalsBatman_verifyCall() = runTest {
 
-        every { repository.getData() } throws Exception("Error")
+        val query = slot<String>()
 
-        assertThrows(Exception::class.java) {
-            videoUseCase.invoke("")
+        coEvery { videoDataSource.refreshOrSearchVideos(capture(query)) } answers {
+            assertTrue(query.captured.isNotEmpty())
+            assertEquals("batman", query.captured)
         }
+
+        videoUC.refreshOrSearchVideos("batman")
+
+        coVerify { videoDataSource.refreshOrSearchVideos("batman") }
+    }
+
+    @Test
+    fun updateBookmarkStatus_verifyCall_assertRowUpdatedValue() = runTest {
+
+        val id = slot<Long>()
+        val isBookmarked = slot<Boolean>()
+        coEvery { videoDataSource.updateBookmarkStatus(capture(id), capture(isBookmarked)) } answers {
+            assertEquals(2, id.captured)
+            assertTrue(isBookmarked.captured)
+            1
+        }
+
+        val row = videoUC.updateBookmarkStatus(2, true)
+
+        coVerify {
+            videoDataSource.updateBookmarkStatus(2, true)
+        }
+
+        assertEquals(1, row)
     }
 }
