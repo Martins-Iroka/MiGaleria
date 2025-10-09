@@ -4,8 +4,9 @@ import com.martdev.data.util.toVideoDataInfo
 import com.martdev.data.util.toVideoEntity
 import com.martdev.data.util.toVideoFileEntity
 import com.martdev.data.util.toVideoImageUrlAndIdData
-import com.martdev.domain.VideoDataInfo
+import com.martdev.domain.VideoData
 import com.martdev.domain.VideoImageUrlAndIdData
+import com.martdev.domain.videodata.VideoDataSource
 import com.martdev.local.videodatasource.VideoLocalDataSource
 import com.martdev.remote.RemoteDataSource
 import com.martdev.remote.remotevideo.VideoDataAPI
@@ -16,9 +17,9 @@ import kotlinx.coroutines.flow.map
 class VideoDataRepositoryImpl(
     private val localDataSource: VideoLocalDataSource,
     private val remoteDataSource: RemoteDataSource<VideoDataAPI>
-) : VideoDataRepositorySource {
+) : VideoDataSource {
 
-    override fun getVideoDataById(id: Long): Flow<VideoDataInfo> {
+    override fun getVideoDataById(id: Long): Flow<VideoData> {
         return localDataSource.getVideoEntityByID(id).map {
             it.toVideoDataInfo()
         }

@@ -1,12 +1,12 @@
-package com.martdev.data.videosource
+package com.martdev.domain.videodata
 
-import com.martdev.domain.VideoDataInfo
+import com.martdev.domain.VideoData
 import com.martdev.domain.VideoImageUrlAndIdData
 import kotlinx.coroutines.flow.Flow
 
-interface VideoDataRepositorySource {
+interface VideoDataSource {
 
-    fun getVideoDataById(id: Long): Flow<VideoDataInfo>
+    fun getVideoDataById(id: Long): Flow<VideoData>
 
     fun getVideoImageUrlAndId(): Flow<List<VideoImageUrlAndIdData>>
 

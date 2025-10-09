@@ -1,11 +1,11 @@
 package com.martdev.data.photosource
 
-import com.martdev.data.PhotoDataRepositorySource
 import com.martdev.data.util.toPhotoData
 import com.martdev.data.util.toPhotoEntity
 import com.martdev.data.util.toPhotoUrlAndIdData
-import com.martdev.domain.PhotoDataClass
-import com.martdev.domain.PhotoUrlAndIdData
+import com.martdev.domain.photodata.PhotoData
+import com.martdev.domain.photodata.PhotoDataSource
+import com.martdev.domain.photodata.PhotoUrlAndIdData
 import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.entity.PhotoUrlAndID
 import com.martdev.local.photodatasource.PhotoLocalDataSource
@@ -28,6 +28,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @Suppress("UnusedFlow")
@@ -42,7 +43,7 @@ class PhotoDataRepositoryImplTest {
     @MockK
     private lateinit var remoteSource: RemoteDataSource<PhotoDataAPI>
 
-    private lateinit var photoDataRepository: PhotoDataRepositorySource
+    private lateinit var photoDataRepository: PhotoDataSource
 
     @Before
     fun setUp() {
@@ -68,14 +69,19 @@ class PhotoDataRepositoryImplTest {
             ""
         )
 
-        val photoDataClass = PhotoDataClass(1)
+        val photoData = PhotoData(1)
         mockkStatic(PhotoEntity::toPhotoData)
 
-        every { photoEntity1.toPhotoData() } returns PhotoDataClass(1)
+        val id = slot<Long>()
 
-        every { localSource.getPhotoEntityById(any()) } returns flowOf(
-            photoEntity1
-        )
+        every { photoEntity1.toPhotoData() } returns PhotoData(1)
+
+        every { localSource.getPhotoEntityById(capture(id)) } answers {
+            assertEquals(1, id.captured)
+            flowOf(
+                photoEntity1
+            )
+        }
 
         val r = photoDataRepository.getPhotoDataById(1).first()
 
@@ -84,7 +90,7 @@ class PhotoDataRepositoryImplTest {
             photoEntity1.toPhotoData()
         }
 
-        Assert.assertEquals(photoDataClass, r)
+        Assert.assertEquals(photoData, r)
     }
 
     @Test
@@ -226,6 +232,7 @@ class PhotoDataRepositoryImplTest {
 
         coEvery { remoteSource.search(capture(q)) } answers {
             assertTrue(q.captured.isNotEmpty())
+            assertEquals("batman", q.captured)
             flowOf(photoDataAPI)
         }
 

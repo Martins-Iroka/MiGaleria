@@ -6,9 +6,10 @@ import com.martdev.data.util.toVideoDataInfo
 import com.martdev.data.util.toVideoEntity
 import com.martdev.data.util.toVideoFileEntity
 import com.martdev.data.util.toVideoImageUrlAndIdData
-import com.martdev.domain.VideoDataInfo
+import com.martdev.domain.VideoData
 import com.martdev.domain.VideoFileData
 import com.martdev.domain.VideoImageUrlAndIdData
+import com.martdev.domain.videodata.VideoDataSource
 import com.martdev.local.entity.VideoEntity
 import com.martdev.local.entity.VideoFileEntity
 import com.martdev.local.entity.VideoImageUrlAndID
@@ -24,6 +25,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import io.mockk.mockkStatic
+import io.mockk.slot
 import io.mockk.verifyOrder
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -32,6 +34,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class VideoDataRepositoryImplTest {
 
@@ -44,7 +47,7 @@ class VideoDataRepositoryImplTest {
     @MockK
     private lateinit var remoteSource: RemoteDataSource<VideoDataAPI>
 
-    private lateinit var videoDataRepository: VideoDataRepositorySource
+    private lateinit var videoDataRepository: VideoDataSource
 
     @Before
     fun setUp() {
@@ -65,7 +68,7 @@ class VideoDataRepositoryImplTest {
             )
         )
 
-        val videoDataInfo = VideoDataInfo(
+        val videoData = VideoData(
             1, "", 5, false, videoFiles.map { VideoFileData(it.quality, it.link, it.size) }
         )
         val map = mapOf(
@@ -74,9 +77,14 @@ class VideoDataRepositoryImplTest {
 
         mockkStatic(Map<VideoEntity, List<VideoFileEntity>>::toVideoDataInfo)
 
-        every { map.toVideoDataInfo() } returns videoDataInfo
+        val id = slot<Long>()
 
-        every { localSource.getVideoEntityByID(any()) } returns flowOf(map)
+        every { map.toVideoDataInfo() } returns videoData
+
+        every { localSource.getVideoEntityByID(capture(id)) } answers {
+            assertEquals(1, id.captured)
+            flowOf(map)
+        }
 
         val videoDataInfoResult = videoDataRepository.getVideoDataById(1).first()
 
@@ -85,7 +93,7 @@ class VideoDataRepositoryImplTest {
             map.toVideoDataInfo()
         }
 
-        Assert.assertEquals(videoDataInfo, videoDataInfoResult)
+        Assert.assertEquals(videoData, videoDataInfoResult)
     }
 
     @Test

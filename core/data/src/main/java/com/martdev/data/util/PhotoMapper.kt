@@ -1,12 +1,12 @@
 package com.martdev.data.util
 
-import com.martdev.domain.PhotoDataClass
-import com.martdev.domain.PhotoUrlAndIdData
+import com.martdev.domain.photodata.PhotoData
+import com.martdev.domain.photodata.PhotoUrlAndIdData
 import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.entity.PhotoUrlAndID
 import com.martdev.remote.remotephoto.PhotoDataAPI
 
-fun PhotoEntity.toPhotoData() = PhotoDataClass(
+fun PhotoEntity.toPhotoData() = PhotoData(
     photoId,
     photographer,
     photographerUrl,

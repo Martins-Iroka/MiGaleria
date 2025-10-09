@@ -1,12 +1,10 @@
-package com.martdev.data
+package com.martdev.domain.photodata
 
-import com.martdev.domain.PhotoDataClass
-import com.martdev.domain.PhotoUrlAndIdData
 import kotlinx.coroutines.flow.Flow
 
-interface PhotoDataRepositorySource {
+interface PhotoDataSource {
 
-    fun getPhotoDataById(id: Long): Flow<PhotoDataClass>
+    fun getPhotoDataById(id: Long): Flow<PhotoData>
 
     fun loadPhotos(): Flow<List<PhotoUrlAndIdData>>
 
