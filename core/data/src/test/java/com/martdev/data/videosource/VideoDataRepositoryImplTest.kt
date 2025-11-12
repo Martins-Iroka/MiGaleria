@@ -6,9 +6,9 @@ import com.martdev.data.util.toVideoDataInfo
 import com.martdev.data.util.toVideoEntity
 import com.martdev.data.util.toVideoFileEntity
 import com.martdev.data.util.toVideoImageUrlAndIdData
-import com.martdev.domain.VideoData
-import com.martdev.domain.VideoFileData
-import com.martdev.domain.VideoImageUrlAndIdData
+import com.martdev.domain.videodata.VideoData
+import com.martdev.domain.videodata.VideoFileData
+import com.martdev.domain.videodata.VideoImageUrlAndIdData
 import com.martdev.domain.videodata.VideoDataSource
 import com.martdev.local.entity.VideoEntity
 import com.martdev.local.entity.VideoFileEntity

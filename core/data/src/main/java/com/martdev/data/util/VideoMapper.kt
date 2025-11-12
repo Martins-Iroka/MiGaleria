@@ -1,8 +1,8 @@
 package com.martdev.data.util
 
-import com.martdev.domain.VideoData
-import com.martdev.domain.VideoFileData
-import com.martdev.domain.VideoImageUrlAndIdData
+import com.martdev.domain.videodata.VideoData
+import com.martdev.domain.videodata.VideoFileData
+import com.martdev.domain.videodata.VideoImageUrlAndIdData
 import com.martdev.local.entity.VideoEntity
 import com.martdev.local.entity.VideoFileEntity
 import com.martdev.local.entity.VideoImageUrlAndID
