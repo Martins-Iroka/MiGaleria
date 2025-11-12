@@ -1,7 +1,5 @@
 package com.martdev.domain.videodata
 
-import com.martdev.domain.VideoData
-import com.martdev.domain.VideoImageUrlAndIdData
 import kotlinx.coroutines.flow.Flow
 
 interface VideoDataSource {

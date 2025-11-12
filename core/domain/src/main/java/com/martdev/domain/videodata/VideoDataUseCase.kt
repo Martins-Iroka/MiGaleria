@@ -1,6 +1,5 @@
 package com.martdev.domain.videodata
 
-import com.martdev.domain.VideoData
 import kotlinx.coroutines.flow.Flow
 
 class VideoDataUseCase(

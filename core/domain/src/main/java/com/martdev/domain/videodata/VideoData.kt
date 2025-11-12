@@ -1,4 +1,4 @@
-package com.martdev.domain
+package com.martdev.domain.videodata
 
 data class VideoData(
     val id: Long = 0,
