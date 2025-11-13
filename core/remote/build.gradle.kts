@@ -9,4 +9,6 @@ android {
 
 dependencies {
     implementation(libs.bundles.ktorLibs)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(projects.core.common)
 }

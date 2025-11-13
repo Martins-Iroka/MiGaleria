@@ -14,8 +14,13 @@ fun Project.configureBuild(
 
     common.run {
         buildTypes {
+            fun getSecret(key: String): String {
+                // Prioritize environment variable, then fall back to local.properties
+                return System.getenv(key.uppercase()) ?: localProperties.getProperty(key) ?: ""
+            }
             getByName("debug") {
-                buildConfigField("String", "PEXELS_API_KEY", "\"${localProperties.getProperty("authorizationKey")}\"")
+                buildConfigField("String", "BASE_URL", "\"${getSecret("base_url")}\"")
+                buildConfigField("String", "KEY_ALIAS", "\"${getSecret("key_alias")}\"")
             }
             getByName("release") {
                 isMinifyEnabled = false
@@ -23,7 +28,11 @@ fun Project.configureBuild(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro"
                 )
-                buildConfigField("String", "PEXELS_API_KEY", "\"${localProperties.getProperty("authorizationKey")}\"")
+                val baseUrl = getSecret("base_url")
+                val keyAlias = getSecret("key_alias")
+
+                buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+                buildConfigField("String", "KEY_ALIAS", "\"$keyAlias\"")
             }
         }
     }

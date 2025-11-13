@@ -1,9 +1,16 @@
 package com.martdev.remote
 
+import com.martdev.remote.datastore.AuthToken
+import com.martdev.remote.datastore.TokenRefreshRequest
+import com.martdev.remote.datastore.TokenRefreshResponse
+import com.martdev.remote.datastore.TokenStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpResponseValidator
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BearerTokens
+import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
@@ -11,12 +18,20 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
-import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
 
-class Client(engine: HttpClientEngine) {
+class Client(
+    engine: HttpClientEngine,
+    private val tokenStorage: TokenStorage
+) {
 
     val httpClient = HttpClient(engine) {
         install(ContentNegotiation) {
@@ -36,6 +51,50 @@ class Client(engine: HttpClientEngine) {
             level = LogLevel.ALL
         }
 
+        install(Auth) {
+            bearer {
+                loadTokens {
+                    val tokens = tokenStorage.getTokens().firstOrNull()
+                    if (tokens != null && tokens.accessToken.isNotBlank()) {
+                        tokens
+                    } else {
+                        null
+                    }
+                }
+
+                refreshTokens {
+                    val oldToken = tokenStorage.getTokens().first()
+                    val refreshToken = oldToken.refreshToken ?: return@refreshTokens null
+
+                    try {
+                        val response: TokenRefreshResponse = client.post("/authentication/refresh") {
+                            markAsRefreshTokenRequest()
+                            contentType(ContentType.Application.Json)
+                            setBody(TokenRefreshRequest(refreshToken))
+                        }.body()
+
+                        val newTokens = AuthToken(response.accessToken, refreshToken)
+                        tokenStorage.saveTokens(newTokens)
+
+                        BearerTokens(newTokens.accessToken, newTokens.refreshToken)
+                    } catch (e: Exception) {
+
+                        println("Token refresh failed: ${e.message}. Forcing logout")
+                        tokenStorage.clearTokens()
+
+                        null
+                    }
+                }
+
+                sendWithoutRequest { request ->
+                    request.url.pathSegments.contains("register") ||
+                            request.url.pathSegments.contains("verify") ||
+                            request.url.pathSegments.contains("login") ||
+                            request.url.pathSegments.contains("logout")
+                }
+            }
+        }
+
         HttpResponseValidator {
             validateResponse {
                 when(it.status.value) {
@@ -50,8 +109,7 @@ class Client(engine: HttpClientEngine) {
         defaultRequest {
             url {
                 protocol = URLProtocol.HTTPS
-                host = "api.pexels.com"
-                header("Authorization", BuildConfig.PEXELS_API_KEY)
+                host = BuildConfig.BASE_URL.plus("v1")
             }
         }
     }
