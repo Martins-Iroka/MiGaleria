@@ -13,6 +13,7 @@
 .cxx
 *.apk
 *.class
+.jks
 
 bin/
 gen/
