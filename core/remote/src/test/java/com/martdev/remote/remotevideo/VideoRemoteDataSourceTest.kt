@@ -6,9 +6,7 @@ import com.martdev.remote.NotFoundException
 import com.martdev.remote.UnauthorizedException
 import com.martdev.remote.datastore.TokenStorage
 import com.martdev.remote.util.FakeTokenStorage
-import com.martdev.remote.util.emptyVideoJson
 import com.martdev.remote.util.readJsonFile
-import com.martdev.remote.util.videoJsonBody
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpHeaders
@@ -32,13 +30,13 @@ import kotlin.test.assertTrue
 class VideoRemoteDataSourceTest {
 
     private lateinit var client: TokenStorage
-
+    private val emptyVideoJson = "empty_videos.json"
     @Before
     fun setup() {
         client = FakeTokenStorage()
     }
 
-    private fun getMockClient(statusCode: HttpStatusCode = HttpStatusCode.OK, json: String = videoJsonBody) =
+    private fun getMockClient(statusCode: HttpStatusCode = HttpStatusCode.OK, json: String = "videos.json") =
         Client(
             MockEngine {
                 respond(
@@ -51,30 +49,14 @@ class VideoRemoteDataSourceTest {
         )
 
     @Test
-    fun searchBatmanVideo_responseOK_returnList() = runTest {
-        val client = getMockClient()
-        mockkConstructor(VideoRemoteDataSource::class)
-
-        every { constructedWith<VideoRemoteDataSource>(EqMatcher(client)).search(any()) } answers { callOriginal() }
-        val searchResult = VideoRemoteDataSource(client).search("batman").first()
-        assertTrue(searchResult.videos.isNotEmpty())
-        assertEquals(
-            2, searchResult.per_page
-        )
-        verify {
-            constructedWith<VideoRemoteDataSource>(EqMatcher(client)).search("batman")
-        }
-    }
-
-    @Test
     fun loadAllVideos_responseOk_returnList() = runTest {
         val client = getMockClient()
         mockkConstructor(VideoRemoteDataSource::class)
 
         every { constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
         val result = VideoRemoteDataSource(client).load().first()
-        assertTrue(result.videos.isNotEmpty())
-        assertEquals(3716105, result.videos.first().user.id)
+        assertTrue(result.data.isNotEmpty())
+        assertEquals(7677511, result.data.first().id)
 
         verify {
             constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load()
@@ -89,8 +71,7 @@ class VideoRemoteDataSourceTest {
         every { constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
 
         val result = VideoRemoteDataSource(client).load().first()
-        assertTrue(result.videos.isEmpty())
-        Assert.assertEquals(0, result.total_results)
+        assertTrue(result.data.isEmpty())
     }
 
     @Test

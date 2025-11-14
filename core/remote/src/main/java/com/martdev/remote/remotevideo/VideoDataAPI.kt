@@ -1,5 +1,6 @@
 package com.martdev.remote.remotevideo
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -47,4 +48,27 @@ data class VideoPictureAPI(
     val id: Int = 0,
     val picture: String = "",
     val nr: Int = 0
+)
+
+@Serializable
+data class VideoPostResponsePayload(
+    val data: List<VideoPostResponse>
+)
+
+@Serializable
+data class VideoPostResponse(
+    val id: Long,
+    @SerialName("video_url")
+    val videoUrl: String,
+    val duration: Int,
+    @SerialName("video_files")
+    val videoFiles: List<VideoFilesResponse>
+)
+
+@Serializable
+data class VideoFilesResponse(
+    @SerialName("video_link")
+    val videoLink: String,
+    @SerialName("video_size")
+    val videoSize: Int
 )
