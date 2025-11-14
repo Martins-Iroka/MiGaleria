@@ -18,7 +18,7 @@ class TokenStorageImpl(
 
     override suspend fun saveTokens(token: AuthToken) {
         dataStore.updateData {
-            token
+            it.copy(token.accessToken, token.refreshToken)
         }
     }
 

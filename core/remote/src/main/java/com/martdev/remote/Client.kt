@@ -87,10 +87,10 @@ class Client(
                 }
 
                 sendWithoutRequest { request ->
-                    request.url.pathSegments.contains("register") ||
-                            request.url.pathSegments.contains("verify") ||
-                            request.url.pathSegments.contains("login") ||
-                            request.url.pathSegments.contains("logout")
+                    request.url.pathSegments.contains("register").not() ||
+                            request.url.pathSegments.contains("verify").not() ||
+                            request.url.pathSegments.contains("login").not() ||
+                            request.url.pathSegments.contains("logout").not()
                 }
             }
         }
