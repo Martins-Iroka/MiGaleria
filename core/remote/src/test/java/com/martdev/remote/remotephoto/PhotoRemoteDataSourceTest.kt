@@ -4,8 +4,9 @@ import com.martdev.remote.BadRequestException
 import com.martdev.remote.Client
 import com.martdev.remote.NotFoundException
 import com.martdev.remote.UnauthorizedException
-import com.martdev.remote.util.emptyPhotosJson
-import com.martdev.remote.util.photoJsonBody
+import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.util.FakeTokenStorage
+import com.martdev.remote.util.readJsonFile
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpHeaders
@@ -19,48 +20,30 @@ import io.mockk.verify
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 @Suppress("UnusedFlow")
 class PhotoRemoteDataSourceTest {
 
-    private fun getMockEngine(statusCode: HttpStatusCode = HttpStatusCode.OK, json: String = photoJsonBody) = MockEngine {
-        respond(
-            content = ByteReadChannel(text = json),
-            status = statusCode,
-            headers = headersOf(HttpHeaders.ContentType, "application/json")
-        )
-    }
-
-
-    @Test
-    fun searchBatman_responseOK_returnList() = runTest {
-        val mockEngine = getMockEngine()
-        val client = Client(mockEngine)
-        mockkConstructor(PhotoRemoteDataSource::class)
-
-        every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).search(any()) } answers { callOriginal() }
-        val searchedResult = PhotoRemoteDataSource(client).search("batman").first()
-        assertTrue(searchedResult.photos.isNotEmpty())
-        assertEquals("Ronê Ferreira", searchedResult.photos.first().photographer)
-
-        verify {
-            constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).search("batman")
-        }
+    private lateinit var client: TokenStorage
+    private val emptyPhotosJson = "empty_photos.json"
+    @Before
+    fun setup() {
+        client = FakeTokenStorage()
     }
 
     @Test
     fun loadAllPhotos_responseOK_returnList() = runTest {
-        val mockEngine = getMockEngine()
-        val client = Client(mockEngine)
+        val client = getMockClient()
         mockkConstructor(PhotoRemoteDataSource::class)
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
         val result = PhotoRemoteDataSource(client).load().first()
-        assertTrue(result.photos.isNotEmpty())
-        assertEquals("Ronê Ferreira", result.photos.first().photographer)
+        assertTrue(result.data.isNotEmpty())
+        assertEquals(34611213, result.data.first().id)
 
         verify {
             constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load()
@@ -69,14 +52,12 @@ class PhotoRemoteDataSourceTest {
 
     @Test
     fun loadAllPhotos_responseOK_returnEmptyList() = runTest {
-        val mockEngine = getMockEngine(json = emptyPhotosJson)
-        val client = Client(mockEngine)
+        val client = getMockClient(json = emptyPhotosJson)
         mockkConstructor(PhotoRemoteDataSource::class)
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
         val result = PhotoRemoteDataSource(client).load().first()
-        assertTrue(result.photos.isEmpty())
-        assertEquals(0, result.total_result)
+        assertTrue(result.data.isEmpty())
 
         verify {
             constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load()
@@ -86,8 +67,7 @@ class PhotoRemoteDataSourceTest {
     @Test
     fun loadAllPhotos_responseCode400_throwBadRequestException() = runTest {
 
-        val mockEngine = getMockEngine(statusCode = HttpStatusCode.BadRequest)
-        val client = Client(mockEngine)
+        val client = getMockClient(statusCode = HttpStatusCode.BadRequest)
         mockkConstructor(PhotoRemoteDataSource::class)
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
@@ -105,8 +85,7 @@ class PhotoRemoteDataSourceTest {
     @Test
     fun loadAllPhotos_responseCode401_throwUnauthorizedException() = runTest {
 
-        val mockEngine = getMockEngine(statusCode = HttpStatusCode.Unauthorized)
-        val client = Client(mockEngine)
+        val client = getMockClient(statusCode = HttpStatusCode.Unauthorized)
         mockkConstructor(PhotoRemoteDataSource::class)
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
@@ -124,8 +103,7 @@ class PhotoRemoteDataSourceTest {
     @Test
     fun loadAllPhotos_responseCode404_throwNotFoundException() = runTest {
 
-        val mockEngine = getMockEngine(statusCode = HttpStatusCode.NotFound)
-        val client = Client(mockEngine)
+        val client = getMockClient(statusCode = HttpStatusCode.NotFound)
         mockkConstructor(PhotoRemoteDataSource::class)
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
@@ -139,4 +117,15 @@ class PhotoRemoteDataSourceTest {
             constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load()
         }
     }
+
+    private fun getMockClient(statusCode: HttpStatusCode = HttpStatusCode.OK, json: String = "photos.json") = Client(
+        MockEngine {
+            respond(
+                content = ByteReadChannel(content = readJsonFile(json)),
+                status = statusCode,
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
+        },
+        client
+    )
 }

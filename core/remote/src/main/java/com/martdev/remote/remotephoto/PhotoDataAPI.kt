@@ -26,6 +26,8 @@ data class PhotoAPI(
 
 @Serializable
 data class PhotoSrcAPI(
+    val id: Long = 0,
+    val photographer: String = "",
     val original: String = "",
     val large2x: String = "",
     val large: String = "",
@@ -34,4 +36,9 @@ data class PhotoSrcAPI(
     val portrait: String = "",
     val landscape: String = "",
     val tiny: String = ""
+)
+
+@Serializable
+data class PhotoPostResponsePayload(
+    val data: List<PhotoAPI>
 )

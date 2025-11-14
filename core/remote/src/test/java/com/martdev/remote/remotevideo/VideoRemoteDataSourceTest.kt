@@ -4,7 +4,10 @@ import com.martdev.remote.BadRequestException
 import com.martdev.remote.Client
 import com.martdev.remote.NotFoundException
 import com.martdev.remote.UnauthorizedException
+import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.util.FakeTokenStorage
 import com.martdev.remote.util.emptyVideoJson
+import com.martdev.remote.util.readJsonFile
 import com.martdev.remote.util.videoJsonBody
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -20,6 +23,7 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
@@ -27,15 +31,23 @@ import kotlin.test.assertTrue
 @Suppress("UnusedFlow")
 class VideoRemoteDataSourceTest {
 
+    private lateinit var client: TokenStorage
+
+    @Before
+    fun setup() {
+        client = FakeTokenStorage()
+    }
+
     private fun getMockClient(statusCode: HttpStatusCode = HttpStatusCode.OK, json: String = videoJsonBody) =
         Client(
             MockEngine {
                 respond(
-                    content = ByteReadChannel(text = json),
+                    content = ByteReadChannel(content = readJsonFile(json)),
                     status = statusCode,
                     headers = headersOf(HttpHeaders.ContentType, "application/json")
                 )
-            }
+            },
+                    client
         )
 
     @Test

@@ -18,13 +18,13 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
+import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
 
@@ -56,18 +56,18 @@ class Client(
                 loadTokens {
                     val tokens = tokenStorage.getTokens().firstOrNull()
                     if (tokens != null && tokens.accessToken.isNotBlank()) {
-                        tokens
+                        BearerTokens(tokens.accessToken, tokens.refreshToken)
                     } else {
                         null
                     }
                 }
 
                 refreshTokens {
-                    val oldToken = tokenStorage.getTokens().first()
-                    val refreshToken = oldToken.refreshToken ?: return@refreshTokens null
+                    val oldToken = tokenStorage.getTokens().firstOrNull()
+                    val refreshToken = oldToken?.refreshToken ?: return@refreshTokens null
 
                     try {
-                        val response: TokenRefreshResponse = client.post("/authentication/refresh") {
+                        val response: TokenRefreshResponse = client.post("/v1/authentication/refresh") {
                             markAsRefreshTokenRequest()
                             contentType(ContentType.Application.Json)
                             setBody(TokenRefreshRequest(refreshToken))
@@ -109,7 +109,11 @@ class Client(
         defaultRequest {
             url {
                 protocol = URLProtocol.HTTPS
-                host = BuildConfig.BASE_URL.plus("v1")
+                host = BuildConfig.BASE_URL
+            }
+            contentType(ContentType.Application.Json)
+            headers {
+                this
             }
         }
     }
