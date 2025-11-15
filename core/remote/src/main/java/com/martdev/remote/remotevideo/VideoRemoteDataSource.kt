@@ -6,8 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 
-const val SEARCH_VIDEO = "videos/search"
-const val POPULAR_VIDEO = "videos/popular"
+const val POPULAR_VIDEO = "/videos"
 
 class VideoRemoteDataSource(
     private val client: Client

@@ -7,7 +7,6 @@ import com.martdev.remote.datastore.TokenStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
@@ -22,8 +21,10 @@ import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
@@ -95,21 +96,10 @@ class Client(
             }
         }
 
-        HttpResponseValidator {
-            validateResponse {
-                when(it.status.value) {
-                    400 -> throw BadRequestException()
-                    401 -> throw UnauthorizedException()
-                    404 -> throw NotFoundException()
-                    in 500..507 -> throw Exception(it.status.description)
-                }
-            }
-        }
-
         defaultRequest {
             url {
                 protocol = URLProtocol.HTTPS
-                host = BuildConfig.BASE_URL
+                host = BuildConfig.BASE_URL.plus("/v1")
             }
             contentType(ContentType.Application.Json)
             headers {
@@ -118,14 +108,46 @@ class Client(
         }
     }
 
-    suspend inline fun <reified T> performGetRequest(
+    suspend inline fun <reified ResponseType> performGetRequest(
         urlString: String,
         crossinline block: HttpRequestBuilder.() -> Unit = {}
-    ): T {
+    ): ResponseType {
         return httpClient.get(urlString, block).body()
+    }
+
+    suspend inline fun <reified BodyType, reified ResponseType> postData(
+        urlString: String,
+        body: BodyType,
+        crossinline block: HttpRequestBuilder.() -> Unit = {}
+    ): NetworkResult<ResponseType> {
+        return try {
+            val response = httpClient.post(urlString) {
+                block()
+                setBody(body)
+            }
+
+            if (response.status.isSuccess()) {
+                NetworkResult.Success(response.body())
+            } else {
+                when(response.status) {
+                    HttpStatusCode.BadRequest -> NetworkResult.Failure.BadRequest()
+                    HttpStatusCode.Unauthorized -> NetworkResult.Failure.Unauthorized()
+                    HttpStatusCode.NotFound -> NetworkResult.Failure.NotFound()
+                    else -> NetworkResult.Failure.Other(Exception(response.status.toString()))
+                }
+            }
+        } catch (e: Exception) {
+            NetworkResult.Failure.Other(e)
+        }
     }
 }
 
-class BadRequestException(val error: String = "Bad Request") : Exception(error)
-class UnauthorizedException(val error: String = "Unauthorized") : Exception(error)
-class NotFoundException(val error: String = "Not Found") : Exception(error)
+sealed interface NetworkResult<out T> {
+    data class Success<T>(val data: T) : NetworkResult<T>
+    sealed class Failure(val error: String) : NetworkResult<Nothing> {
+        data class BadRequest(val message: String = "Bad Request") : Failure(message)
+        data class Unauthorized(val message: String = "Unauthorized") : Failure(message)
+        data class NotFound(val message: String = "Not Found") : Failure(message)
+        data class Other(val cause: Throwable) : Failure(cause.message.orEmpty().ifEmpty { "An error occurred" })
+    }
+}

@@ -5,7 +5,7 @@ import com.martdev.remote.RemoteDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-internal const val CURATED_PHOTO = "v1/photos"
+internal const val CURATED_PHOTO = "/photos"
 
 class PhotoRemoteDataSource(
     private val client: Client
