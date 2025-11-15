@@ -9,7 +9,6 @@ data class VideoData(
 )
 
 data class VideoFileData(
-    val quality: String = "",
     val link: String = "",
     val size: Long = 0
 )

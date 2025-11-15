@@ -7,17 +7,17 @@ import com.martdev.data.util.toVideoEntity
 import com.martdev.data.util.toVideoFileEntity
 import com.martdev.data.util.toVideoImageUrlAndIdData
 import com.martdev.domain.videodata.VideoData
+import com.martdev.domain.videodata.VideoDataSource
 import com.martdev.domain.videodata.VideoFileData
 import com.martdev.domain.videodata.VideoImageUrlAndIdData
-import com.martdev.domain.videodata.VideoDataSource
 import com.martdev.local.entity.VideoEntity
 import com.martdev.local.entity.VideoFileEntity
 import com.martdev.local.entity.VideoImageUrlAndID
 import com.martdev.local.videodatasource.VideoLocalDataSource
 import com.martdev.remote.RemoteDataSource
-import com.martdev.remote.remotevideo.VideoAPI
-import com.martdev.remote.remotevideo.VideoDataAPI
-import com.martdev.remote.remotevideo.VideoFileAPI
+import com.martdev.remote.remotevideo.VideoFilesResponse
+import com.martdev.remote.remotevideo.VideoPostResponse
+import com.martdev.remote.remotevideo.VideoPostResponsePayload
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
@@ -45,7 +45,7 @@ class VideoDataRepositoryImplTest {
     private lateinit var localSource: VideoLocalDataSource
 
     @MockK
-    private lateinit var remoteSource: RemoteDataSource<VideoDataAPI>
+    private lateinit var remoteSource: RemoteDataSource<VideoPostResponsePayload>
 
     private lateinit var videoDataRepository: VideoDataSource
 
@@ -64,12 +64,12 @@ class VideoDataRepositoryImplTest {
         )
         val videoFiles = listOf(
             VideoFileEntity(
-                videoId = 1, quality = "", size = 5, link = ""
+                videoId = 1, videoSize = 5, videoLink = ""
             )
         )
 
         val videoData = VideoData(
-            1, "", 5, false, videoFiles.map { VideoFileData(it.quality, it.link, it.size) }
+            1, "", 5, false, videoFiles.map { VideoFileData(it.videoLink, it.videoSize) }
         )
         val map = mapOf(
             Pair(videoEntity, videoFiles)
@@ -133,21 +133,21 @@ class VideoDataRepositoryImplTest {
     }
 
     @Test
-    fun testRefreshOrSearchVideos_passEmptyQuerySearch_verifyRemoteLoadIsCalled() = runTest {
-        val videoDataAPI = VideoDataAPI(
-            videos = listOf(
-                VideoAPI(
+    fun testRefreshVideos_verifyRemoteLoadIsCalled() = runTest {
+        val videoDataAPI = VideoPostResponsePayload(
+            data = listOf(
+                VideoPostResponse(
                     id = 1,
-                    video_files = listOf(
-                        VideoFileAPI(),
-                        VideoFileAPI()
+                    videoFiles = listOf(
+                        VideoFilesResponse(),
+                        VideoFilesResponse()
                     )
                 ),
-                VideoAPI(
+                VideoPostResponse(
                     id = 2,
-                    video_files = listOf(
-                        VideoFileAPI(),
-                        VideoFileAPI()
+                    videoFiles = listOf(
+                        VideoFilesResponse(),
+                        VideoFilesResponse()
                     )
                 )
             )
@@ -159,94 +159,34 @@ class VideoDataRepositoryImplTest {
         )
 
         val videoFiles = listOf(
-            VideoFileEntity(videoId = 1, quality = "", link = "", size = 123),
-            VideoFileEntity(videoId = 1, quality = "", link = "", size = 456),
-            VideoFileEntity(videoId = 2, quality = "", link = "", size = 234),
-            VideoFileEntity(videoId = 2, quality = "", link = "", size = 567)
+            VideoFileEntity(videoId = 1, videoLink = "", videoSize = 123),
+            VideoFileEntity(videoId = 1, videoLink = "", videoSize = 456),
+            VideoFileEntity(videoId = 2, videoLink = "", videoSize = 234),
+            VideoFileEntity(videoId = 2, videoLink = "", videoSize = 567)
         )
 
-        mockkStatic(List<VideoAPI>::toVideoEntity)
-        mockkStatic(List<VideoAPI>::toVideoFileEntity)
+        mockkStatic(List<VideoPostResponse>::toVideoEntity)
+        mockkStatic(List<VideoPostResponse>::toVideoFileEntity)
 
         coEvery { localSource.deleteVideoEntity() } returns 1
 
         every { remoteSource.load() } returns flowOf(videoDataAPI)
 
-        every { videoDataAPI.videos.toVideoEntity() } returns videoEntities
+        every { videoDataAPI.data.toVideoEntity() } returns videoEntities
 
-        every { videoDataAPI.videos.toVideoFileEntity() } returns videoFiles
+        every { videoDataAPI.data.toVideoFileEntity() } returns videoFiles
 
         coEvery { localSource.saveVideoEntity(any()) } returns listOf(2)
 
         coEvery { localSource.saveVideoFiles(any()) } returns listOf(4)
 
-        videoDataRepository.refreshOrSearchVideos("")
+        videoDataRepository.refreshVideos()
 
         coVerifyOrder {
             localSource.deleteVideoEntity()
             remoteSource.load()
-            videoDataAPI.videos.toVideoEntity()
-            videoDataAPI.videos.toVideoFileEntity()
-            localSource.saveVideoEntity(any())
-            localSource.saveVideoFiles(any())
-        }
-    }
-
-    @Test
-    fun testRefreshOrSearchVideos_passBatmanQuerySearch_verifyRemoteSearchIsCalled() = runTest {
-        val videoDataAPI = VideoDataAPI(
-            videos = listOf(
-                VideoAPI(
-                    id = 1,
-                    video_files = listOf(
-                        VideoFileAPI(),
-                        VideoFileAPI()
-                    )
-                ),
-                VideoAPI(
-                    id = 2,
-                    video_files = listOf(
-                        VideoFileAPI(),
-                        VideoFileAPI()
-                    )
-                )
-            )
-        )
-
-        val videoEntities = listOf(
-            VideoEntity(1, "", "", 5),
-            VideoEntity(2, "", "", 5)
-        )
-
-        val videoFiles = listOf(
-            VideoFileEntity(videoId = 1, quality = "", link = "", size = 123),
-            VideoFileEntity(videoId = 1, quality = "", link = "", size = 456),
-            VideoFileEntity(videoId = 2, quality = "", link = "", size = 234),
-            VideoFileEntity(videoId = 2, quality = "", link = "", size = 567)
-        )
-
-        mockkStatic(List<VideoAPI>::toVideoEntity)
-        mockkStatic(List<VideoAPI>::toVideoFileEntity)
-
-        coEvery { localSource.deleteVideoEntity() } returns 1
-
-        every { remoteSource.search(any()) } returns flowOf(videoDataAPI)
-
-        every { videoDataAPI.videos.toVideoEntity() } returns videoEntities
-
-        every { videoDataAPI.videos.toVideoFileEntity() } returns videoFiles
-
-        coEvery { localSource.saveVideoEntity(any()) } returns listOf(2)
-
-        coEvery { localSource.saveVideoFiles(any()) } returns listOf(4)
-
-        videoDataRepository.refreshOrSearchVideos("batman")
-
-        coVerifyOrder {
-            localSource.deleteVideoEntity()
-            remoteSource.search(any())
-            videoDataAPI.videos.toVideoEntity()
-            videoDataAPI.videos.toVideoFileEntity()
+            videoDataAPI.data.toVideoEntity()
+            videoDataAPI.data.toVideoFileEntity()
             localSource.saveVideoEntity(any())
             localSource.saveVideoFiles(any())
         }

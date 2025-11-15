@@ -96,13 +96,13 @@ class VideoDataUseCaseTest {
 
         val query = slot<String>()
 
-        coEvery { videoDataSource.refreshOrSearchVideos(capture(query)) } answers {
+        coEvery { videoDataSource.refreshVideos(capture(query)) } answers {
             assertTrue(query.captured.isEmpty())
         }
 
         videoUC.refreshOrSearchVideos("")
 
-        coVerify { videoDataSource.refreshOrSearchVideos("") }
+        coVerify { videoDataSource.refreshVideos("") }
     }
 
     @Test
@@ -110,14 +110,14 @@ class VideoDataUseCaseTest {
 
         val query = slot<String>()
 
-        coEvery { videoDataSource.refreshOrSearchVideos(capture(query)) } answers {
+        coEvery { videoDataSource.refreshVideos(capture(query)) } answers {
             assertTrue(query.captured.isNotEmpty())
             assertEquals("batman", query.captured)
         }
 
         videoUC.refreshOrSearchVideos("batman")
 
-        coVerify { videoDataSource.refreshOrSearchVideos("batman") }
+        coVerify { videoDataSource.refreshVideos("batman") }
     }
 
     @Test

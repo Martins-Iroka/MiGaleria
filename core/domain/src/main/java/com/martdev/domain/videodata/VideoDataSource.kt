@@ -8,7 +8,7 @@ interface VideoDataSource {
 
     fun getVideoImageUrlAndId(): Flow<List<VideoImageUrlAndIdData>>
 
-    suspend fun refreshOrSearchVideos(query: String)
+    suspend fun refreshVideos()
 
     suspend fun updateBookmarkStatus(videoId: Long, isBookmarked: Boolean): Int
 }
