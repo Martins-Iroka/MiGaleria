@@ -80,7 +80,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Set up prerequisites
-        run: sudo apt-get update && sudo apt-get install -y libx11-6 libgl1-mesa-glx libpulse0
+        run: sudo apt-get update && sudo apt-get install -y libx11-6 libgl1 libpulse0
 
       - name: Clean emulator state
         run: rm -rf ~/.android/emu-update-last-check.ini ~/.android/*snapshot*
