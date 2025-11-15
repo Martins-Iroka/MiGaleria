@@ -10,7 +10,7 @@ class VideoDataUseCase(
 
     fun getVideoImageUrlAndId() = videoDataSource.getVideoImageUrlAndId()
 
-    suspend fun refreshOrSearchVideos() = videoDataSource.refreshVideos()
+    suspend fun refreshVideos() = videoDataSource.refreshVideos()
 
     suspend fun updateBookmarkStatus(videoId: Long, isBookmarked: Boolean) =
         videoDataSource.updateBookmarkStatus(videoId, isBookmarked)

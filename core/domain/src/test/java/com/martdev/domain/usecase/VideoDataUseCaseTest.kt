@@ -1,16 +1,18 @@
 package com.martdev.domain.usecase
 
 import com.martdev.domain.videodata.VideoData
-import com.martdev.domain.videodata.VideoFileData
-import com.martdev.domain.videodata.VideoImageUrlAndIdData
 import com.martdev.domain.videodata.VideoDataSource
 import com.martdev.domain.videodata.VideoDataUseCase
+import com.martdev.domain.videodata.VideoFileData
+import com.martdev.domain.videodata.VideoImageUrlAndIdData
+import io.mockk.Runs
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
+import io.mockk.just
 import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.flow.first
@@ -92,32 +94,13 @@ class VideoDataUseCaseTest {
     }
 
     @Test
-    fun refreshVideos_assertQueryParameterIsEmpty_verifyCall() = runTest {
+    fun refreshVideos_verifyCall() = runTest {
 
-        val query = slot<String>()
+        coEvery { videoDataSource.refreshVideos() } just Runs
 
-        coEvery { videoDataSource.refreshVideos(capture(query)) } answers {
-            assertTrue(query.captured.isEmpty())
-        }
+        videoUC.refreshVideos()
 
-        videoUC.refreshOrSearchVideos("")
-
-        coVerify { videoDataSource.refreshVideos("") }
-    }
-
-    @Test
-    fun refreshVideos_assertQueryParameterIsNotEmpty_equalsBatman_verifyCall() = runTest {
-
-        val query = slot<String>()
-
-        coEvery { videoDataSource.refreshVideos(capture(query)) } answers {
-            assertTrue(query.captured.isNotEmpty())
-            assertEquals("batman", query.captured)
-        }
-
-        videoUC.refreshOrSearchVideos("batman")
-
-        coVerify { videoDataSource.refreshVideos("batman") }
+        coVerify { videoDataSource.refreshVideos() }
     }
 
     @Test
