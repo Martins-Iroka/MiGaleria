@@ -4,18 +4,18 @@ import com.martdev.data.util.toPhotoData
 import com.martdev.data.util.toPhotoEntity
 import com.martdev.data.util.toPhotoUrlAndIdData
 import com.martdev.domain.photodata.PhotoData
-import com.martdev.domain.photodata.PhotoUrlAndIdData
 import com.martdev.domain.photodata.PhotoDataSource
+import com.martdev.domain.photodata.PhotoUrlAndIdData
 import com.martdev.local.photodatasource.PhotoLocalDataSource
 import com.martdev.remote.RemoteDataSource
-import com.martdev.remote.remotephoto.PhotoDataAPI
+import com.martdev.remote.remotephoto.PhotoPostResponsePayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 class PhotoDataRepositoryImpl(
     private val localPhotoSource: PhotoLocalDataSource,
-    private val remoteSource: RemoteDataSource<PhotoDataAPI>
+    private val remoteSource: RemoteDataSource<PhotoPostResponsePayload>
 ) : PhotoDataSource {
     override fun getPhotoDataById(id: Long): Flow<PhotoData> {
         return localPhotoSource.getPhotoEntityById(id).map { it.toPhotoData() }
@@ -27,9 +27,9 @@ class PhotoDataRepositoryImpl(
         }
     }
 
-    override suspend fun refreshOrSearchPhotos(query: String) {
+    override suspend fun refreshPhotos() {
         localPhotoSource.deletePhotoEntity()
-        val remotePhotos = if (query.isEmpty()) remoteSource.load().firstOrNull() else remoteSource.search(query).firstOrNull()
+        val remotePhotos = remoteSource.load().firstOrNull()
         remotePhotos?.let { localPhotoSource.savePhotoEntity(it.toPhotoEntity()) }
     }
 

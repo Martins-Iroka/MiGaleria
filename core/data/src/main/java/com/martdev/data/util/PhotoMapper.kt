@@ -4,12 +4,11 @@ import com.martdev.domain.photodata.PhotoData
 import com.martdev.domain.photodata.PhotoUrlAndIdData
 import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.entity.PhotoUrlAndID
-import com.martdev.remote.remotephoto.PhotoDataAPI
+import com.martdev.remote.remotephoto.PhotoPostResponsePayload
 
 fun PhotoEntity.toPhotoData() = PhotoData(
     photoId,
     photographer,
-    photographerUrl,
     original,
     large2x,
     large,
@@ -21,19 +20,18 @@ fun PhotoEntity.toPhotoData() = PhotoData(
     bookmarked
 )
 
-fun PhotoDataAPI.toPhotoEntity() = this.photos.map {
+fun PhotoPostResponsePayload.toPhotoEntity() = data.map {
     PhotoEntity(
         it.id,
         it.photographer,
-        it.photographer_url,
-        it.src.original,
-        it.src.large2x,
-        it.src.large,
-        it.src.medium,
-        it.src.small,
-        it.src.portrait,
-        it.src.landscape,
-        it.src.tiny
+        it.original,
+        it.large2x,
+        it.large,
+        it.medium,
+        it.small,
+        it.portrait,
+        it.landscape,
+        it.tiny
     )
 }
 

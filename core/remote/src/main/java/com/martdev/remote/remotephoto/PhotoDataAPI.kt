@@ -40,5 +40,5 @@ data class PhotoSrcAPI(
 
 @Serializable
 data class PhotoPostResponsePayload(
-    val data: List<PhotoAPI>
+    val data: List<PhotoSrcAPI>
 )

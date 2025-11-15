@@ -103,14 +103,14 @@ class PhotoDataUseCaseTest {
 
         val query = slot<String>()
 
-        coEvery { photoDataSource.refreshOrSearchPhotos(capture(query)) } answers {
+        coEvery { photoDataSource.refreshPhotos(capture(query)) } answers {
             assertTrue(query.captured.isEmpty())
         }
 
         photoDataUseCase.refreshOrSearchPhotos("")
 
         coVerify {
-            photoDataSource.refreshOrSearchPhotos("")
+            photoDataSource.refreshPhotos("")
         }
     }
 
@@ -119,7 +119,7 @@ class PhotoDataUseCaseTest {
 
         val query = slot<String>()
 
-        coEvery { photoDataSource.refreshOrSearchPhotos(capture(query)) } answers {
+        coEvery { photoDataSource.refreshPhotos(capture(query)) } answers {
             assertTrue(query.captured.isNotEmpty())
             assertEquals("batman", query.captured)
         }
@@ -127,7 +127,7 @@ class PhotoDataUseCaseTest {
         photoDataUseCase.refreshOrSearchPhotos("batman")
 
         coVerify {
-            photoDataSource.refreshOrSearchPhotos("batman")
+            photoDataSource.refreshPhotos("batman")
         }
     }
 
