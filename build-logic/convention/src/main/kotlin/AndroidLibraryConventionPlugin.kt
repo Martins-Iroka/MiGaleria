@@ -7,7 +7,6 @@ import com.martdev.extension.implementation
 import com.martdev.extension.libs
 import com.martdev.extension.org_jetbrains_kotlin_android
 import com.martdev.extension.testImplementation
-import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -34,13 +33,6 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                     targetSdk = 36
                     minSdk = 26
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-                }
-
-                compileOptions {
-                    // Up to Java 11 APIs are available through desugaring
-                    // https://developer.android.com/studio/write/java11-minimal-support-table
-                    sourceCompatibility = JavaVersion.VERSION_17
-                    targetCompatibility = JavaVersion.VERSION_17
                 }
 
                 configureBuild(this)

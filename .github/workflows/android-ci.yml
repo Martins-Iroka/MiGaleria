@@ -96,7 +96,7 @@ jobs:
           arch: x86_64
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew connectedDemoDebugAndroidTest --daemon
+          script: ./gradlew connectedDebugAndroidTest --daemon
 
       - name: Upload Instrumented Test Reports
         uses: actions/upload-artifact@v4
