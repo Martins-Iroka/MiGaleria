@@ -1,4 +1,4 @@
-package com.martdev.remote.video
+package com.martdev.remote.video.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

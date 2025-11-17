@@ -38,6 +38,9 @@ const val PHOTOS_PATH = "/photos"
 const val CREATE_PHOTOS_COMMENT_PATH = "$PHOTOS_PATH/{postID}/create-comment"
 const val PHOTO_COMMENTS_PATH = "$PHOTOS_PATH/{postID}/comments"
 const val VIDEOS_PATH = "/videos"
+const val CREATE_VIDEOS_COMMENT_PATH = "$VIDEOS_PATH/{postID}/create-comment"
+const val VIDEO_COMMENTS_PATH = "$VIDEOS_PATH/{postID}/comments"
+
 class Client(
     engine: HttpClientEngine,
     private val tokenStorage: TokenStorage

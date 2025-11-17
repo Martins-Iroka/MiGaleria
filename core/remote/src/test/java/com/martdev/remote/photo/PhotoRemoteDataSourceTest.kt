@@ -4,9 +4,7 @@ import com.martdev.remote.CREATE_PHOTOS_COMMENT_PATH
 import com.martdev.remote.NetworkResult
 import com.martdev.remote.PHOTOS_PATH
 import com.martdev.remote.PHOTO_COMMENTS_PATH
-import com.martdev.remote.datastore.TokenStorage
 import com.martdev.remote.photo.model.CreatePhotoCommentRequest
-import com.martdev.remote.util.FakeTokenStorage
 import com.martdev.remote.util.badRequestJsonResponse
 import com.martdev.remote.util.badRequestMessage
 import com.martdev.remote.util.getMockClient
@@ -19,18 +17,16 @@ import io.mockk.verify
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertTrue
 
 @Suppress("UnusedFlow")
 class PhotoRemoteDataSourceTest {
 
-    private lateinit var client: TokenStorage
     private val emptyPhotosJson = "empty_photos.json"
     private val photosJsonResponse = "photos.json"
-    private val createPhotoCommentResponseJson = "createPhotoCommentResponse.json"
-    private val commentsByPhotoPostID = "commentsByPhotoPostID.json"
+    private val createPhotoCommentResponseJson = "createCommentResponse.json"
+    private val commentsByPhotoPostID = "commentsByPostID.json"
 
     private val photosPath = "/v1$PHOTOS_PATH"
     private val createPhotoCommentPath = "/v1$CREATE_PHOTOS_COMMENT_PATH".replace("{postID}", "1")
@@ -40,11 +36,6 @@ class PhotoRemoteDataSourceTest {
         userID = 1,
         content = "content"
     )
-
-    @Before
-    fun setup() {
-        client = FakeTokenStorage()
-    }
 
     @Test
     fun getAllPhotoPosts_responseOK_returnPhotos() = runTest {
@@ -284,7 +275,7 @@ class PhotoRemoteDataSourceTest {
     }
 
     @Test
-    fun getCommentsByPhotoPostID_responseInternalServer() = runTest {
+    fun getCommentsByPhotoPostID_responseInternalServerError() = runTest {
         val client = getMockClient(path = photoCommentsPath, statusCode = HttpStatusCode.InternalServerError)
         mockkConstructor(PhotoRemoteDataSourceImpl::class)
 
