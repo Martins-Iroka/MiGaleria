@@ -4,7 +4,7 @@ import com.martdev.domain.photodata.PhotoData
 import com.martdev.domain.photodata.PhotoUrlAndIdData
 import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.entity.PhotoUrlAndID
-import com.martdev.remote.photo.PhotoPostResponsePayload
+import com.martdev.remote.photo.model.PhotoPostResponsePayload
 
 fun PhotoEntity.toPhotoData() = PhotoData(
     photoId,

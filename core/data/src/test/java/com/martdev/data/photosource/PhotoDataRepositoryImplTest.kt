@@ -10,8 +10,8 @@ import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.entity.PhotoUrlAndID
 import com.martdev.local.photodatasource.PhotoLocalDataSource
 import com.martdev.remote.RemoteDataSource
-import com.martdev.remote.photo.PhotoPostResponsePayload
-import com.martdev.remote.photo.PhotoSrcAPI
+import com.martdev.remote.photo.model.PhotoPostResponsePayload
+import com.martdev.remote.photo.model.PhotoSrcAPI
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder

@@ -8,7 +8,7 @@ import com.martdev.domain.photodata.PhotoDataSource
 import com.martdev.domain.photodata.PhotoUrlAndIdData
 import com.martdev.local.photodatasource.PhotoLocalDataSource
 import com.martdev.remote.RemoteDataSource
-import com.martdev.remote.photo.PhotoPostResponsePayload
+import com.martdev.remote.photo.model.PhotoPostResponsePayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map

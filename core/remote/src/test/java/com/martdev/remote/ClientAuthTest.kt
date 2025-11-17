@@ -2,7 +2,7 @@ package com.martdev.remote
 
 import com.martdev.remote.datastore.AuthToken
 import com.martdev.remote.datastore.TokenStorage
-import com.martdev.remote.photo.PhotoSrcAPI
+import com.martdev.remote.photo.model.PhotoSrcAPI
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.respondError

@@ -1,21 +1,18 @@
 package com.martdev.remote.photo
 
-import com.martdev.remote.Client
 import com.martdev.remote.NetworkResult
-import com.martdev.remote.PHOTOS_PATH
-import com.martdev.remote.RemoteDataSource
 import com.martdev.remote.ResponseDataPayload
+import com.martdev.remote.photo.model.CreatePhotoCommentRequest
+import com.martdev.remote.photo.model.CreatePhotoCommentResponse
+import com.martdev.remote.photo.model.PhotoPostCommentResponse
+import com.martdev.remote.photo.model.PhotoSrcAPI
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
-class PhotoRemoteDataSource(
-    private val client: Client
-) : RemoteDataSource<NetworkResult<ResponseDataPayload<List<PhotoSrcAPI>>>> {
+interface PhotoRemoteDataSource {
 
-    override fun load(): Flow<NetworkResult<ResponseDataPayload<List<PhotoSrcAPI>>>> {
-        return flow {
-            val result = client.getRequest<ResponseDataPayload<List<PhotoSrcAPI>>>(PHOTOS_PATH)
-            emit(result)
-        }
-    }
+    fun getAllPhotoPosts(limit: Int, offset: Int): Flow<NetworkResult<ResponseDataPayload<List<PhotoSrcAPI>>>>
+
+    fun postComment(postID: String, commentRequest: CreatePhotoCommentRequest): Flow<NetworkResult<ResponseDataPayload<CreatePhotoCommentResponse>>>
+
+    fun getCommentsByPostID(postID: String): Flow<NetworkResult<ResponseDataPayload<List<PhotoPostCommentResponse>>>>
 }

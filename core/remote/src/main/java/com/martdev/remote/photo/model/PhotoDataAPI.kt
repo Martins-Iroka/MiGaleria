@@ -1,4 +1,4 @@
-package com.martdev.remote.photo
+package com.martdev.remote.photo.model
 
 import kotlinx.serialization.Serializable
 
