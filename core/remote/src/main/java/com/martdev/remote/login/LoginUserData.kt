@@ -12,7 +12,7 @@ data class LoginUserRequestPayload(
 @Serializable
 data class LoginUserResponsePayload(
     @SerialName("access_token")
-    private val accessToken: String,
+    val accessToken: String,
     @SerialName("refresh_token")
-    private val refreshToken: String
+    val refreshToken: String
 )

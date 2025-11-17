@@ -45,6 +45,11 @@ class RegisterUserRemoteSourceImplTest {
             assertTrue(result.data.data.token.isNotEmpty())
             assertEquals("token", result.data.data.token)
         }
+
+        verify {
+            constructedWith<RegisterUserRemoteSourceImpl>(EqMatcher(client))
+                .registerUser(any())
+        }
     }
 
     @Test

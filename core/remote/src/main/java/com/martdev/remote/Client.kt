@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
 
 const val AUTH_REGISTER_PATH = "/authentication/register"
+const val AUTH_LOGIN_PATH = "/authentication/login"
 class Client(
     engine: HttpClientEngine,
     private val tokenStorage: TokenStorage
