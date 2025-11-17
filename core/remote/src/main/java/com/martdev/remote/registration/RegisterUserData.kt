@@ -4,12 +4,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RegisterUserRequestPayload(
-    private val username: String,
-    private val email: String,
-    private val password: String
+    val username: String = "",
+    val email: String = "",
+    val password: String = ""
 )
 
 @Serializable
 data class RegisterUserResponsePayload(
-    private val token: String
+    val token: String = ""
 )

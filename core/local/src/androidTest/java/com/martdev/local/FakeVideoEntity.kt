@@ -20,25 +20,21 @@ val videoEntities = listOf(
 val videoFileEntities = listOf(
     VideoFileEntity(
         videoId = 1,
-        quality = "sd",
         videoLink = "sd_link",
         videoSize = 1
     ),
     VideoFileEntity(
         videoId = 1,
-        quality = "hd",
         videoLink = "hd_link",
         videoSize = 2
     ),
     VideoFileEntity(
         videoId = 2,
-        quality = "sd",
         videoLink = "sd_link",
         videoSize = 1
     ),
     VideoFileEntity(
         videoId = 2,
-        quality = "hd",
         videoLink = "hd_link",
         videoSize = 2
     )

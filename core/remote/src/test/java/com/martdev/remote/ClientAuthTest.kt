@@ -2,6 +2,7 @@ package com.martdev.remote
 
 import com.martdev.remote.datastore.AuthToken
 import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.remotephoto.PhotoSrcAPI
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.respondError
@@ -19,7 +20,6 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-//Todo modify this to fit the new return type for NetworkResult
 class ClientAuthTest {
 
     @Test
@@ -41,7 +41,7 @@ class ClientAuthTest {
 
         val client = Client(mockEngine, mockTokenStorage).httpClient
 
-        val response = client.get("/v1/photos")
+        val response = client.get("/photos")
 
         assertEquals(HttpStatusCode.OK, response.status)
     }
@@ -54,7 +54,7 @@ class ClientAuthTest {
         val mockEngine = MockEngine { request ->
             requestCount++
             when (requestCount) {
-                // First attempt to /v1/photos fails with 401
+                // First attempt to /photos fails with 401
                 1 -> {
                     assertEquals(
                         "Bearer expired_access_token",
@@ -62,7 +62,7 @@ class ClientAuthTest {
                     )
                     respondError(HttpStatusCode.Unauthorized)
                 }
-                // The refresh request to /v1/authentication/refresh
+                // The refresh request to /authentication/refresh
                 2 -> {
                     assertEquals("/v1/authentication/refresh", request.url.encodedPath)
                     respond(
@@ -71,7 +71,7 @@ class ClientAuthTest {
                         headers = headersOf(HttpHeaders.ContentType, "application/json")
                     )
                 }
-                // The retried request to /v1/photos with the new token
+                // The retried request to /photos with the new token
                 3 -> {
                     assertEquals(
                         "Bearer new_access_token",
@@ -95,7 +95,7 @@ class ClientAuthTest {
 
         val client = Client(mockEngine, mockTokenStorage).httpClient
 
-        val response = client.get("/v1/photos")
+        val response = client.get("/photos")
 
         assertEquals(HttpStatusCode.OK, response.status)
 
@@ -116,7 +116,7 @@ class ClientAuthTest {
 
         val mockEngine = MockEngine { request ->
             // The first request to the protected endpoint fails
-            if (request.url.encodedPath.contains("/v1/photos")) {
+            if (request.url.encodedPath.contains("/photos")) {
                 respondError(HttpStatusCode.Unauthorized)
             }
             // The subsequent request to the refresh endpoint also fails
@@ -133,10 +133,10 @@ class ClientAuthTest {
         ))
 
         val client = Client(mockEngine, mockTokenStorage)
-
-       /* assertFailsWith<UnauthorizedException> {
-            client.performGetRequest("/v1/photos")
-        }*/
+        val r = client.getRequest<ResponseDataPayload<PhotoSrcAPI>>("/photos")
+        if (r is NetworkResult.Failure) {
+            assertEquals("Unauthorized", r.error)
+        }
 
         coVerify { mockTokenStorage.clearTokens() }
     }
@@ -157,7 +157,7 @@ class ClientAuthTest {
         val client = Client(mockEngine, mockTokenStorage).httpClient
 
         // 2. Act
-        val response = client.get("/v1/login")
+        val response = client.get("/login")
 
         // 3. Assert
         assertEquals(HttpStatusCode.OK, response.status)

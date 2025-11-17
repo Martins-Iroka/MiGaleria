@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
+//Todo work on NetworkResult
 class PhotoDataRepositoryImpl(
     private val localPhotoSource: PhotoLocalDataSource,
     private val remoteSource: RemoteDataSource<PhotoPostResponsePayload>

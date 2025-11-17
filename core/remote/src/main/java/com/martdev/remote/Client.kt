@@ -20,6 +20,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
@@ -29,6 +30,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
 
+const val AUTH_REGISTER_PATH = "/authentication/register"
 class Client(
     engine: HttpClientEngine,
     private val tokenStorage: TokenStorage
@@ -68,7 +70,7 @@ class Client(
                     val refreshToken = oldToken?.refreshToken ?: return@refreshTokens null
 
                     try {
-                        val response: TokenRefreshResponse = client.post("/v1/authentication/refresh") {
+                        val response: TokenRefreshResponse = client.post("/authentication/refresh") {
                             markAsRefreshTokenRequest()
                             contentType(ContentType.Application.Json)
                             setBody(TokenRefreshRequest(refreshToken))
@@ -108,11 +110,15 @@ class Client(
         }
     }
 
-    suspend inline fun <reified ResponseType> performGetRequest(
+    suspend inline fun <reified ResponseType> getRequest(
         urlString: String,
         crossinline block: HttpRequestBuilder.() -> Unit = {}
-    ): ResponseType {
-        return httpClient.get(urlString, block).body()
+    ): NetworkResult<ResponseType> {
+        val r = httpClient.get(urlString, block)
+
+        return r.handleResponse{
+            r.body()
+        }
     }
 
     suspend inline fun <reified BodyType, reified ResponseType> postData(
@@ -126,18 +132,26 @@ class Client(
                 setBody(body)
             }
 
-            if (response.status.isSuccess()) {
-                NetworkResult.Success(response.body())
-            } else {
-                when(response.status) {
-                    HttpStatusCode.BadRequest -> NetworkResult.Failure.BadRequest()
-                    HttpStatusCode.Unauthorized -> NetworkResult.Failure.Unauthorized()
-                    HttpStatusCode.NotFound -> NetworkResult.Failure.NotFound()
-                    else -> NetworkResult.Failure.Other(Exception(response.status.toString()))
-                }
+            response.handleResponse {
+                response.body()
             }
+
         } catch (e: Exception) {
             NetworkResult.Failure.Other(e)
+        }
+    }
+
+    inline fun <reified ResponseType> HttpResponse.handleResponse(body: () -> ResponseType): NetworkResult<ResponseType> {
+        return when {
+            status.isSuccess() -> NetworkResult.Success(body())
+            status == HttpStatusCode.BadRequest -> NetworkResult.Failure.BadRequest()
+            status == HttpStatusCode.Unauthorized -> NetworkResult.Failure.Unauthorized()
+            status == HttpStatusCode.NotFound -> NetworkResult.Failure.NotFound()
+            status == HttpStatusCode.InternalServerError -> NetworkResult.Failure.InternalServerError()
+            else -> {
+                val exception = Exception("Unhandled HTTP status code: ${status.value} - ${status.description}")
+                NetworkResult.Failure.Other(exception)
+            }
         }
     }
 }
@@ -148,6 +162,7 @@ sealed interface NetworkResult<out T> {
         data class BadRequest(val message: String = "Bad Request") : Failure(message)
         data class Unauthorized(val message: String = "Unauthorized") : Failure(message)
         data class NotFound(val message: String = "Not Found") : Failure(message)
+        data class InternalServerError(val message: String = "Internal Server Error"): Failure(message)
         data class Other(val cause: Throwable) : Failure(cause.message.orEmpty().ifEmpty { "An error occurred" })
     }
 }

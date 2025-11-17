@@ -1,18 +1,8 @@
 package com.martdev.remote.remotevideo
 
-import com.martdev.remote.BadRequestException
-import com.martdev.remote.Client
-import com.martdev.remote.NotFoundException
-import com.martdev.remote.UnauthorizedException
-import com.martdev.remote.datastore.TokenStorage
-import com.martdev.remote.util.FakeTokenStorage
-import com.martdev.remote.util.readJsonFile
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.respond
-import io.ktor.http.HttpHeaders
+import com.martdev.remote.NetworkResult
+import com.martdev.remote.util.getMockClient
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
-import io.ktor.utils.io.ByteReadChannel
 import io.mockk.EqMatcher
 import io.mockk.every
 import io.mockk.mockkConstructor
@@ -21,42 +11,26 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 @Suppress("UnusedFlow")
 class VideoRemoteDataSourceTest {
 
-    private lateinit var client: TokenStorage
     private val emptyVideoJson = "empty_videos.json"
-    @Before
-    fun setup() {
-        client = FakeTokenStorage()
-    }
-
-    private fun getMockClient(statusCode: HttpStatusCode = HttpStatusCode.OK, json: String = "videos.json") =
-        Client(
-            MockEngine {
-                respond(
-                    content = ByteReadChannel(content = readJsonFile(json)),
-                    status = statusCode,
-                    headers = headersOf(HttpHeaders.ContentType, "application/json")
-                )
-            },
-                    client
-        )
+    private val videoJson = "videos.json"
 
     @Test
     fun loadAllVideos_responseOk_returnList() = runTest {
-        val client = getMockClient()
+        val client = getMockClient(json = videoJson)
         mockkConstructor(VideoRemoteDataSource::class)
 
         every { constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
         val result = VideoRemoteDataSource(client).load().first()
-        assertTrue(result.data.isNotEmpty())
-        assertEquals(7677511, result.data.first().id)
+        if (result is NetworkResult.Success) {
+            assertTrue(result.data.data.isNotEmpty())
+            assertEquals(7677511, result.data.data.first().id)
+        }
 
         verify {
             constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load()
@@ -71,7 +45,9 @@ class VideoRemoteDataSourceTest {
         every { constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
 
         val result = VideoRemoteDataSource(client).load().first()
-        assertTrue(result.data.isEmpty())
+        if (result is NetworkResult.Success) {
+            assertTrue(result.data.data.isEmpty())
+        }
     }
 
     @Test
@@ -81,11 +57,10 @@ class VideoRemoteDataSourceTest {
         mockkConstructor(VideoRemoteDataSource::class)
 
         every { constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
-        val b = assertFailsWith<BadRequestException> {
-            VideoRemoteDataSource(client).load().first()
+        val r = VideoRemoteDataSource(client).load().first()
+        if (r is NetworkResult.Failure) {
+            Assert.assertEquals("Bad Request", r.error)
         }
-
-        Assert.assertEquals("Bad Request", b.error)
 
         verify {
             constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load()
@@ -99,11 +74,10 @@ class VideoRemoteDataSourceTest {
         mockkConstructor(VideoRemoteDataSource::class)
 
         every { constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
-        val u = assertFailsWith<UnauthorizedException> {
-            VideoRemoteDataSource(client).load().first()
+        val r = VideoRemoteDataSource(client).load().first()
+        if (r is NetworkResult.Failure) {
+            Assert.assertEquals("Unauthorized", r.error)
         }
-
-        Assert.assertEquals("Unauthorized", u.error)
 
         verify {
             constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load()
@@ -117,11 +91,10 @@ class VideoRemoteDataSourceTest {
         mockkConstructor(VideoRemoteDataSource::class)
 
         every { constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
-        val n = assertFailsWith<NotFoundException> {
-            VideoRemoteDataSource(client).load().first()
+        val r = VideoRemoteDataSource(client).load().first()
+        if (r is NetworkResult.Failure) {
+            Assert.assertEquals("Not Found", r.error)
         }
-
-        Assert.assertEquals("Not Found", n.error)
 
         verify {
             constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load()

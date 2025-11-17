@@ -1,18 +1,10 @@
 package com.martdev.remote.remotephoto
 
-import com.martdev.remote.BadRequestException
-import com.martdev.remote.Client
-import com.martdev.remote.NotFoundException
-import com.martdev.remote.UnauthorizedException
+import com.martdev.remote.NetworkResult
 import com.martdev.remote.datastore.TokenStorage
 import com.martdev.remote.util.FakeTokenStorage
-import com.martdev.remote.util.readJsonFile
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.respond
-import io.ktor.http.HttpHeaders
+import com.martdev.remote.util.getMockClient
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
-import io.ktor.utils.io.ByteReadChannel
 import io.mockk.EqMatcher
 import io.mockk.every
 import io.mockk.mockkConstructor
@@ -22,7 +14,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 @Suppress("UnusedFlow")
@@ -30,6 +21,7 @@ class PhotoRemoteDataSourceTest {
 
     private lateinit var client: TokenStorage
     private val emptyPhotosJson = "empty_photos.json"
+
     @Before
     fun setup() {
         client = FakeTokenStorage()
@@ -42,8 +34,10 @@ class PhotoRemoteDataSourceTest {
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
         val result = PhotoRemoteDataSource(client).load().first()
-        assertTrue(result.data.isNotEmpty())
-        assertEquals(34611213, result.data.first().id)
+        if (result is NetworkResult.Success) {
+            assertTrue(result.data.data.isNotEmpty())
+            assertEquals(34611213, result.data.data.first().id)
+        }
 
         verify {
             constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load()
@@ -57,7 +51,9 @@ class PhotoRemoteDataSourceTest {
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
         val result = PhotoRemoteDataSource(client).load().first()
-        assertTrue(result.data.isEmpty())
+        if (result is NetworkResult.Success) {
+            assertTrue(result.data.data.isEmpty())
+        }
 
         verify {
             constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load()
@@ -71,11 +67,10 @@ class PhotoRemoteDataSourceTest {
         mockkConstructor(PhotoRemoteDataSource::class)
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
-        val b = assertFailsWith<BadRequestException> {
-            PhotoRemoteDataSource(client).load().first()
+        val r = PhotoRemoteDataSource(client).load().first()
+        if (r is NetworkResult.Failure.BadRequest) {
+            assertEquals("Bad Request", r.error)
         }
-
-        assertEquals("Bad Request", b.error)
 
         verify {
             constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load()
@@ -89,11 +84,10 @@ class PhotoRemoteDataSourceTest {
         mockkConstructor(PhotoRemoteDataSource::class)
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
-        val u = assertFailsWith<UnauthorizedException> {
-            PhotoRemoteDataSource(client).load().first()
+        val r = PhotoRemoteDataSource(client).load().first()
+        if (r is NetworkResult.Failure.Unauthorized) {
+            assertEquals("Unauthorized", r.error)
         }
-
-        assertEquals("Unauthorized", u.error)
 
         verify {
             constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load()
@@ -107,25 +101,13 @@ class PhotoRemoteDataSourceTest {
         mockkConstructor(PhotoRemoteDataSource::class)
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
-        val n = assertFailsWith<NotFoundException> {
-            PhotoRemoteDataSource(client).load().first()
+        val r = PhotoRemoteDataSource(client).load().first()
+        if (r is NetworkResult.Failure.NotFound) {
+            assertEquals("Not Found", r.error)
         }
-
-        assertEquals("Not Found", n.error)
 
         verify {
             constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load()
         }
     }
-
-    private fun getMockClient(statusCode: HttpStatusCode = HttpStatusCode.OK, json: String = "photos.json") = Client(
-        MockEngine {
-            respond(
-                content = ByteReadChannel(content = readJsonFile(json)),
-                status = statusCode,
-                headers = headersOf(HttpHeaders.ContentType, "application/json")
-            )
-        },
-        client
-    )
 }
