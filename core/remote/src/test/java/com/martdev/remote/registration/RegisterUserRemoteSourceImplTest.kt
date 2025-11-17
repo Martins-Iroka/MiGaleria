@@ -2,6 +2,8 @@ package com.martdev.remote.registration
 
 import com.martdev.remote.AUTH_REGISTER_PATH
 import com.martdev.remote.NetworkResult
+import com.martdev.remote.util.badRequestJsonResponse
+import com.martdev.remote.util.badRequestMessage
 import com.martdev.remote.util.getMockClient
 import io.ktor.http.HttpStatusCode
 import io.mockk.EqMatcher
@@ -54,7 +56,7 @@ class RegisterUserRemoteSourceImplTest {
 
     @Test
     fun postRegisterUserRequest_returnBadRequest() = runTest {
-        val client = getMockClient(statusCode = HttpStatusCode.BadRequest, path = authRegisterPath)
+        val client = getMockClient(statusCode = HttpStatusCode.BadRequest, path = authRegisterPath, json = badRequestJsonResponse)
         mockkConstructor(RegisterUserRemoteSourceImpl::class)
         val requestSlot = slot<RegisterUserRequestPayload>()
         every {
@@ -67,7 +69,7 @@ class RegisterUserRemoteSourceImplTest {
         val result =
             RegisterUserRemoteSourceImpl(client).registerUser(request).first()
         if (result is NetworkResult.Failure) {
-            assertEquals("Bad Request", result.error)
+            assertEquals(badRequestMessage, result.error)
         }
 
         verify {

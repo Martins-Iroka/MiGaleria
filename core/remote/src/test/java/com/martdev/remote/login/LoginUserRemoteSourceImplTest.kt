@@ -4,6 +4,8 @@ package com.martdev.remote.login
 
 import com.martdev.remote.AUTH_LOGIN_PATH
 import com.martdev.remote.NetworkResult
+import com.martdev.remote.util.badRequestJsonResponse
+import com.martdev.remote.util.badRequestMessage
 import com.martdev.remote.util.getMockClient
 import io.ktor.http.HttpStatusCode
 import io.mockk.EqMatcher
@@ -53,7 +55,7 @@ class LoginUserRemoteSourceImplTest {
 
     @Test
     fun postLoginUserRequest_returnBadRequest() = runTest {
-        val client = getMockClient(statusCode = HttpStatusCode.BadRequest, path = authLoginPath)
+        val client = getMockClient(statusCode = HttpStatusCode.BadRequest, path = authLoginPath, json = badRequestJsonResponse)
         mockkConstructor(LoginUserRemoteSourceImpl::class)
         val requestSlot = slot<LoginUserRequestPayload>()
         every {
@@ -67,7 +69,7 @@ class LoginUserRemoteSourceImplTest {
         val result = LoginUserRemoteSourceImpl(client)
             .loginUser(request).first()
         if (result is NetworkResult.Failure) {
-            assertEquals("Bad Request", result.error)
+            assertEquals(badRequestMessage, result.error)
         }
 
         verify {

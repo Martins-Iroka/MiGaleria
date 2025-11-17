@@ -1,6 +1,9 @@
 package com.martdev.remote.remotevideo
 
 import com.martdev.remote.NetworkResult
+import com.martdev.remote.VIDEOS_PATH
+import com.martdev.remote.util.badRequestJsonResponse
+import com.martdev.remote.util.badRequestMessage
 import com.martdev.remote.util.getMockClient
 import io.ktor.http.HttpStatusCode
 import io.mockk.EqMatcher
@@ -19,10 +22,11 @@ class VideoRemoteDataSourceTest {
 
     private val emptyVideoJson = "empty_videos.json"
     private val videoJson = "videos.json"
+    private val videoPath = "/v1$VIDEOS_PATH"
 
     @Test
     fun loadAllVideos_responseOk_returnList() = runTest {
-        val client = getMockClient(json = videoJson)
+        val client = getMockClient(json = videoJson, path = videoPath)
         mockkConstructor(VideoRemoteDataSource::class)
 
         every { constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
@@ -39,7 +43,7 @@ class VideoRemoteDataSourceTest {
 
     @Test
     fun loadAllVideos_responseOk_returnEmptyList() = runTest {
-        val client = getMockClient(json = emptyVideoJson)
+        val client = getMockClient(json = emptyVideoJson, path = videoPath)
         mockkConstructor(VideoRemoteDataSource::class)
 
         every { constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
@@ -53,13 +57,13 @@ class VideoRemoteDataSourceTest {
     @Test
     fun loadAllVideos_responseCode400_throwBadRequestException() = runTest {
 
-        val client = getMockClient(statusCode = HttpStatusCode.BadRequest)
+        val client = getMockClient(statusCode = HttpStatusCode.BadRequest, path = videoPath, json = badRequestJsonResponse)
         mockkConstructor(VideoRemoteDataSource::class)
 
         every { constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
         val r = VideoRemoteDataSource(client).load().first()
         if (r is NetworkResult.Failure) {
-            Assert.assertEquals("Bad Request", r.error)
+            Assert.assertEquals(badRequestMessage, r.error)
         }
 
         verify {
@@ -87,7 +91,7 @@ class VideoRemoteDataSourceTest {
     @Test
     fun loadAllVideos_responseCode404_throwNotFoundException() = runTest {
 
-        val client = getMockClient(statusCode = HttpStatusCode.NotFound)
+        val client = getMockClient(statusCode = HttpStatusCode.NotFound, path = videoPath)
         mockkConstructor(VideoRemoteDataSource::class)
 
         every { constructedWith<VideoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }

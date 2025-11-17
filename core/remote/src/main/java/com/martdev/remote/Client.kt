@@ -28,10 +28,14 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 const val AUTH_REGISTER_PATH = "/authentication/register"
 const val AUTH_LOGIN_PATH = "/authentication/login"
+const val AUTH_VERIFY_PATH = "/authentication/verify"
+const val PHOTOS_PATH = "/photos"
+const val VIDEOS_PATH = "/videos"
 class Client(
     engine: HttpClientEngine,
     private val tokenStorage: TokenStorage
@@ -142,10 +146,13 @@ class Client(
         }
     }
 
-    inline fun <reified ResponseType> HttpResponse.handleResponse(body: () -> ResponseType): NetworkResult<ResponseType> {
+    suspend inline fun <reified ResponseType> HttpResponse.handleResponse(body: () -> ResponseType): NetworkResult<ResponseType> {
         return when {
             status.isSuccess() -> NetworkResult.Success(body())
-            status == HttpStatusCode.BadRequest -> NetworkResult.Failure.BadRequest()
+            status == HttpStatusCode.BadRequest -> {
+                val b = body<ServerError>()
+                NetworkResult.Failure.BadRequest(b.error.ifEmpty { "Bad Request" })
+            }
             status == HttpStatusCode.Unauthorized -> NetworkResult.Failure.Unauthorized()
             status == HttpStatusCode.NotFound -> NetworkResult.Failure.NotFound()
             status == HttpStatusCode.InternalServerError -> NetworkResult.Failure.InternalServerError()
@@ -156,6 +163,9 @@ class Client(
         }
     }
 }
+
+@Serializable
+data class ServerError(val error: String = "")
 
 sealed interface NetworkResult<out T> {
     data class Success<T>(val data: T) : NetworkResult<T>

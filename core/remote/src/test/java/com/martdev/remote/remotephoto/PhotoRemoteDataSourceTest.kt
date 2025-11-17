@@ -1,8 +1,11 @@
 package com.martdev.remote.remotephoto
 
 import com.martdev.remote.NetworkResult
+import com.martdev.remote.PHOTOS_PATH
 import com.martdev.remote.datastore.TokenStorage
 import com.martdev.remote.util.FakeTokenStorage
+import com.martdev.remote.util.badRequestJsonResponse
+import com.martdev.remote.util.badRequestMessage
 import com.martdev.remote.util.getMockClient
 import io.ktor.http.HttpStatusCode
 import io.mockk.EqMatcher
@@ -21,6 +24,8 @@ class PhotoRemoteDataSourceTest {
 
     private lateinit var client: TokenStorage
     private val emptyPhotosJson = "empty_photos.json"
+    private val photosJsonResponse = "photos.json"
+    private val photosPath = "/v1$PHOTOS_PATH"
 
     @Before
     fun setup() {
@@ -29,7 +34,7 @@ class PhotoRemoteDataSourceTest {
 
     @Test
     fun loadAllPhotos_responseOK_returnList() = runTest {
-        val client = getMockClient()
+        val client = getMockClient(json = photosJsonResponse, path = photosPath)
         mockkConstructor(PhotoRemoteDataSource::class)
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
@@ -46,7 +51,7 @@ class PhotoRemoteDataSourceTest {
 
     @Test
     fun loadAllPhotos_responseOK_returnEmptyList() = runTest {
-        val client = getMockClient(json = emptyPhotosJson)
+        val client = getMockClient(json = emptyPhotosJson, path = photosPath)
         mockkConstructor(PhotoRemoteDataSource::class)
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
@@ -63,13 +68,13 @@ class PhotoRemoteDataSourceTest {
     @Test
     fun loadAllPhotos_responseCode400_throwBadRequestException() = runTest {
 
-        val client = getMockClient(statusCode = HttpStatusCode.BadRequest)
+        val client = getMockClient(statusCode = HttpStatusCode.BadRequest, json = badRequestJsonResponse, path = photosPath)
         mockkConstructor(PhotoRemoteDataSource::class)
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }
         val r = PhotoRemoteDataSource(client).load().first()
         if (r is NetworkResult.Failure.BadRequest) {
-            assertEquals("Bad Request", r.error)
+            assertEquals(badRequestMessage, r.error)
         }
 
         verify {
@@ -97,7 +102,7 @@ class PhotoRemoteDataSourceTest {
     @Test
     fun loadAllPhotos_responseCode404_throwNotFoundException() = runTest {
 
-        val client = getMockClient(statusCode = HttpStatusCode.NotFound)
+        val client = getMockClient(statusCode = HttpStatusCode.NotFound, path = photosPath)
         mockkConstructor(PhotoRemoteDataSource::class)
 
         every { constructedWith<PhotoRemoteDataSource>(EqMatcher(client)).load() } answers { callOriginal() }

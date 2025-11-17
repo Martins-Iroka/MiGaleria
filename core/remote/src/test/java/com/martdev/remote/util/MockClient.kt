@@ -10,6 +10,8 @@ import io.ktor.http.headersOf
 import io.ktor.utils.io.ByteReadChannel
 import kotlin.test.assertEquals
 
+const val badRequestJsonResponse = "badRequestJsonResponse.json"
+const val badRequestMessage = "bad request from server"
 fun getMockClient(
     json: String = "",
     path: String = "",
