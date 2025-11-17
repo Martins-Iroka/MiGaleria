@@ -1,4 +1,4 @@
-package com.martdev.remote.remotephoto
+package com.martdev.remote.photo
 
 import com.martdev.remote.NetworkResult
 import com.martdev.remote.PHOTOS_PATH

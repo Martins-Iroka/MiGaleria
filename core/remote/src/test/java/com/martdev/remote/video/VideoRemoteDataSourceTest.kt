@@ -1,4 +1,4 @@
-package com.martdev.remote.remotevideo
+package com.martdev.remote.video
 
 import com.martdev.remote.NetworkResult
 import com.martdev.remote.VIDEOS_PATH

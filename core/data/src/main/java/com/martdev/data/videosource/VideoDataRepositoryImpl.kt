@@ -9,7 +9,7 @@ import com.martdev.domain.videodata.VideoDataSource
 import com.martdev.domain.videodata.VideoImageUrlAndIdData
 import com.martdev.local.videodatasource.VideoLocalDataSource
 import com.martdev.remote.RemoteDataSource
-import com.martdev.remote.remotevideo.VideoPostResponsePayload
+import com.martdev.remote.video.VideoPostResponsePayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map

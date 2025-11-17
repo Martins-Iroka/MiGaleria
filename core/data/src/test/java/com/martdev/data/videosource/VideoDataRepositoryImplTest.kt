@@ -15,9 +15,9 @@ import com.martdev.local.entity.VideoFileEntity
 import com.martdev.local.entity.VideoImageUrlAndID
 import com.martdev.local.videodatasource.VideoLocalDataSource
 import com.martdev.remote.RemoteDataSource
-import com.martdev.remote.remotevideo.VideoFilesResponse
-import com.martdev.remote.remotevideo.VideoPostResponse
-import com.martdev.remote.remotevideo.VideoPostResponsePayload
+import com.martdev.remote.video.VideoFilesResponse
+import com.martdev.remote.video.VideoPostResponse
+import com.martdev.remote.video.VideoPostResponsePayload
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
