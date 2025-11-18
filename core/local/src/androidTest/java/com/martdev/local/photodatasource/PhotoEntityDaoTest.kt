@@ -62,7 +62,6 @@ class PhotoEntityDaoTest {
 
         Assert.assertEquals(1, photoEntity.photoId)
         Assert.assertEquals("Ik", photoEntity.photographer)
-        Assert.assertEquals("Ik_link", photoEntity.photographerUrl)
     }
 
     @Test
@@ -97,7 +96,6 @@ class PhotoEntityDaoTest {
             PhotoEntity(
                 photoId = 1,
                 photographer = "Ik",
-                photographerUrl = "Ik_link",
                 original = "ik_original",
                 large2x = "large2x",
                 large = "large",
@@ -110,7 +108,6 @@ class PhotoEntityDaoTest {
             PhotoEntity(
                 photoId = 2,
                 photographer = "MI",
-                photographerUrl = "MI_link",
                 original = "mi_original",
                 large2x = "large2x",
                 large = "large",

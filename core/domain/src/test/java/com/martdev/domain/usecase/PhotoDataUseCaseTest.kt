@@ -4,12 +4,14 @@ import com.martdev.domain.photodata.PhotoData
 import com.martdev.domain.photodata.PhotoDataSource
 import com.martdev.domain.photodata.PhotoDataUseCase
 import com.martdev.domain.photodata.PhotoUrlAndIdData
+import io.mockk.Runs
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
+import io.mockk.just
 import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.flow.first
@@ -101,33 +103,12 @@ class PhotoDataUseCaseTest {
     @Test
     fun refreshPhotos_assertQueryParameterIsEmpty_verifyCall() = runTest {
 
-        val query = slot<String>()
+        coEvery { photoDataSource.refreshPhotos() } just Runs
 
-        coEvery { photoDataSource.refreshOrSearchPhotos(capture(query)) } answers {
-            assertTrue(query.captured.isEmpty())
-        }
-
-        photoDataUseCase.refreshOrSearchPhotos("")
+        photoDataUseCase.refreshPhotos()
 
         coVerify {
-            photoDataSource.refreshOrSearchPhotos("")
-        }
-    }
-
-    @Test
-    fun searchPhotos_assertQueryParameterIsNotEmpty_equalsToBatman_verifyCall() = runTest {
-
-        val query = slot<String>()
-
-        coEvery { photoDataSource.refreshOrSearchPhotos(capture(query)) } answers {
-            assertTrue(query.captured.isNotEmpty())
-            assertEquals("batman", query.captured)
-        }
-
-        photoDataUseCase.refreshOrSearchPhotos("batman")
-
-        coVerify {
-            photoDataSource.refreshOrSearchPhotos("batman")
+            photoDataSource.refreshPhotos()
         }
     }
 

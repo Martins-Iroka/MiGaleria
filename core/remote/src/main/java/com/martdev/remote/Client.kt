@@ -7,7 +7,6 @@ import com.martdev.remote.datastore.TokenStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
@@ -18,15 +17,29 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
+import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+
+const val AUTH_REGISTER_PATH = "/authentication/register"
+const val AUTH_LOGIN_PATH = "/authentication/login"
+const val AUTH_VERIFY_PATH = "/authentication/verify"
+const val PHOTOS_PATH = "/photos"
+const val CREATE_PHOTOS_COMMENT_PATH = "$PHOTOS_PATH/{postID}/create-comment"
+const val PHOTO_COMMENTS_PATH = "$PHOTOS_PATH/{postID}/comments"
+const val VIDEOS_PATH = "/videos"
+const val CREATE_VIDEOS_COMMENT_PATH = "$VIDEOS_PATH/{postID}/create-comment"
+const val VIDEO_COMMENTS_PATH = "$VIDEOS_PATH/{postID}/comments"
 
 class Client(
     engine: HttpClientEngine,
@@ -56,15 +69,15 @@ class Client(
                 loadTokens {
                     val tokens = tokenStorage.getTokens().firstOrNull()
                     if (tokens != null && tokens.accessToken.isNotBlank()) {
-                        tokens
+                        BearerTokens(tokens.accessToken, tokens.refreshToken)
                     } else {
                         null
                     }
                 }
 
                 refreshTokens {
-                    val oldToken = tokenStorage.getTokens().first()
-                    val refreshToken = oldToken.refreshToken ?: return@refreshTokens null
+                    val oldToken = tokenStorage.getTokens().firstOrNull()
+                    val refreshToken = oldToken?.refreshToken ?: return@refreshTokens null
 
                     try {
                         val response: TokenRefreshResponse = client.post("/authentication/refresh") {
@@ -87,21 +100,10 @@ class Client(
                 }
 
                 sendWithoutRequest { request ->
-                    request.url.pathSegments.contains("register") ||
-                            request.url.pathSegments.contains("verify") ||
-                            request.url.pathSegments.contains("login") ||
-                            request.url.pathSegments.contains("logout")
-                }
-            }
-        }
-
-        HttpResponseValidator {
-            validateResponse {
-                when(it.status.value) {
-                    400 -> throw BadRequestException()
-                    401 -> throw UnauthorizedException()
-                    404 -> throw NotFoundException()
-                    in 500..507 -> throw Exception(it.status.description)
+                    request.url.pathSegments.contains("register").not() ||
+                            request.url.pathSegments.contains("verify").not() ||
+                            request.url.pathSegments.contains("login").not() ||
+                            request.url.pathSegments.contains("logout").not()
                 }
             }
         }
@@ -109,19 +111,74 @@ class Client(
         defaultRequest {
             url {
                 protocol = URLProtocol.HTTPS
-                host = BuildConfig.BASE_URL.plus("v1")
+                host = BuildConfig.BASE_URL.plus("/v1")
+            }
+            contentType(ContentType.Application.Json)
+            headers {
+                this
             }
         }
     }
 
-    suspend inline fun <reified T> performGetRequest(
+    suspend inline fun <reified ResponseType> getRequest(
         urlString: String,
         crossinline block: HttpRequestBuilder.() -> Unit = {}
-    ): T {
-        return httpClient.get(urlString, block).body()
+    ): NetworkResult<ResponseType> {
+        val r = httpClient.get(urlString, block)
+
+        return r.handleResponse{
+            r.body()
+        }
+    }
+
+    suspend inline fun <reified BodyType, reified ResponseType> postData(
+        urlString: String,
+        body: BodyType,
+        crossinline block: HttpRequestBuilder.() -> Unit = {}
+    ): NetworkResult<ResponseType> {
+        return try {
+            val response = httpClient.post(urlString) {
+                block()
+                setBody(body)
+            }
+
+            response.handleResponse {
+                response.body()
+            }
+
+        } catch (e: Exception) {
+            NetworkResult.Failure.Other(e)
+        }
+    }
+
+    suspend inline fun <reified ResponseType> HttpResponse.handleResponse(body: () -> ResponseType): NetworkResult<ResponseType> {
+        return when {
+            status.isSuccess() -> NetworkResult.Success(body())
+            status == HttpStatusCode.BadRequest -> {
+                val b = body<ServerError>()
+                NetworkResult.Failure.BadRequest(b.error.ifEmpty { "Bad Request" })
+            }
+            status == HttpStatusCode.Unauthorized -> NetworkResult.Failure.Unauthorized()
+            status == HttpStatusCode.NotFound -> NetworkResult.Failure.NotFound()
+            status == HttpStatusCode.InternalServerError -> NetworkResult.Failure.InternalServerError()
+            else -> {
+                val exception = Exception("Unhandled HTTP status code: ${status.value} - ${status.description}")
+                NetworkResult.Failure.Other(exception)
+            }
+        }
     }
 }
 
-class BadRequestException(val error: String = "Bad Request") : Exception(error)
-class UnauthorizedException(val error: String = "Unauthorized") : Exception(error)
-class NotFoundException(val error: String = "Not Found") : Exception(error)
+@Serializable
+data class ServerError(val error: String = "")
+
+sealed interface NetworkResult<out T> {
+    data class Success<T>(val data: T) : NetworkResult<T>
+    sealed class Failure(val error: String) : NetworkResult<Nothing> {
+        data class BadRequest(val message: String = "Bad Request") : Failure(message)
+        data class Unauthorized(val message: String = "Unauthorized") : Failure(message)
+        data class NotFound(val message: String = "Not Found") : Failure(message)
+        data class InternalServerError(val message: String = "Internal Server Error"): Failure(message)
+        data class Other(val cause: Throwable) : Failure(cause.message.orEmpty().ifEmpty { "An error occurred" })
+    }
+}

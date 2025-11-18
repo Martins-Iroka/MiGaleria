@@ -10,7 +10,7 @@ class PhotoDataUseCase(
 
     fun loadPhotos(): Flow<List<PhotoUrlAndIdData>> = photoDataSource.loadPhotos()
 
-    suspend fun refreshOrSearchPhotos(query: String) = photoDataSource.refreshOrSearchPhotos(query)
+    suspend fun refreshPhotos() = photoDataSource.refreshPhotos()
 
     suspend fun updateBookmarkStatus(photoId: Long, isBookmarked: Boolean) =
         photoDataSource.updateBookmarkStatus(photoId, isBookmarked)

@@ -79,6 +79,12 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
+      - name: Start adb server
+        run: $ANDROID_HOME/platform-tools/adb start-server
+
+      - name: Clean emulator state
+        run: rm -rf ~/.android/emu-update-last-check.ini ~/.android/*snapshot*
+
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v4
 
@@ -90,7 +96,7 @@ jobs:
           arch: x86_64
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew connectedDemoDebugAndroidTest --daemon
+          script: ./gradlew connectedDebugAndroidTest --daemon
 
       - name: Upload Instrumented Test Reports
         uses: actions/upload-artifact@v4
@@ -130,7 +136,6 @@ jobs:
           SIGNING_KEY_STORE_PASSWORD: ${{ secrets.SIGNING_KEY_STORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-        # The command to build a release APK
         run: ./gradlew assembleRelease
 
       - name: Upload Release APK

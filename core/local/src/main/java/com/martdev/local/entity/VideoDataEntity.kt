@@ -40,9 +40,8 @@ data class VideoEntity(
 data class VideoFileEntity(
     @PrimaryKey val uuid: String = UUID.randomUUID().toString(),
     val videoId: Long,
-    val quality: String,
-    val link: String,
-    val size: Long
+    val videoLink: String,
+    val videoSize: Long
 )
 
 data class VideoImageUrlAndID(

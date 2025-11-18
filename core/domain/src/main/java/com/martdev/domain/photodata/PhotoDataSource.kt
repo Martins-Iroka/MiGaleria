@@ -8,7 +8,7 @@ interface PhotoDataSource {
 
     fun loadPhotos(): Flow<List<PhotoUrlAndIdData>>
 
-    suspend fun refreshOrSearchPhotos(query: String)
+    suspend fun refreshPhotos()
 
     suspend fun updateBookmarkStatus(photoId: Long, isBookmarked: Boolean): Int
 }

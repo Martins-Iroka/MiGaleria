@@ -4,4 +4,7 @@ plugins {
 
 android {
     namespace = "com.martdev.domain"
+    kotlin {
+        jvmToolchain(17)
+    }
 }

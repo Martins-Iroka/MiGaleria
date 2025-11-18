@@ -12,6 +12,9 @@ android {
         resources.excludes.add("META-INF/LICENSE.txt")
         resources.excludes.add("META-INF/LICENSE-notice.md")
     }
+    kotlin {
+        jvmToolchain(17)
+    }
 }
 
 dependencies {

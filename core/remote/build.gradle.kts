@@ -5,6 +5,9 @@ plugins {
 
 android {
     namespace = "com.martdev.remote"
+    kotlin {
+        jvmToolchain(17)
+    }
 }
 
 dependencies {

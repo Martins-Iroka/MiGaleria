@@ -3,7 +3,6 @@ package com.martdev.domain.photodata
 data class PhotoData(
     val photoId: Long = 0,
     val photographer: String = "",
-    val photographerUrl: String = "",
     val original: String = "",
     val large2x: String = "",
     val large: String = "",

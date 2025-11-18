@@ -5,18 +5,18 @@ import com.martdev.data.util.toVideoEntity
 import com.martdev.data.util.toVideoFileEntity
 import com.martdev.data.util.toVideoImageUrlAndIdData
 import com.martdev.domain.videodata.VideoData
-import com.martdev.domain.videodata.VideoImageUrlAndIdData
 import com.martdev.domain.videodata.VideoDataSource
+import com.martdev.domain.videodata.VideoImageUrlAndIdData
 import com.martdev.local.videodatasource.VideoLocalDataSource
 import com.martdev.remote.RemoteDataSource
-import com.martdev.remote.remotevideo.VideoDataAPI
+import com.martdev.remote.video.model.VideoPostResponsePayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 class VideoDataRepositoryImpl(
     private val localDataSource: VideoLocalDataSource,
-    private val remoteDataSource: RemoteDataSource<VideoDataAPI>
+    private val remoteDataSource: RemoteDataSource<VideoPostResponsePayload>
 ) : VideoDataSource {
 
     override fun getVideoDataById(id: Long): Flow<VideoData> {
@@ -31,13 +31,13 @@ class VideoDataRepositoryImpl(
         }
     }
 
-    override suspend fun refreshOrSearchVideos(query: String) {
+    override suspend fun refreshVideos() {
         localDataSource.deleteVideoEntity()
-        val videoResult = if (query.isEmpty()) remoteDataSource.load().firstOrNull() else remoteDataSource.search(query).firstOrNull()
+        val videoResult = remoteDataSource.load().firstOrNull()
         videoResult?.let {
-            val videoEntities = it.videos.toVideoEntity()
+            val videoEntities = it.data.toVideoEntity()
 
-            val videoFileEntities = it.videos.toVideoFileEntity()
+            val videoFileEntities = it.data.toVideoFileEntity()
             localDataSource.saveVideoEntity(videoEntities)
             localDataSource.saveVideoFiles(videoFileEntities)
         }

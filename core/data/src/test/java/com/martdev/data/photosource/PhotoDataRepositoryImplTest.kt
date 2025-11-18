@@ -10,8 +10,8 @@ import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.entity.PhotoUrlAndID
 import com.martdev.local.photodatasource.PhotoLocalDataSource
 import com.martdev.remote.RemoteDataSource
-import com.martdev.remote.remotephoto.PhotoAPI
-import com.martdev.remote.remotephoto.PhotoDataAPI
+import com.martdev.remote.photo.model.PhotoPostResponsePayload
+import com.martdev.remote.photo.model.PhotoSrcAPI
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
@@ -29,7 +29,6 @@ import org.junit.Before
 import org.junit.Rule
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 @Suppress("UnusedFlow")
 class PhotoDataRepositoryImplTest {
@@ -41,7 +40,7 @@ class PhotoDataRepositoryImplTest {
     private lateinit var localSource: PhotoLocalDataSource
 
     @MockK
-    private lateinit var remoteSource: RemoteDataSource<PhotoDataAPI>
+    private lateinit var remoteSource: RemoteDataSource<PhotoPostResponsePayload>
 
     private lateinit var photoDataRepository: PhotoDataSource
 
@@ -57,7 +56,6 @@ class PhotoDataRepositoryImplTest {
     fun testGetPhotoDataByIdFromLocalDB_confirmResultIsPhotoDataClass() = runTest {
         val photoEntity1 = PhotoEntity(
             photoId = 1,
-            "",
             "",
             "",
             "",
@@ -137,13 +135,13 @@ class PhotoDataRepositoryImplTest {
     }
 
     @Test
-    fun testRefreshOrSearchPhotos_passEmptyQuerySearch_verifyRemoteLoadIsCalled() = runTest {
-        val photoDataAPI = PhotoDataAPI(
-            photos = listOf(
-                PhotoAPI(
+    fun testRefreshPhotos_verifyRemoteLoadIsCalled() = runTest {
+        val photoDataAPI = PhotoPostResponsePayload(
+            data = listOf(
+                PhotoSrcAPI(
                     id = 1
                 ),
-                PhotoAPI(
+                PhotoSrcAPI(
                     id = 2
                 )
             )
@@ -155,7 +153,6 @@ class PhotoDataRepositoryImplTest {
                 "",
                 "",
                 "",
-                "",
                 ""
             ),
             PhotoEntity(
@@ -163,12 +160,11 @@ class PhotoDataRepositoryImplTest {
                 "",
                 "",
                 "",
-                "",
                 ""
             )
         )
 
-        mockkStatic(PhotoDataAPI::toPhotoEntity)
+        mockkStatic(PhotoPostResponsePayload::toPhotoEntity)
 
         coEvery { localSource.deletePhotoEntity() } returns 1
 
@@ -178,69 +174,11 @@ class PhotoDataRepositoryImplTest {
 
         coEvery { remoteSource.load() } returns flowOf(photoDataAPI)
 
-        photoDataRepository.refreshOrSearchPhotos("")
+        photoDataRepository.refreshPhotos()
 
         coVerifyOrder {
             localSource.deletePhotoEntity()
             remoteSource.load()
-            photoDataAPI.toPhotoEntity()
-            localSource.savePhotoEntity(any())
-        }
-    }
-
-    @Test
-    fun testRefreshOrSearchPhotos_passQuerySearch_verifyRemoteSearchIsCalled() = runTest {
-        val photoDataAPI = PhotoDataAPI(
-            photos = listOf(
-                PhotoAPI(
-                    id = 1
-                ),
-                PhotoAPI(
-                    id = 2
-                )
-            )
-        )
-
-        val photoEntities = listOf(
-            PhotoEntity(
-                photoId = 1, "", "", "", "", "",
-                "",
-                "",
-                "",
-                "",
-                ""
-            ),
-            PhotoEntity(
-                photoId = 2, "", "", "", "", "",
-                "",
-                "",
-                "",
-                "",
-                ""
-            )
-        )
-
-        mockkStatic(PhotoDataAPI::toPhotoEntity)
-
-        val q = slot<String>()
-
-        coEvery { localSource.deletePhotoEntity() } returns 1
-
-        coEvery { localSource.savePhotoEntity(any()) } returns listOf(3)
-
-        every { photoDataAPI.toPhotoEntity() } returns photoEntities
-
-        coEvery { remoteSource.search(capture(q)) } answers {
-            assertTrue(q.captured.isNotEmpty())
-            assertEquals("batman", q.captured)
-            flowOf(photoDataAPI)
-        }
-
-        photoDataRepository.refreshOrSearchPhotos("batman")
-
-        coVerifyOrder {
-            localSource.deletePhotoEntity()
-            remoteSource.search(any())
             photoDataAPI.toPhotoEntity()
             localSource.savePhotoEntity(any())
         }
