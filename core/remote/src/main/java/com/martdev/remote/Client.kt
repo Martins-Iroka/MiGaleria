@@ -33,6 +33,7 @@ import kotlinx.serialization.json.Json
 
 const val AUTH_REGISTER_PATH = "/authentication/register"
 const val AUTH_LOGIN_PATH = "/authentication/login"
+const val AUTH_LOGOUT_PATH = "/authentication/logout"
 const val AUTH_VERIFY_PATH = "/authentication/verify"
 const val PHOTOS_PATH = "/photos"
 const val CREATE_PHOTOS_COMMENT_PATH = "$PHOTOS_PATH/{postID}/create-comment"

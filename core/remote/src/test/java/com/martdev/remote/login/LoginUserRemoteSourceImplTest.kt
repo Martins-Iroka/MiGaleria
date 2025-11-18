@@ -3,6 +3,7 @@
 package com.martdev.remote.login
 
 import com.martdev.remote.AUTH_LOGIN_PATH
+import com.martdev.remote.AUTH_LOGOUT_PATH
 import com.martdev.remote.NetworkResult
 import com.martdev.remote.util.badRequestJsonResponse
 import com.martdev.remote.util.badRequestMessage
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class LoginUserRemoteSourceImplTest {
 
@@ -25,7 +27,11 @@ class LoginUserRemoteSourceImplTest {
         email = "test@gmail.com",
         password = "123456"
     )
+    private val logoutRequest = LogoutUserRequest(
+        refreshToken = "refreshToken"
+    )
     private val authLoginPath = "/v1$AUTH_LOGIN_PATH"
+    private val authLogoutPath = "/v1$AUTH_LOGOUT_PATH"
 
     @Test
     fun postLoginUserRequest_returnSuccessLoginUserResponse() = runTest {
@@ -54,7 +60,7 @@ class LoginUserRemoteSourceImplTest {
     }
 
     @Test
-    fun postLoginUserRequest_returnBadRequest() = runTest {
+    fun postLoginUserRequest_responseBadRequest() = runTest {
         val client = getMockClient(statusCode = HttpStatusCode.BadRequest, path = authLoginPath, json = badRequestJsonResponse)
         mockkConstructor(LoginUserRemoteSourceImpl::class)
         val requestSlot = slot<LoginUserRequestPayload>()
@@ -79,8 +85,8 @@ class LoginUserRemoteSourceImplTest {
     }
 
     @Test
-    fun postLoginUserRequest_returnUnauthorized() = runTest {
-        val client = getMockClient(statusCode = HttpStatusCode.Unauthorized)
+    fun postLoginUserRequest_responseNotFound() = runTest {
+        val client = getMockClient(statusCode = HttpStatusCode.NotFound)
         mockkConstructor(LoginUserRemoteSourceImpl::class)
         val requestSlot = slot<LoginUserRequestPayload>()
         every {
@@ -94,7 +100,7 @@ class LoginUserRemoteSourceImplTest {
         val result = LoginUserRemoteSourceImpl(client)
             .loginUser(request).first()
         if (result is NetworkResult.Failure) {
-            assertEquals("Unauthorized", result.error)
+            assertEquals("Not Found", result.error)
         }
 
         verify {
@@ -104,7 +110,7 @@ class LoginUserRemoteSourceImplTest {
     }
 
     @Test
-    fun postLoginUserRequest_returnInternalServerError() = runTest {
+    fun postLoginUserRequest_responseInternalServerError() = runTest {
         val client = getMockClient(statusCode = HttpStatusCode.InternalServerError, path = authLoginPath)
         mockkConstructor(LoginUserRemoteSourceImpl::class)
         val requestSlot = slot<LoginUserRequestPayload>()
@@ -125,6 +131,77 @@ class LoginUserRemoteSourceImplTest {
         verify {
             constructedWith<LoginUserRemoteSourceImpl>(EqMatcher(client))
                 .loginUser(any())
+        }
+    }
+
+    @Test
+    fun postLogoutUserRequest_responseNoContent() = runTest {
+        val client = getMockClient(statusCode = HttpStatusCode.NoContent, path = authLogoutPath)
+        mockkConstructor(LoginUserRemoteSourceImpl::class)
+        val requestSlot = slot<LogoutUserRequest>()
+        every {
+            constructedWith<LoginUserRemoteSourceImpl>(EqMatcher(client))
+                .logoutUser(capture(requestSlot))
+        } answers {
+            assertEquals(logoutRequest, requestSlot.captured)
+            callOriginal()
+        }
+
+        val result = LoginUserRemoteSourceImpl(client)
+            .logoutUser(logoutRequest).first()
+        assertTrue(result is NetworkResult.Success)
+
+        verify {
+            constructedWith<LoginUserRemoteSourceImpl>(EqMatcher(client))
+                .logoutUser(any())
+        }
+    }
+
+    @Test
+    fun postLogoutUserRequest_responseBadRequest() = runTest {
+        val client = getMockClient(statusCode = HttpStatusCode.BadRequest, path = authLogoutPath, json = badRequestJsonResponse)
+        mockkConstructor(LoginUserRemoteSourceImpl::class)
+        val requestSlot = slot<LogoutUserRequest>()
+        every {
+            constructedWith<LoginUserRemoteSourceImpl>(EqMatcher(client))
+                .logoutUser(capture(requestSlot))
+        } answers {
+            assertEquals(logoutRequest, requestSlot.captured)
+            callOriginal()
+        }
+
+        val result = LoginUserRemoteSourceImpl(client)
+            .logoutUser(logoutRequest).first()
+        assertTrue(result is NetworkResult.Failure)
+        assertEquals(badRequestMessage, result.error)
+
+        verify {
+            constructedWith<LoginUserRemoteSourceImpl>(EqMatcher(client))
+                .logoutUser(any())
+        }
+    }
+
+    @Test
+    fun postLogoutUserRequest_responseInternalServerError() = runTest {
+        val client = getMockClient(statusCode = HttpStatusCode.InternalServerError, path = authLogoutPath)
+        mockkConstructor(LoginUserRemoteSourceImpl::class)
+        val requestSlot = slot<LogoutUserRequest>()
+        every {
+            constructedWith<LoginUserRemoteSourceImpl>(EqMatcher(client))
+                .logoutUser(capture(requestSlot))
+        } answers {
+            assertEquals(logoutRequest, requestSlot.captured)
+            callOriginal()
+        }
+
+        val result = LoginUserRemoteSourceImpl(client)
+            .logoutUser(logoutRequest).first()
+        assertTrue(result is NetworkResult.Failure)
+        assertEquals("Internal Server Error", result.error)
+
+        verify {
+            constructedWith<LoginUserRemoteSourceImpl>(EqMatcher(client))
+                .logoutUser(any())
         }
     }
 }

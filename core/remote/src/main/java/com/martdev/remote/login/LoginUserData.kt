@@ -16,3 +16,9 @@ data class LoginUserResponsePayload(
     @SerialName("refresh_token")
     val refreshToken: String
 )
+
+@Serializable
+data class LogoutUserRequest(
+    @SerialName("refresh_token")
+    val refreshToken: String
+)
