@@ -1,6 +1,6 @@
 package com.martdev.remote.verification
 
-import com.martdev.remote.NetworkResult
+import com.martdev.common.NetworkResult
 import com.martdev.remote.ResponseDataPayload
 import kotlinx.coroutines.flow.Flow
 
