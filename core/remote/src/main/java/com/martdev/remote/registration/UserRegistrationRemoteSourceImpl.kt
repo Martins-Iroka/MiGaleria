@@ -7,13 +7,13 @@ import com.martdev.remote.ResponseDataPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class RegisterUserRemoteSourceImpl(
+class UserRegistrationRemoteSourceImpl(
     private val client: Client
-) : RegisterUserRemoteSource {
+) : UserRegistrationRemoteSource {
 
-    override fun registerUser(user: RegisterUserRequestPayload): Flow<NetworkResult<ResponseDataPayload<RegisterUserResponsePayload>>> {
+    override fun registerUser(user: UserRegistrationRequestPayload): Flow<NetworkResult<ResponseDataPayload<UserRegistrationResponsePayload>>> {
         return flow {
-            val r = client.postData<RegisterUserRequestPayload, ResponseDataPayload<RegisterUserResponsePayload>>(
+            val r = client.postData<UserRegistrationRequestPayload, ResponseDataPayload<UserRegistrationResponsePayload>>(
                 AUTH_REGISTER_PATH,
                 user
             )

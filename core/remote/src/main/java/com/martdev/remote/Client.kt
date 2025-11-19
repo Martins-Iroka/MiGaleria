@@ -89,7 +89,7 @@ class Client(
                         }.body()
 
                         val newTokens = AuthToken(response.accessToken, refreshToken)
-                        tokenStorage.saveTokens(newTokens)
+                        tokenStorage.saveAuthTokens(newTokens)
 
                         BearerTokens(newTokens.accessToken, newTokens.refreshToken)
                     } catch (e: Exception) {

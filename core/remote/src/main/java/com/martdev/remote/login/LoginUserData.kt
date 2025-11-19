@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginUserRequestPayload(
+data class UserLoginRequestPayload(
     private val email: String,
     private val password: String
 )

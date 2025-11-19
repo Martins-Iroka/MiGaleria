@@ -6,7 +6,9 @@ interface TokenStorage {
 
     fun getTokens(): Flow<AuthToken>
 
-    suspend fun saveTokens(token: AuthToken)
+    suspend fun saveAuthTokens(token: AuthToken)
+
+    suspend fun saveVerificationToken(token: String)
 
     suspend fun clearTokens()
 }

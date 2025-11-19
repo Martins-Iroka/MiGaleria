@@ -4,9 +4,9 @@ import com.martdev.common.NetworkResult
 import com.martdev.remote.ResponseDataPayload
 import kotlinx.coroutines.flow.Flow
 
-interface LoginUserRemoteSource {
+interface UserLoginRemoteSource {
 
-    fun loginUser(user: LoginUserRequestPayload): Flow<NetworkResult<ResponseDataPayload<LoginUserResponsePayload>>>
+    fun loginUser(user: UserLoginRequestPayload): Flow<NetworkResult<ResponseDataPayload<LoginUserResponsePayload>>>
 
     fun logoutUser(user: LogoutUserRequest): Flow<NetworkResult<Unit>>
 }

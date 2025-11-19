@@ -8,12 +8,12 @@ import com.martdev.remote.ResponseDataPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class LoginUserRemoteSourceImpl(
+class UserLoginRemoteSourceImpl(
     private val client: Client
-) : LoginUserRemoteSource {
-    override fun loginUser(user: LoginUserRequestPayload): Flow<NetworkResult<ResponseDataPayload<LoginUserResponsePayload>>> {
+) : UserLoginRemoteSource {
+    override fun loginUser(user: UserLoginRequestPayload): Flow<NetworkResult<ResponseDataPayload<LoginUserResponsePayload>>> {
         return flow {
-            val r = client.postData<LoginUserRequestPayload, ResponseDataPayload<LoginUserResponsePayload>>(
+            val r = client.postData<UserLoginRequestPayload, ResponseDataPayload<LoginUserResponsePayload>>(
                 AUTH_LOGIN_PATH, user)
 
             emit(r)

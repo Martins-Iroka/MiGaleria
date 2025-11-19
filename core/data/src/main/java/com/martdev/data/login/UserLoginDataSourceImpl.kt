@@ -6,9 +6,9 @@ import com.martdev.domain.login.UserLoginDataRequest
 import com.martdev.domain.login.UserLoginDataSource
 import com.martdev.remote.datastore.AuthToken
 import com.martdev.remote.datastore.TokenStorage
-import com.martdev.remote.login.LoginUserRemoteSource
-import com.martdev.remote.login.LoginUserRequestPayload
 import com.martdev.remote.login.LogoutUserRequest
+import com.martdev.remote.login.UserLoginRemoteSource
+import com.martdev.remote.login.UserLoginRequestPayload
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -19,16 +19,16 @@ import kotlinx.coroutines.flow.onCompletion
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserLoginDataSourceImpl(
-    private val remote: LoginUserRemoteSource,
+    private val remote: UserLoginRemoteSource,
     private val tokenStorage: TokenStorage
 ) : UserLoginDataSource {
     override fun loginUser(user: UserLoginDataRequest): Flow<ResponseData<Nothing>> {
-        return remote.loginUser(LoginUserRequestPayload(user.email, user.password))
+        return remote.loginUser(UserLoginRequestPayload(user.email, user.password))
             .map {
                 it.toResponseData { loginPayload ->
                     val accessToken = loginPayload.data.accessToken
                     val refreshToken = loginPayload.data.refreshToken
-                    tokenStorage.saveTokens(AuthToken(accessToken, refreshToken))
+                    tokenStorage.saveAuthTokens(AuthToken(accessToken, refreshToken))
                     null
                 }
             }

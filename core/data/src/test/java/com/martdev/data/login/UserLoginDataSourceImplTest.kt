@@ -9,7 +9,7 @@ import com.martdev.domain.login.UserLoginDataSource
 import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.datastore.AuthToken
 import com.martdev.remote.datastore.TokenStorage
-import com.martdev.remote.login.LoginUserRemoteSource
+import com.martdev.remote.login.UserLoginRemoteSource
 import com.martdev.remote.login.LoginUserResponsePayload
 import com.martdev.remote.login.LogoutUserRequest
 import io.mockk.Runs
@@ -37,7 +37,7 @@ class UserLoginDataSourceImplTest {
     val mockkRule = MockKRule(this)
 
     @MockK
-    private lateinit var remote: LoginUserRemoteSource
+    private lateinit var remote: UserLoginRemoteSource
 
     @MockK
     private lateinit var tokenStorage: TokenStorage
@@ -66,7 +66,7 @@ class UserLoginDataSourceImplTest {
             ))
         )
 
-        coEvery { tokenStorage.saveTokens(any()) } just Runs
+        coEvery { tokenStorage.saveAuthTokens(any()) } just Runs
 
         val r = userDatasource.loginUser(request).first()
 
@@ -74,7 +74,7 @@ class UserLoginDataSourceImplTest {
 
         coVerify {
             remote.loginUser(any())
-            tokenStorage.saveTokens(any())
+            tokenStorage.saveAuthTokens(any())
         }
     }
 
