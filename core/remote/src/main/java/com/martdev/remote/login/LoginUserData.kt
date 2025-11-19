@@ -10,7 +10,7 @@ data class UserLoginRequestPayload(
 )
 
 @Serializable
-data class LoginUserResponsePayload(
+data class UserLoginResponsePayload(
     @SerialName("access_token")
     val accessToken: String,
     @SerialName("refresh_token")

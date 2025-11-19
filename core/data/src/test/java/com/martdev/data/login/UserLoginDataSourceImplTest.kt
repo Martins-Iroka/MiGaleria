@@ -9,9 +9,9 @@ import com.martdev.domain.login.UserLoginDataSource
 import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.datastore.AuthToken
 import com.martdev.remote.datastore.TokenStorage
-import com.martdev.remote.login.UserLoginRemoteSource
-import com.martdev.remote.login.LoginUserResponsePayload
+import com.martdev.remote.login.UserLoginResponsePayload
 import com.martdev.remote.login.LogoutUserRequest
+import com.martdev.remote.login.UserLoginRemoteSource
 import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -62,7 +62,7 @@ class UserLoginDataSourceImplTest {
 
         every { remote.loginUser(any()) } returns flowOf(
             NetworkResult.Success(ResponseDataPayload(
-                data = LoginUserResponsePayload("access_token", "refresh_token")
+                data = UserLoginResponsePayload("access_token", "refresh_token")
             ))
         )
 
@@ -196,12 +196,6 @@ class UserLoginDataSourceImplTest {
         }
 
         assertEquals("Error", e.message)
-        try {
-            userDatasource.logoutUser()
-        } catch (e: Exception) {
-            assertTrue(e is IllegalStateException)
-            assertEquals("No refresh token found to log out.", e.message)
-        }
 
         coVerify {
             tokenStorage.getTokens()

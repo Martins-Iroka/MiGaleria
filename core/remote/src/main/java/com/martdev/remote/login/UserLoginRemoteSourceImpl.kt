@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.flow
 class UserLoginRemoteSourceImpl(
     private val client: Client
 ) : UserLoginRemoteSource {
-    override fun loginUser(user: UserLoginRequestPayload): Flow<NetworkResult<ResponseDataPayload<LoginUserResponsePayload>>> {
+    override fun loginUser(user: UserLoginRequestPayload): Flow<NetworkResult<ResponseDataPayload<UserLoginResponsePayload>>> {
         return flow {
-            val r = client.postData<UserLoginRequestPayload, ResponseDataPayload<LoginUserResponsePayload>>(
+            val r = client.postData<UserLoginRequestPayload, ResponseDataPayload<UserLoginResponsePayload>>(
                 AUTH_LOGIN_PATH, user)
 
             emit(r)

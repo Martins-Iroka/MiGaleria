@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserLoginRemoteSource {
 
-    fun loginUser(user: UserLoginRequestPayload): Flow<NetworkResult<ResponseDataPayload<LoginUserResponsePayload>>>
+    fun loginUser(user: UserLoginRequestPayload): Flow<NetworkResult<ResponseDataPayload<UserLoginResponsePayload>>>
 
     fun logoutUser(user: LogoutUserRequest): Flow<NetworkResult<Unit>>
 }
