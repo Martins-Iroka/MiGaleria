@@ -1,5 +1,6 @@
 package com.martdev.remote
 
+import com.martdev.common.NetworkResult
 import com.martdev.remote.datastore.AuthToken
 import com.martdev.remote.datastore.TokenRefreshRequest
 import com.martdev.remote.datastore.TokenRefreshResponse
@@ -33,6 +34,7 @@ import kotlinx.serialization.json.Json
 
 const val AUTH_REGISTER_PATH = "/authentication/register"
 const val AUTH_LOGIN_PATH = "/authentication/login"
+const val AUTH_LOGOUT_PATH = "/authentication/logout"
 const val AUTH_VERIFY_PATH = "/authentication/verify"
 const val PHOTOS_PATH = "/photos"
 const val CREATE_PHOTOS_COMMENT_PATH = "$PHOTOS_PATH/{postID}/create-comment"
@@ -87,7 +89,7 @@ class Client(
                         }.body()
 
                         val newTokens = AuthToken(response.accessToken, refreshToken)
-                        tokenStorage.saveTokens(newTokens)
+                        tokenStorage.saveAuthTokens(newTokens)
 
                         BearerTokens(newTokens.accessToken, newTokens.refreshToken)
                     } catch (e: Exception) {
@@ -171,14 +173,3 @@ class Client(
 
 @Serializable
 data class ServerError(val error: String = "")
-
-sealed interface NetworkResult<out T> {
-    data class Success<T>(val data: T) : NetworkResult<T>
-    sealed class Failure(val error: String) : NetworkResult<Nothing> {
-        data class BadRequest(val message: String = "Bad Request") : Failure(message)
-        data class Unauthorized(val message: String = "Unauthorized") : Failure(message)
-        data class NotFound(val message: String = "Not Found") : Failure(message)
-        data class InternalServerError(val message: String = "Internal Server Error"): Failure(message)
-        data class Other(val cause: Throwable) : Failure(cause.message.orEmpty().ifEmpty { "An error occurred" })
-    }
-}

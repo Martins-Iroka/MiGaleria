@@ -16,9 +16,15 @@ class TokenStorageImpl(
 
     override fun getTokens() = dataStore.data.map { AuthToken(it.accessToken, it.refreshToken) }
 
-    override suspend fun saveTokens(token: AuthToken) {
+    override suspend fun saveAuthTokens(token: AuthToken) {
         dataStore.updateData {
-            it.copy(token.accessToken, token.refreshToken)
+            it.copy(accessToken = token.accessToken, refreshToken = token.refreshToken)
+        }
+    }
+
+    override suspend fun saveVerificationToken(token: String) {
+        dataStore.updateData {
+            it.copy(verificationToken = token)
         }
     }
 

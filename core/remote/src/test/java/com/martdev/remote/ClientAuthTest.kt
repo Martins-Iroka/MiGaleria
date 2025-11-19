@@ -1,5 +1,6 @@
 package com.martdev.remote
 
+import com.martdev.common.NetworkResult
 import com.martdev.remote.datastore.AuthToken
 import com.martdev.remote.datastore.TokenStorage
 import com.martdev.remote.photo.model.PhotoSrcAPI
@@ -100,7 +101,7 @@ class ClientAuthTest {
         assertEquals(HttpStatusCode.OK, response.status)
 
         coVerify {
-            mockTokenStorage.saveTokens(
+            mockTokenStorage.saveAuthTokens(
                 AuthToken(
                     "new_access_token",
                     "valid_refresh_token"

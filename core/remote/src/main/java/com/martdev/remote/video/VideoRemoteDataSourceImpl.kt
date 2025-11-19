@@ -1,8 +1,8 @@
 package com.martdev.remote.video
 
+import com.martdev.common.NetworkResult
 import com.martdev.remote.CREATE_VIDEOS_COMMENT_PATH
 import com.martdev.remote.Client
-import com.martdev.remote.NetworkResult
 import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.VIDEOS_PATH
 import com.martdev.remote.VIDEO_COMMENTS_PATH
@@ -17,7 +17,7 @@ class VideoRemoteDataSourceImpl(
     private val client: Client
 ) : VideoRemoteDataSource {
 
-    override fun getAllVideoPosts(limit: Int, offset: Int): Flow<NetworkResult<ResponseDataPayload< List<VideoPostResponse>>>> {
+    override fun getAllVideoPosts(limit: Int, offset: Int): Flow<NetworkResult<ResponseDataPayload<List<VideoPostResponse>>>> {
         return flow {
             val result =
                 client.getRequest<ResponseDataPayload<List<VideoPostResponse>>>(VIDEOS_PATH)

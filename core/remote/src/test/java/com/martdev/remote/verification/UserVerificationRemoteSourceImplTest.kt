@@ -1,7 +1,7 @@
 package com.martdev.remote.verification
 
+import com.martdev.common.NetworkResult
 import com.martdev.remote.AUTH_VERIFY_PATH
-import com.martdev.remote.NetworkResult
 import com.martdev.remote.util.badRequestJsonResponse
 import com.martdev.remote.util.badRequestMessage
 import com.martdev.remote.util.getMockClient

@@ -1,6 +1,6 @@
 package com.martdev.remote.photo
 
-import com.martdev.remote.NetworkResult
+import com.martdev.common.NetworkResult
 import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.photo.model.CreatePhotoCommentRequest
 import com.martdev.remote.photo.model.CreatePhotoCommentResponse

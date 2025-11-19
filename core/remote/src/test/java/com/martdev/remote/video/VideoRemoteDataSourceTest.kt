@@ -1,7 +1,7 @@
 package com.martdev.remote.video
 
+import com.martdev.common.NetworkResult
 import com.martdev.remote.CREATE_VIDEOS_COMMENT_PATH
-import com.martdev.remote.NetworkResult
 import com.martdev.remote.VIDEOS_PATH
 import com.martdev.remote.VIDEO_COMMENTS_PATH
 import com.martdev.remote.util.badRequestJsonResponse

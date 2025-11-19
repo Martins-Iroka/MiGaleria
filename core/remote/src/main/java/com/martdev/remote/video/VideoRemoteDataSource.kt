@@ -1,6 +1,6 @@
 package com.martdev.remote.video
 
-import com.martdev.remote.NetworkResult
+import com.martdev.common.NetworkResult
 import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.video.model.CreateVideoCommentRequest
 import com.martdev.remote.video.model.CreateVideoCommentResponse
