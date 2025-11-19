@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserLoginDataSource {
 
-    fun loginUser(user: UserLoginDataRequest): Flow<ResponseData<Any>>
+    fun loginUser(user: UserLoginDataRequest): Flow<ResponseData<Nothing>>
 
+    fun logoutUser(): Flow<ResponseData<Unit>>
 }
