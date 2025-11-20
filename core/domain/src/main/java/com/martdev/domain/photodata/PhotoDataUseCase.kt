@@ -8,7 +8,7 @@ class PhotoDataUseCase(
 
     fun getPhotoDataById(id: Long): Flow<PhotoData> = photoDataSource.getPhotoDataById(id)
 
-    fun loadPhotos(): Flow<List<PhotoUrlAndIdData>> = photoDataSource.loadPhotos()
+    fun loadPhotos(): Flow<List<PhotoUrlAndIdData>> = photoDataSource.loadLocalPhotos()
 
     suspend fun refreshPhotos() = photoDataSource.refreshPhotos()
 

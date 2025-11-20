@@ -72,7 +72,7 @@ class PhotoDataUseCaseTest {
                 2, "original2"
             )
         )
-        every { photoDataSource.loadPhotos() } returns flowOf(l)
+        every { photoDataSource.loadLocalPhotos() } returns flowOf(l)
 
         val result = photoDataUseCase.loadPhotos().first()
 
@@ -89,7 +89,7 @@ class PhotoDataUseCaseTest {
     @Test
     fun loadPhotos_returnEmptyListOfPhotoUrlAndIdData() = runTest {
 
-        every { photoDataSource.loadPhotos() } returns flowOf(emptyList())
+        every { photoDataSource.loadLocalPhotos() } returns flowOf(emptyList())
 
         val result = photoDataUseCase.loadPhotos().first()
 

@@ -5,6 +5,7 @@ import com.martdev.domain.photodata.PhotoUrlAndIdData
 import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.entity.PhotoUrlAndID
 import com.martdev.remote.photo.model.PhotoPostResponsePayload
+import com.martdev.remote.photo.model.PhotoSrcAPI
 
 fun PhotoEntity.toPhotoData() = PhotoData(
     photoId,
@@ -32,6 +33,21 @@ fun PhotoPostResponsePayload.toPhotoEntity() = data.map {
         it.portrait,
         it.landscape,
         it.tiny
+    )
+}
+
+fun List<PhotoSrcAPI>.toPhotoData() = map {
+    PhotoData(
+        it.id,
+        it.photographer,
+        it.original,
+        it.large2x,
+        it.large,
+        it.medium,
+        it.small,
+        it.portrait,
+        it.landscape,
+        it.tiny,
     )
 }
 
