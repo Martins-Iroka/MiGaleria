@@ -2,7 +2,6 @@ package com.martdev.remote.photo
 
 import com.martdev.common.NetworkResult
 import com.martdev.remote.CREATE_PHOTOS_COMMENT_PATH
-import com.martdev.remote.NetworkResult
 import com.martdev.remote.PHOTOS_PATH
 import com.martdev.remote.PHOTO_COMMENTS_PATH
 import com.martdev.remote.photo.model.CreatePhotoCommentRequest

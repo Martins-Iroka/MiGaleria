@@ -4,6 +4,7 @@ androidJunitVersion = "1.3.0"
 androidTools = "31.13.0"
 appcompat = "1.7.1"
 archCoreVersion = "2.2.0"
+composeActicityVerions = "1.9.0"
 composeBom = "2025.09.01"
 composeCompiler = "1.5.7"
 coreKtx = "1.17.0"
@@ -22,6 +23,7 @@ robolectricVersion = "4.16"
 roomVersion = "2.8.1"
 slf4jAndroidVersion = "1.7.36"
 timber = "5.0.1"
+materialVersion = "1.13.0"
 
 [libraries]
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp"}
@@ -32,7 +34,16 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidJunitVersion"}
+compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "composeActicityVerions"}
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+compose-graphics = { group = "androidx.compose.ui", name = "ui-graphics"}
+compose-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4"}
+compose-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest"}
+compose-material = { group = "androidx.compose.material3", name = "material3"}
+compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended"}
+compose-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview"}
+compose-ui = { group = "androidx.compose.ui", name = "ui"}
+compose-tooling = { group = "androidx.compose.ui", name = "ui-tooling"}
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesAndroidVersion"}
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesAndroidVersion"}
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesAndroidVersion"}
@@ -49,7 +60,6 @@ ktor-content-negotiation = { group = "io.ktor", name = "ktor-client-content-nego
 ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktorVersion"}
 ktor-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktorVersion"}
 ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktorVersion"}
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockkVersion"}
 mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockkVersion"}
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectricVersion"}
@@ -58,14 +68,18 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomVers
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomVersion"}
 slf4j-android = { group = "org.slf4j", name = "slf4j-android", version.ref = "slf4jAndroidVersion" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber"}
+material = { group = "com.google.android.material", name = "material", version.ref = "materialVersion" }
 
 [bundles]
 androidTestLibs = ["androidx-junit", "androidx-arch-testing", "coroutines-test", "androidx-espresso-core", "mockk-android"]
+composeToolingLib = ["compose-manifest", "compose-tooling"]
+composeLibs = ["compose-bom", "compose-graphics", "compose-material", "compose-material-icons", "compose-preview"]
 ktorLibs = ["ktor-auth", "ktor-client", "ktor-client-cio", "ktor-client-mock", "ktor-content-negotiation", "ktor-logging", "ktor-okhttp", "ktor-serialization", "slf4j-android"]
 testLibs = ["coroutines-test", "junit", "hamcrest", "robolectric", "mockk-android", "mockk-agent"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin_version" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_version" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_version" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin_version"}

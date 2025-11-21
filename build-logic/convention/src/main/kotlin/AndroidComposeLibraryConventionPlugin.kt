@@ -23,8 +23,10 @@ class AndroidComposeLibraryConventionPlugin : Plugin<Project> {
 
                 dependencies {
                     val bom = libs.findLibrary("compose-bom").get()
-                    add(implementation, platform(bom))
                     add(androidTestImplementation, platform(bom))
+                    add(androidTestImplementation, libs.findLibrary("compose-activity").get())
+                    add(implementation, platform(bom))
+                    add(implementation, libs.findBundle("composeLibs").get())
                 }
             }
         }
