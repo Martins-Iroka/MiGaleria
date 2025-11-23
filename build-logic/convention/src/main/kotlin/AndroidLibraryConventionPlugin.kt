@@ -58,6 +58,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                     implementation(libs.findLibrary("androidx-core-ktx").get())
                     implementation(libs.findLibrary("coroutines-core").get())
                     implementation(libs.findLibrary("coroutines-test").get())
+                    implementation(libs.findBundle("koinLibs").get())
                     implementation(libs.findLibrary("timber").get())
                     testImplementation(libs.findBundle("testLibs").get())
                     testImplementation(kotlin("test"))

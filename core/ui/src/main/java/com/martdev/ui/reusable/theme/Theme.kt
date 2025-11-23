@@ -1,4 +1,4 @@
-package com.martdev.ui.theme
+package com.martdev.ui.reusable.theme
 
 import android.app.Activity
 import android.os.Build

@@ -7,4 +7,11 @@ plugins {
 android {
     namespace = "com.martdev.ui"
 
+    kotlin {
+        jvmToolchain(17)
+    }
+}
+
+dependencies {
+    debugApi(libs.bundles.composeToolingLib)
 }

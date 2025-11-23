@@ -10,8 +10,8 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.domain)
-    implementation(projects.core.local)
-    implementation(projects.core.remote)
-    implementation(projects.core.common)
+    api(projects.core.domain)
+    api(projects.core.local)
+    api(projects.core.remote)
+    api(projects.core.common)
 }
