@@ -5,7 +5,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
-import com.martdev.local.MyGalleryDB
+import com.martdev.local.database.MyGalleryDB
 import com.martdev.local.videoEntities
 import com.martdev.local.videoFileEntities
 import kotlinx.coroutines.flow.first

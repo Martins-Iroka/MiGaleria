@@ -1,7 +1,7 @@
 package com.martdev.local.videodatasource
 
 import com.martdev.local.dao.VideoEntityDao
-import com.martdev.local.doIOOperation
+import com.martdev.local.database.doIOOperation
 import com.martdev.local.entity.VideoEntity
 import com.martdev.local.entity.VideoFileEntity
 import com.martdev.local.entity.VideoImageUrlAndID

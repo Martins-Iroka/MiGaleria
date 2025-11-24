@@ -1,7 +1,7 @@
 package com.martdev.local.photodatasource
 
 import com.martdev.local.dao.PhotoEntityDao
-import com.martdev.local.doIOOperation
+import com.martdev.local.database.doIOOperation
 import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.entity.PhotoUrlAndID
 import kotlinx.coroutines.flow.Flow

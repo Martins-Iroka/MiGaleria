@@ -1,4 +1,4 @@
-package com.martdev.local
+package com.martdev.local.database
 
 import android.content.Context
 import androidx.room.Database
@@ -31,3 +31,5 @@ abstract class MyGalleryDB : RoomDatabase() {
         ).build()
     }
 }
+
+suspend fun <T> doIOOperation(block: suspend () -> T) = block()
