@@ -1,9 +1,9 @@
 package com.martdev.remote.login
 
 import com.martdev.common.NetworkResult
-import com.martdev.remote.AUTH_LOGIN_PATH
-import com.martdev.remote.AUTH_LOGOUT_PATH
-import com.martdev.remote.Client
+import com.martdev.remote.client.AUTH_LOGIN_PATH
+import com.martdev.remote.client.AUTH_LOGOUT_PATH
+import com.martdev.remote.client.Client
 import com.martdev.remote.ResponseDataPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

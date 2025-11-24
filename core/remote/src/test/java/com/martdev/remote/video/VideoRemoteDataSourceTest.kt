@@ -1,9 +1,9 @@
 package com.martdev.remote.video
 
 import com.martdev.common.NetworkResult
-import com.martdev.remote.CREATE_VIDEOS_COMMENT_PATH
-import com.martdev.remote.VIDEOS_PATH
-import com.martdev.remote.VIDEO_COMMENTS_PATH
+import com.martdev.remote.client.CREATE_VIDEOS_COMMENT_PATH
+import com.martdev.remote.client.VIDEOS_PATH
+import com.martdev.remote.client.VIDEO_COMMENTS_PATH
 import com.martdev.remote.util.badRequestJsonResponse
 import com.martdev.remote.util.badRequestMessage
 import com.martdev.remote.util.getMockClient

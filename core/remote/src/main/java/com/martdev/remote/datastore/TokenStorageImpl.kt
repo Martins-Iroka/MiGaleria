@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import kotlinx.coroutines.flow.map
 
-private val Context.dataStore by dataStore(
+val Context.dataStore by dataStore(
     fileName = "user-preferences",
     serializer = UserPreferencesSerializer
 )

@@ -1,6 +1,7 @@
-package com.martdev.remote
+package com.martdev.remote.client
 
 import com.martdev.common.NetworkResult
+import com.martdev.remote.BuildConfig
 import com.martdev.remote.datastore.AuthToken
 import com.martdev.remote.datastore.TokenRefreshRequest
 import com.martdev.remote.datastore.TokenRefreshResponse
@@ -49,6 +50,8 @@ class Client(
 ) {
 
     val httpClient = HttpClient(engine) {
+        engine {
+        }
         install(ContentNegotiation) {
             json(Json {
                 prettyPrint = true

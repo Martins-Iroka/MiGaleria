@@ -1,8 +1,8 @@
 package com.martdev.remote.verification
 
 import com.martdev.common.NetworkResult
-import com.martdev.remote.AUTH_VERIFY_PATH
-import com.martdev.remote.Client
+import com.martdev.remote.client.AUTH_VERIFY_PATH
+import com.martdev.remote.client.Client
 import com.martdev.remote.ResponseDataPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

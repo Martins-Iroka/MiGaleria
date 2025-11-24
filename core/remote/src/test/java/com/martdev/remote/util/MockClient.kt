@@ -1,6 +1,6 @@
 package com.martdev.remote.util
 
-import com.martdev.remote.Client
+import com.martdev.remote.client.Client
 import com.martdev.remote.datastore.TokenStorage
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond

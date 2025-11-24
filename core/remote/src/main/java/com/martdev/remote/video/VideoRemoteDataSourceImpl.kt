@@ -1,11 +1,11 @@
 package com.martdev.remote.video
 
 import com.martdev.common.NetworkResult
-import com.martdev.remote.CREATE_VIDEOS_COMMENT_PATH
-import com.martdev.remote.Client
+import com.martdev.remote.client.CREATE_VIDEOS_COMMENT_PATH
+import com.martdev.remote.client.Client
 import com.martdev.remote.ResponseDataPayload
-import com.martdev.remote.VIDEOS_PATH
-import com.martdev.remote.VIDEO_COMMENTS_PATH
+import com.martdev.remote.client.VIDEOS_PATH
+import com.martdev.remote.client.VIDEO_COMMENTS_PATH
 import com.martdev.remote.video.model.CreateVideoCommentRequest
 import com.martdev.remote.video.model.CreateVideoCommentResponse
 import com.martdev.remote.video.model.VideoPostCommentResponse

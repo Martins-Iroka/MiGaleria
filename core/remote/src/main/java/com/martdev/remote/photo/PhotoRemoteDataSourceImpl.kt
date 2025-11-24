@@ -1,10 +1,10 @@
 package com.martdev.remote.photo
 
 import com.martdev.common.NetworkResult
-import com.martdev.remote.CREATE_PHOTOS_COMMENT_PATH
-import com.martdev.remote.Client
-import com.martdev.remote.PHOTOS_PATH
-import com.martdev.remote.PHOTO_COMMENTS_PATH
+import com.martdev.remote.client.CREATE_PHOTOS_COMMENT_PATH
+import com.martdev.remote.client.Client
+import com.martdev.remote.client.PHOTOS_PATH
+import com.martdev.remote.client.PHOTO_COMMENTS_PATH
 import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.photo.model.CreatePhotoCommentRequest
 import com.martdev.remote.photo.model.CreatePhotoCommentResponse
