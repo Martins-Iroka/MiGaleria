@@ -47,7 +47,7 @@ class UserLoginUseCaseTest {
 
         val r = useCase("email", "password").first()
 
-        assertTrue(r is ResponseData.Success<*>)
+        assertTrue(r is ResponseData.Success)
         assertEquals(null, r.data)
 
         verify {

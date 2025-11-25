@@ -52,7 +52,7 @@ class UserRegistrationUseCaseTest {
 
         val r = useCase("email", "password", "martdev").first()
 
-        assertTrue(r is ResponseData.Success<*>)
+        assertTrue(r is ResponseData.Success)
         assertEquals(null, r.data)
 
         verify {
