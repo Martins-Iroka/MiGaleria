@@ -44,7 +44,7 @@ compose-material = { group = "androidx.compose.material3", name = "material3"}
 compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended"}
 compose-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview"}
 compose-ui = { group = "androidx.compose.ui", name = "ui"}
-compose-test = { group = "androidx.compose.ui", name = "ui-test-junit4"}
+compose-ui-test = { group = "androidx.compose.ui", name = "ui-test-junit4"}
 compose-tooling = { group = "androidx.compose.ui", name = "ui-tooling"}
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesAndroidVersion"}
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesAndroidVersion"}

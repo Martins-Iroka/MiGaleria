@@ -1,12 +1,12 @@
 package com.martdev.login
 
-import com.martdev.data.dataKoinModule
-import com.martdev.domain.domainModule
+import com.martdev.data.login.userLoginDataModule
+import com.martdev.domain.login.userLoginUseCaseModule
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val userLoginModule = module {
-    includes(domainModule)
-    includes(dataKoinModule)
+    includes(userLoginUseCaseModule)
+    includes(userLoginDataModule)
     viewModelOf(::UserLoginViewModel)
 }

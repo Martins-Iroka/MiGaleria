@@ -3,7 +3,7 @@ package com.martdev.android.mygallery
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.martdev.ui.reusable.MyGalleryTheme
+import com.martdev.ui.reusable.theme.MyGalleryTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
