@@ -6,9 +6,11 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import com.martdev.domain.ResponseData
+import com.martdev.domain.registration.UserRegistrationDataSource
 import com.martdev.domain.registration.UserRegistrationUseCase
 import io.mockk.every
-import io.mockk.mockk
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit4.MockKRule
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
 import org.junit.Rule
@@ -24,7 +26,14 @@ class UserRegistrationKoinTest : KoinTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
-    private val useCase: UserRegistrationUseCase = mockk()
+    @get:Rule
+    val mockK = MockKRule(this)
+
+    @MockK
+    private lateinit var dataSource: UserRegistrationDataSource
+
+    @MockK
+    private lateinit var useCase: UserRegistrationUseCase
 
     @Before
     fun setUp() {
@@ -32,6 +41,7 @@ class UserRegistrationKoinTest : KoinTest {
         startKoin {
             modules(
                 module {
+                    single { dataSource }
                     factory { useCase }
                     viewModelOf(::UserRegistrationViewModel)
                 }
