@@ -12,10 +12,10 @@ fun TextCompose(
     text: String,
     font: Int = MANROP_SEMI_BOLD,
     fontSize: Int = 14,
-    fontColor: Color = Color_4E0189,
+    textColor: Color = Color_4E0189,
     modifier: Modifier = Modifier
 ) = Text(text = text,
     modifier = modifier,
     fontFamily = setFontFamily(font),
-    color = fontColor,
+    color = textColor,
     fontSize = fontSize.sp)

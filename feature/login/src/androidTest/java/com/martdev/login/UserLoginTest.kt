@@ -72,7 +72,7 @@ class UserLoginTest {
                 .assertIsDisplayed()
                 .performClick()
 
-            assertTrue(signupClicked, "The signupClick lambda was not called.")
+            assertTrue(signupClicked)
         }
     }
 

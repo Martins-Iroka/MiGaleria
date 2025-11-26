@@ -1,4 +1,4 @@
-package com.martdev.login
+package com.martdev.registration
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -19,7 +21,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,44 +47,56 @@ import com.martdev.ui.reusable.theme.Color_4E0189
 import com.martdev.ui.reusable.theme.Color_999EA1
 import org.koin.androidx.compose.koinViewModel
 
-sealed interface UserLoginTag {
-    data object LoginScreenTag : UserLoginTag
-    data object EnterEmailTag : UserLoginTag
-    data object EnterPasswordTag : UserLoginTag
-    data object LoginButtonTag : UserLoginTag
-    data object ForgotPasswordButtonTag : UserLoginTag
-    data object SignUpTextButtonTag : UserLoginTag
-    data object LoginCircularTag : UserLoginTag
+sealed interface UserRegistrationTag {
+    data object RegistrationScreen : UserRegistrationTag
+    data object EmailInput : UserRegistrationTag
+    data object PasswordInput : UserRegistrationTag
+    data object UsernameInput : UserRegistrationTag
+    data object SignUpButton : UserRegistrationTag
+    data object LoginButton : UserRegistrationTag
+    data object LoadingIndicator : UserRegistrationTag
 }
 
+
 @Composable
-fun UserLoginScreen(
+fun UserRegistrationComposable(
     navigate: () -> Unit
 ) {
 
-    val viewModel: UserLoginViewModel = koinViewModel()
+    val viewModel: UserRegistrationViewModel = koinViewModel()
 
-    val response by viewModel.loginRes.collectAsStateWithLifecycle()
+    val response by viewModel.response.collectAsStateWithLifecycle()
 
-    UserLogin(
+    UserRegistration(
         responseData = response,
-        loginUserClick = { email, password ->
-            viewModel.loginUser(email = email, password = password)
-        },
-        signupClick = navigate
+        loginUserClicked = navigate,
+        signUpUserClicked = {email, password, username ->
+            viewModel.registerUser(email, password, username)
+        }
     )
 }
 
 @Composable
-internal fun UserLogin(
+internal fun UserRegistration(
     responseData: ResponseData<Nothing> = ResponseData.NoResponse,
-    loginUserClick: (String, String) -> Unit = { _, _ -> },
-    forgetPasswordClick: () -> Unit = {},
-    signupClick: ()-> Unit= {}
+    loginUserClicked: () -> Unit = {},
+    signUpUserClicked: (String, String, String) -> Unit = { _, _, _ -> }
 ) {
-    var email by remember { mutableStateOf("") }
-    var error by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+
+    var email by remember {
+        mutableStateOf("")
+    }
+    var password by remember {
+        mutableStateOf("")
+    }
+    var username by remember {
+        mutableStateOf("")
+    }
+
+    var error by remember {
+        mutableStateOf("")
+    }
+
     var passwordVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(responseData) {
@@ -98,13 +111,13 @@ internal fun UserLogin(
                 .padding(it)
                 .fillMaxSize()
                 .padding(16.dp)
-                .testTag(UserLoginTag.LoginScreenTag.toString()),
-            horizontalAlignment = Alignment.Start
+                .verticalScroll(rememberScrollState())
+                .testTag(UserRegistrationTag.RegistrationScreen.toString())
         ) {
             Spacer(modifier = Modifier.height(60.dp))
 
             TextCompose(
-                "Hi, Welcome Back! \uD83D\uDC4B",
+                "Create an account",
                 font = MANROP_SEMI_BOLD,
                 fontSize = 25,
                 textColor = Color.Black
@@ -121,7 +134,7 @@ internal fun UserLogin(
                     textColor = Color_1F1F1F) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag(UserLoginTag.EnterEmailTag.toString()),
+                    .testTag(UserRegistrationTag.EmailInput.toString()),
                 shape = RoundedCornerShape(10.dp)
             )
 
@@ -136,7 +149,7 @@ internal fun UserLogin(
                     textColor = Color_1F1F1F) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag(UserLoginTag.EnterPasswordTag.toString()),
+                    .testTag(UserRegistrationTag.PasswordInput.toString()),
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 trailingIcon = {
@@ -151,37 +164,42 @@ internal fun UserLogin(
                 shape = RoundedCornerShape(10.dp)
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextCompose("Username", font = MANROP_SEMI_BOLD, fontSize = 14, textColor = Color_4E0189)
+
+            OutlinedTextField(
+                value = username,
+                onValueChange = { u -> username = u },
+                label = { TextCompose("Enter username",
+                    textColor = Color_1F1F1F) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(UserRegistrationTag.UsernameInput.toString()),
+                shape = RoundedCornerShape(10.dp)
+            )
+
             Spacer(modifier = Modifier.height(32.dp))
 
             if (responseData is ResponseData.Loading) {
                 CircularProgressIndicator(
                     color = Color_4E0189,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
-                        .testTag(UserLoginTag.LoginCircularTag.toString())
+                        .testTag(UserRegistrationTag.LoadingIndicator.toString())
                 )
             } else {
                 Button(
                     onClick = {
-                        loginUserClick(email, password)
+                        signUpUserClicked(email, password, username)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .testTag(UserLoginTag.LoginButtonTag.toString()),
+                        .testTag(UserRegistrationTag.SignUpButton.toString()),
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color_4E0189)
                 ) {
-                    TextCompose("Login", fontSize = 17)
+                    TextCompose("Sign Up", fontSize = 17, textColor = Color.White)
                 }
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            TextButton(onClick = forgetPasswordClick,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .testTag(UserLoginTag.ForgotPasswordButtonTag.toString())
-            ) {
-                Text("Forgot Password")
             }
 
             Spacer(modifier = Modifier.weight(1f))
@@ -191,12 +209,12 @@ internal fun UserLogin(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                TextCompose("Don't have an account?", textColor = Color_999EA1)
+                TextCompose("Already have an account?", textColor = Color_999EA1)
                 TextButton(
-                    onClick = signupClick,
+                    onClick = loginUserClicked,
                     modifier = Modifier
-                        .testTag(UserLoginTag.SignUpTextButtonTag.toString())) {
-                    TextCompose("Sign Up")
+                        .testTag(UserRegistrationTag.LoginButton.toString())) {
+                    TextCompose("Login")
                 }
             }
         }
@@ -205,6 +223,6 @@ internal fun UserLogin(
 
 @Preview(showBackground = true)
 @Composable
-fun UserLoginScreenPreview() {
-    UserLogin{}
+internal fun UserRegistrationScreenPreview() {
+    UserRegistration()
 }
