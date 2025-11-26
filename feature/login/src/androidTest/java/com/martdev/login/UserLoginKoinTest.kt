@@ -1,4 +1,4 @@
-package com.martdev.registration
+package com.martdev.login
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
@@ -6,7 +6,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import com.martdev.domain.ResponseData
-import com.martdev.domain.registration.UserRegistrationUseCase
+import com.martdev.domain.login.UserLoginUseCase
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
@@ -19,43 +19,42 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 
-class UserRegistrationKoinTest : KoinTest {
+class UserLoginKoinTest : KoinTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
-
-    private val useCase: UserRegistrationUseCase = mockk()
+    private val useCase: UserLoginUseCase = mockk()
 
     @Before
-    fun setUp() {
+    fun setup() {
         stopKoin()
         startKoin {
             modules(
                 module {
-                    factory { useCase }
-                    viewModelOf(::UserRegistrationViewModel)
+                    factory {useCase}
+                    viewModelOf(::UserLoginViewModel)
                 }
             )
         }
     }
 
     @Test
-    fun clickSignUpButton_triggersViewModel() {
+    fun clickLoginButton_triggerViewModel() {
         every {
-            useCase(any(), any(), any())
+            useCase(any(), any())
         } returns flowOf(ResponseData.Loading)
 
         with(composeTestRule) {
             setContent {
-                UserRegistrationComposable()
+                UserLoginScreen()
             }
 
             onNodeWithTag(
-                UserRegistrationTag.SignUpButton.toString()
-            ).performClick()
+                UserLoginTag.LoginButtonTag.toString()
+            ).assertExists().assertIsDisplayed().performClick()
 
             onNodeWithTag(
-                UserRegistrationTag.LoadingIndicator.toString()
+                UserLoginTag.LoginCircularTag.toString()
             ).assertExists().assertIsDisplayed()
         }
     }

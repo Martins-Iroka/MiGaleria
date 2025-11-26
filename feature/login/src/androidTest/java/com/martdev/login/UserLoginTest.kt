@@ -7,7 +7,6 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import com.martdev.domain.ResponseData
-import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -19,7 +18,7 @@ class UserLoginTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun enterEmail_Password_click_loginButton() = runTest {
+    fun enterEmail_Password_click_loginButton() {
         with(composeTestRule){
             setContent {
                 UserLogin(loginUserClick = { e, p ->
@@ -39,7 +38,7 @@ class UserLoginTest {
     }
 
     @Test
-    fun testForgetPasswordClicked() = runTest {
+    fun testForgetPasswordClicked() {
         with(composeTestRule) {
             var forgetPasswordClicked = false
             setContent {
@@ -58,7 +57,7 @@ class UserLoginTest {
     }
 
     @Test
-    fun testSignUpButtonClicked() = runTest {
+    fun testSignUpButtonClicked() {
         with(composeTestRule) {
             var signupClicked = false
             setContent {
@@ -77,7 +76,7 @@ class UserLoginTest {
     }
 
     @Test
-    fun setResponseDataToLoading_showCircularProgressIndicator() = runTest {
+    fun setResponseDataToLoading_showCircularProgressIndicator() {
         with(composeTestRule) {
             setContent {
                 UserLogin(
@@ -90,7 +89,7 @@ class UserLoginTest {
     }
 
     @Test
-    fun setResponseDataToError_showsSnackbarWithMessage() = runTest {
+    fun setResponseDataToError_showsSnackbarWithMessage() {
         with(composeTestRule) {
             val errorMessage = "Invalid credentials"
 

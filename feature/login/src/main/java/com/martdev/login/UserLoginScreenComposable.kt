@@ -58,7 +58,7 @@ sealed interface UserLoginTag {
 
 @Composable
 fun UserLoginScreen(
-    navigate: () -> Unit
+    navigate: () -> Unit= {}
 ) {
 
     val viewModel: UserLoginViewModel = koinViewModel()

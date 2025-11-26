@@ -60,7 +60,7 @@ sealed interface UserRegistrationTag {
 
 @Composable
 fun UserRegistrationComposable(
-    navigate: () -> Unit
+    navigate: () -> Unit= {}
 ) {
 
     val viewModel: UserRegistrationViewModel = koinViewModel()
