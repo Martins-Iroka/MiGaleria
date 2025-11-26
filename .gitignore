@@ -25,3 +25,4 @@ local.properties
 .kotlin
 # Sentry Config File
 sentry.properties
+kotzilla.json

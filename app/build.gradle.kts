@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotzilla)
 }
 
 android {
@@ -43,6 +44,11 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
+
+    kotzilla {
+        composeInstrumentation = true
+    }
+
     packaging {
         resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
     }
@@ -66,7 +72,8 @@ dependencies {
     implementation(projects.core.remote)
     implementation(projects.core.local)
     implementation(projects.core.ui)
-
+    implementation(libs.kotzilla.sdk.compose)
+    implementation(libs.bundles.koinLibsWithCompose)
     // Jetpack Compose
     val composeBom = platform(libs.compose.bom.get())
     implementation(composeBom)
