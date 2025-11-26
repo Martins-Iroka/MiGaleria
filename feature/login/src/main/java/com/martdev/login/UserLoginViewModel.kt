@@ -6,7 +6,7 @@ import com.martdev.domain.ResponseData
 import com.martdev.domain.login.UserLoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
@@ -22,7 +22,10 @@ class UserLoginViewModel(
             userLoginUseCase(email, password)
                 .onStart { 
                     _loginRes.value = ResponseData.Loading
-                }.collectLatest { data ->
+                }.catch {
+                    _loginRes.value = ResponseData.Error(it.message?: "An unknown error")
+                }
+                .collect { data ->
                     _loginRes.value = data
                 }
 
