@@ -3,6 +3,7 @@ import com.android.build.gradle.LibraryExtension
 import com.martdev.extension.androidTestImplementation
 import com.martdev.extension.com_android_library
 import com.martdev.extension.configureBuild
+import com.martdev.extension.configureKotlinJvm
 import com.martdev.extension.implementation
 import com.martdev.extension.libs
 import com.martdev.extension.org_jetbrains_kotlin_android
@@ -49,6 +50,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 }
 
                 configureBuild(this)
+                configureKotlinJvm()
                 buildFeatures {
                     buildConfig = true
                 }

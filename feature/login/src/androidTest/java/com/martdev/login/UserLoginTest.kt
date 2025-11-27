@@ -89,7 +89,7 @@ class UserLoginTest {
     }
 
     @Test
-    fun setResponseDataToError_showsSnackbarWithMessage() {
+    fun setResponseDataToError_showsSnackBarWithMessage() {
         with(composeTestRule) {
             val errorMessage = "Invalid credentials"
 

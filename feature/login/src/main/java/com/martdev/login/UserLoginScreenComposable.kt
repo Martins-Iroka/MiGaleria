@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.martdev.domain.ResponseData
 import com.martdev.ui.reusable.CustomLayout
-import com.martdev.ui.reusable.MANROP_SEMI_BOLD
 import com.martdev.ui.reusable.TextCompose
 import com.martdev.ui.reusable.theme.Color_1F1F1F
 import com.martdev.ui.reusable.theme.Color_4E0189
@@ -105,14 +104,13 @@ internal fun UserLogin(
 
             TextCompose(
                 "Hi, Welcome Back! \uD83D\uDC4B",
-                font = MANROP_SEMI_BOLD,
                 fontSize = 25,
                 textColor = Color.Black
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            TextCompose("Email", font = MANROP_SEMI_BOLD, fontSize = 14, textColor = Color_4E0189)
+            TextCompose("Email", fontSize = 14)
 
             OutlinedTextField(
                 value = email,
@@ -127,7 +125,7 @@ internal fun UserLogin(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextCompose("Password", font = MANROP_SEMI_BOLD, fontSize = 14, textColor = Color_4E0189)
+            TextCompose("Password", fontSize = 14)
 
             OutlinedTextField(
                 value = password,
@@ -170,7 +168,7 @@ internal fun UserLogin(
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color_4E0189)
                 ) {
-                    TextCompose("Login", fontSize = 17)
+                    TextCompose("Login", fontSize = 17, textColor = Color.White)
                 }
             }
 

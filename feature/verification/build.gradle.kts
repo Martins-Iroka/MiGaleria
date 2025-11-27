@@ -5,11 +5,4 @@ plugins {
 
 android {
     namespace = "com.martdev.verification"
-    kotlin {
-        jvmToolchain(17)
-    }
-}
-
-dependencies {
-    implementation(projects.core.ui)
 }

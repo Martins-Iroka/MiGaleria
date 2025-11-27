@@ -1,8 +1,8 @@
-package com.martdev.registration
+package com.martdev.verification
 
 import app.cash.turbine.test
 import com.martdev.domain.ResponseData
-import com.martdev.domain.registration.UserRegistrationUseCase
+import com.martdev.domain.verification.UserVerificationUseCase
 import com.martdev.test_shared.MainCoroutineRule
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -16,7 +16,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
-class UserRegistrationViewModelTest {
+class UserVerificationViewModelTest {
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
@@ -25,27 +25,25 @@ class UserRegistrationViewModelTest {
     val mockKRule = MockKRule(this)
 
     @MockK
-    private lateinit var useCase: UserRegistrationUseCase
+    private lateinit var useCase: UserVerificationUseCase
 
-    private lateinit var viewmodel: UserRegistrationViewModel
+    private lateinit var viewmodel: UserVerificationViewModel
 
     @Before
-    fun setup() {
-        viewmodel = UserRegistrationViewModel(useCase)
+    fun setUp() {
+        viewmodel = UserVerificationViewModel(useCase)
     }
+    val codeSlot = slot<String>()
+    val emailSlot = slot<String>()
 
     @Test
-    fun `register user should emit loading then success when use case returns succeeds`() = runTest {
+    fun `verify code should emit loading then success when use case returns success`() = runTest {
 
-        val emailSlot = slot<String>()
-        val passwordSlot = slot<String>()
-        val usernameSlot = slot<String>()
         every {
-            useCase(capture(emailSlot), capture(passwordSlot), capture(usernameSlot))
+            useCase(capture(codeSlot), capture((emailSlot)))
         } answers {
+            assertEquals("code", codeSlot.captured)
             assertEquals("email", emailSlot.captured)
-            assertEquals("password", passwordSlot.captured)
-            assertEquals("martdev", usernameSlot.captured)
             flowOf(
                 ResponseData.Success(null)
             )
@@ -54,29 +52,24 @@ class UserRegistrationViewModelTest {
         viewmodel.response.test {
             assertEquals(ResponseData.NoResponse, awaitItem())
 
-            viewmodel.registerUser("email", "password", "martdev")
+            viewmodel.verifyCode("code", "email")
 
             assertEquals(ResponseData.Loading, awaitItem())
 
-            val finalState = awaitItem()
-            assertIs<ResponseData.Success<*>>(finalState)
+            assertIs<ResponseData.Success<*>>(awaitItem())
 
             expectNoEvents()
         }
     }
 
     @Test
-    fun `register user should emit loading then error when use case returns error`() = runTest {
+    fun `verify code should emit loading then error when use case returns error`() = runTest {
 
-        val emailSlot = slot<String>()
-        val passwordSlot = slot<String>()
-        val usernameSlot = slot<String>()
         every {
-            useCase(capture(emailSlot), capture(passwordSlot), capture(usernameSlot))
+            useCase(capture(codeSlot), capture(emailSlot))
         } answers {
+            assertEquals("code", codeSlot.captured)
             assertEquals("email", emailSlot.captured)
-            assertEquals("password", passwordSlot.captured)
-            assertEquals("martdev", usernameSlot.captured)
             flowOf(
                 ResponseData.Error("error")
             )
@@ -85,15 +78,13 @@ class UserRegistrationViewModelTest {
         viewmodel.response.test {
             assertEquals(ResponseData.NoResponse, awaitItem())
 
-            viewmodel.registerUser("email", "password", "martdev")
+            viewmodel.verifyCode("code", "email")
 
             assertEquals(ResponseData.Loading, awaitItem())
 
             val finalState = awaitItem()
             assertIs<ResponseData.Error>(finalState)
             assertEquals("error", finalState.message)
-
-            expectNoEvents()
         }
     }
 }

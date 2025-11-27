@@ -3,6 +3,7 @@ import com.android.build.api.dsl.ApplicationExtension
 import com.martdev.extension.androidTestImplementation
 import com.martdev.extension.com_android_application
 import com.martdev.extension.configureBuild
+import com.martdev.extension.configureKotlinJvm
 import com.martdev.extension.implementation
 import com.martdev.extension.libs
 import com.martdev.extension.org_jetbrains_kotlin_android
@@ -56,7 +57,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 }
 
                 configureBuild(this)
-
+                configureKotlinJvm()
                 buildFeatures {
                     compose = true
                     buildConfig = true

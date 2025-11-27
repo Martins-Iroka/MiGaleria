@@ -4,10 +4,4 @@ plugins {
 
 android {
     namespace = "com.martdev.common"
-    kotlin {
-        jvmToolchain(17)
-    }
-}
-
-dependencies {
 }

@@ -6,7 +6,6 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val userLoginModule = module {
-    includes(userLoginUseCaseModule)
-    includes(userLoginDataModule)
+    includes(userLoginUseCaseModule, userLoginDataModule)
     viewModelOf(::UserLoginViewModel)
 }

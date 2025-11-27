@@ -6,10 +6,6 @@ plugins {
 
 android {
     namespace = "com.martdev.ui"
-
-    kotlin {
-        jvmToolchain(17)
-    }
 }
 
 dependencies {

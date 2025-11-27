@@ -3,6 +3,7 @@ package com.martdev.login
 import app.cash.turbine.test
 import com.martdev.domain.ResponseData
 import com.martdev.domain.login.UserLoginUseCase
+import com.martdev.test_shared.MainCoroutineRule
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule

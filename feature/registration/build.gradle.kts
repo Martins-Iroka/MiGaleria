@@ -5,13 +5,4 @@ plugins {
 
 android {
     namespace = "com.martdev.registration"
-
-    kotlin {
-        jvmToolchain(17)
-    }
-
-}
-
-dependencies {
-    implementation(projects.core.ui)
 }

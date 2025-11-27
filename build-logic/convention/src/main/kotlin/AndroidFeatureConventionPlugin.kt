@@ -1,6 +1,7 @@
 import com.android.build.gradle.LibraryExtension
 import com.martdev.extension.implementation
 import com.martdev.extension.libs
+import com.martdev.extension.testImplementation
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -20,6 +21,8 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 dependencies {
                     implementation(project(":core:data"))
                     implementation(libs.findBundle("koinLibsWithCompose").get())
+                    implementation(project(":core:ui"))
+                    testImplementation(project(":core:test-shared"))
                 }
             }
         }

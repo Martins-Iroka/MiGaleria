@@ -1,4 +1,4 @@
-package com.martdev.login
+package com.martdev.verification
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
@@ -6,8 +6,8 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import com.martdev.domain.ResponseData
-import com.martdev.domain.login.UserLoginDataSource
-import com.martdev.domain.login.UserLoginUseCase
+import com.martdev.domain.verification.UserVerificationDataSource
+import com.martdev.domain.verification.UserVerificationUseCase
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
@@ -20,7 +20,7 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 
-class UserLoginKoinTest : KoinTest {
+class UserVerificationKoinTest : KoinTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
@@ -29,10 +29,10 @@ class UserLoginKoinTest : KoinTest {
     val mockK = MockKRule(this)
 
     @MockK
-    private lateinit var dataSource: UserLoginDataSource
+    private lateinit var dataSource: UserVerificationDataSource
 
     @MockK
-    private lateinit var useCase: UserLoginUseCase
+    private lateinit var useCase: UserVerificationUseCase
 
     @Before
     fun setup() {
@@ -41,29 +41,28 @@ class UserLoginKoinTest : KoinTest {
                 module {
                     single { dataSource }
                     factory { useCase }
-                    viewModelOf(::UserLoginViewModel)
+                    viewModelOf(::UserVerificationViewModel)
                 }
             )
         }
     }
 
     @Test
-    fun clickLoginButton_triggerViewModel() {
+    fun clickVerifyButton_triggerViewModel() {
         every {
             useCase(any(), any())
         } returns flowOf(ResponseData.Loading)
 
         with(composeTestRule) {
             setContent {
-                UserLoginScreen()
+                UserVerificationScreen()
             }
 
-            onNodeWithTag(
-                UserLoginTag.LoginButtonTag.toString()
-            ).assertExists().assertIsDisplayed().performClick()
+            onNodeWithTag(UserVerificationTag.VerifyButtonTag.toString())
+                .assertExists().assertIsDisplayed().performClick()
 
             onNodeWithTag(
-                UserLoginTag.LoginCircularTag.toString()
+                UserVerificationTag.LoadingIndicatorTag.toString()
             ).assertExists().assertIsDisplayed()
         }
     }

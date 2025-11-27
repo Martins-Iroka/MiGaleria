@@ -4,9 +4,6 @@ plugins {
 
 android {
     namespace = "com.martdev.data"
-    kotlin {
-        jvmToolchain(17)
-    }
 }
 
 dependencies {

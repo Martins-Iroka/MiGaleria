@@ -1,4 +1,4 @@
-package com.martdev.login
+package com.martdev.test_shared
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

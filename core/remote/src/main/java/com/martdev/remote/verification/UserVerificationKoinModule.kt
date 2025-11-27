@@ -5,7 +5,7 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-val userVerificationModule = module {
+val userVerificationRemoteModule = module {
     includes(clientModule)
     singleOf(::UserVerificationRemoteSourceImpl) {
         bind<UserVerificationRemoteSource>()
