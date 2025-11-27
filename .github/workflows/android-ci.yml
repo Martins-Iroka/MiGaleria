@@ -129,6 +129,9 @@ jobs:
       - name: Decode Keystore File
         run: echo "${{ secrets.SIGNING_KEY_STORE_BASE64 }}" | base64 --decode > app/mg_keystore.jks
 
+      - name: Decode and create Kotzilla key
+        run: echo "${{ secrets.KOTZILLA_LICENSE_KEY }}" > app/src/main/assets/kotzilla.key
+
       - name: Assemble Release APK with Secrets
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
