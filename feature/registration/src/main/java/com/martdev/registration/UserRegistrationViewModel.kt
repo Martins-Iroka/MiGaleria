@@ -31,4 +31,8 @@ class UserRegistrationViewModel(
                 }
         }
     }
+
+    fun resetResponseState() {
+        _response.value = ResponseData.NoResponse
+    }
 }

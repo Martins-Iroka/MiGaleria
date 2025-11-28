@@ -20,8 +20,9 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
 
                 dependencies {
                     implementation(project(":core:data"))
-                    implementation(libs.findBundle("koinLibsWithCompose").get())
                     implementation(project(":core:ui"))
+                    implementation(libs.findBundle("koinLibsWithCompose").get())
+                    implementation(libs.findBundle("navigation3").get())
                     testImplementation(project(":core:test-shared"))
                 }
             }

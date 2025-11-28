@@ -9,5 +9,6 @@ android {
 }
 
 dependencies {
+    api(libs.bundles.navigation3)
     debugApi(libs.bundles.composeToolingLib)
 }

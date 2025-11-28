@@ -55,7 +55,7 @@ class UserRegistrationKoinTest : KoinTest {
 
         with(composeTestRule) {
             setContent {
-                UserRegistrationComposable()
+                UserRegistrationScreen()
             }
 
             onNodeWithTag(

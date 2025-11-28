@@ -1,5 +1,6 @@
 package com.martdev.registration
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -59,17 +60,26 @@ sealed interface UserRegistrationTag {
 
 
 @Composable
-fun UserRegistrationComposable(
-    navigate: () -> Unit= {}
+fun UserRegistrationScreen(
+    goToLogin: () -> Unit = {},
+    goToVerification: (String) -> Unit = {}
 ) {
 
     val viewModel: UserRegistrationViewModel = koinViewModel()
 
     val response by viewModel.response.collectAsStateWithLifecycle()
 
+    BackHandler {
+        goToLogin()
+    }
+
     UserRegistration(
         responseData = response,
-        loginUserClicked = navigate,
+        goToVerification = {
+            goToVerification(it)
+            viewModel.resetResponseState()
+        },
+        loginUserClicked = goToLogin,
         signUpUserClicked = {email, password, username ->
             viewModel.registerUser(email, password, username)
         }
@@ -79,6 +89,7 @@ fun UserRegistrationComposable(
 @Composable
 internal fun UserRegistration(
     responseData: ResponseData<Nothing> = ResponseData.NoResponse,
+    goToVerification: (String) -> Unit = {},
     loginUserClicked: () -> Unit = {},
     signUpUserClicked: (String, String, String) -> Unit = { _, _, _ -> }
 ) {
@@ -102,6 +113,8 @@ internal fun UserRegistration(
     LaunchedEffect(responseData) {
         if (responseData is ResponseData.Error) {
             error = responseData.message
+        } else if (responseData is ResponseData.Success) {
+            goToVerification(email)
         }
     }
 

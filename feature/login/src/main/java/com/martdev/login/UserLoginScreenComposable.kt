@@ -1,5 +1,6 @@
 package com.martdev.login
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -57,19 +58,23 @@ sealed interface UserLoginTag {
 
 @Composable
 fun UserLoginScreen(
-    navigate: () -> Unit= {}
+    goBack: () -> Unit= {},
+    goToSignUp: ()-> Unit = {}
 ) {
 
     val viewModel: UserLoginViewModel = koinViewModel()
 
     val response by viewModel.loginRes.collectAsStateWithLifecycle()
+    BackHandler {
+        goBack()
+    }
 
     UserLogin(
         responseData = response,
         loginUserClick = { email, password ->
             viewModel.loginUser(email = email, password = password)
         },
-        signupClick = navigate
+        signupClick = goToSignUp
     )
 }
 
