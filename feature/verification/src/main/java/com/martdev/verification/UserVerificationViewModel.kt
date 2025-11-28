@@ -1,5 +1,6 @@
 package com.martdev.verification
 
+import android.R.attr.data
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.martdev.domain.ResponseData
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class UserVerificationViewModel(
     private val userVerificationUseCase: UserVerificationUseCase
@@ -26,8 +28,12 @@ class UserVerificationViewModel(
                 .onStart {
                     _response.value = ResponseData.Loading
                 }.catch {
+                    println(it.message)
+                    Timber.e(it.message)
                     _response.value = ResponseData.Error(it.message ?: "An unknown error")
                 }.collect {
+                    println(data.toString())
+                    Timber.e(data.toString())
                     _response.value = it
                 }
         }

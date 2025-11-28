@@ -1,3 +1,4 @@
+
 import com.android.build.gradle.LibraryExtension
 import com.martdev.extension.implementation
 import com.martdev.extension.libs
@@ -22,6 +23,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                     implementation(project(":core:data"))
                     implementation(project(":core:ui"))
                     implementation(libs.findBundle("koinLibsWithCompose").get())
+//                    implementation(libs.findLibrary("kotzilla-sdk-compose").get())
                     implementation(libs.findBundle("navigation3").get())
                     testImplementation(project(":core:test-shared"))
                 }

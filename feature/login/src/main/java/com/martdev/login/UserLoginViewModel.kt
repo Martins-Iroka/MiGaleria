@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class UserLoginViewModel(
     private val userLoginUseCase: UserLoginUseCase
@@ -26,6 +27,8 @@ class UserLoginViewModel(
                     _loginRes.value = ResponseData.Error(it.message?: "An unknown error")
                 }
                 .collect { data ->
+                    println(data.toString())
+                    Timber.e(data.toString())
                     _loginRes.value = data
                 }
 

@@ -13,8 +13,8 @@ import org.koin.dsl.navigation3.navigation
 @OptIn(KoinExperimentalAPI::class)
 val userRegistrationModule = module {
     includes(userRegistrationUseCaseModule, userRegistrationDataModule)
+    viewModelOf(::UserRegistrationViewModel)
     activityRetainedScope {
-        viewModelOf(::UserRegistrationViewModel)
         navigation<NavigateTo.Registration> {
             val navigator = get<Navigator>()
             UserRegistrationScreen(

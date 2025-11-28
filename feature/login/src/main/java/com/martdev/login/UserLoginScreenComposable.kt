@@ -45,6 +45,7 @@ import com.martdev.ui.reusable.theme.Color_1F1F1F
 import com.martdev.ui.reusable.theme.Color_4E0189
 import com.martdev.ui.reusable.theme.Color_999EA1
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
 sealed interface UserLoginTag {
     data object LoginScreenTag : UserLoginTag
@@ -93,6 +94,8 @@ internal fun UserLogin(
     LaunchedEffect(responseData) {
         if (responseData is ResponseData.Error) {
             error = responseData.message
+        } else if (responseData is ResponseData.Success) {
+            Timber.e("Login successful")
         }
     }
 

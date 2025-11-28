@@ -9,6 +9,7 @@ import com.martdev.remote.registration.UserRegistrationRemoteSource
 import com.martdev.remote.registration.UserRegistrationRequestPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 
 class UserRegistrationDataSourceImpl(
     private val remote: UserRegistrationRemoteSource,
@@ -21,6 +22,7 @@ class UserRegistrationDataSourceImpl(
             password = user.password
         )).map {
             it.toResponseData(onSuccess = { response ->
+                Timber.e("Token from registration $response")
                 tokenStorage.saveVerificationToken(response.data.token)
                 null
             })

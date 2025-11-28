@@ -2,13 +2,13 @@ package com.martdev.remote.client
 
 import com.martdev.remote.datastore.tokenModuleModule
 import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.okhttp.OkHttp
 import org.koin.dsl.module
 
 internal val clientModule = module {
     includes(tokenModuleModule)
     single<HttpClientEngine> {
-        CIO.create()
+        OkHttp.create()
     }
     single {
         Client(get(), get())

@@ -13,8 +13,8 @@ import org.koin.dsl.navigation3.navigation
 @OptIn(KoinExperimentalAPI::class)
 val userLoginModule = module {
     includes(userLoginUseCaseModule, userLoginDataModule)
+    viewModelOf(::UserLoginViewModel)
     activityRetainedScope {
-        viewModelOf(::UserLoginViewModel)
         navigation<NavigateTo.Login> {
             val navigator = get<Navigator>()
             UserLoginScreen(

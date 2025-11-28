@@ -14,7 +14,11 @@ class TokenStorageImpl(
     private val dataStore: DataStore<AuthToken>
 ) : TokenStorage{
 
-    override fun getTokens() = dataStore.data.map { AuthToken(it.accessToken, it.refreshToken) }
+    override fun getTokens() = dataStore.data.map { AuthToken(
+        accessToken = it.accessToken,
+        refreshToken = it.refreshToken,
+        verificationToken = it.verificationToken
+    ) }
 
     override suspend fun saveAuthTokens(token: AuthToken) {
         dataStore.updateData {

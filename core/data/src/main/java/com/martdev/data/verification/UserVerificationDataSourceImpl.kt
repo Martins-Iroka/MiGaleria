@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
+import timber.log.Timber
 
 class UserVerificationDataSourceImpl(
     private val remote: UserVerificationRemoteSource,
@@ -25,7 +26,7 @@ class UserVerificationDataSourceImpl(
 
             val verificationToken = tokenStorage.getTokens().firstOrNull()?.verificationToken
                 ?: throw IllegalStateException("No verification token found")
-
+            Timber.e("Verification token is $verificationToken")
             val r = remote.verifyUser(
                 UserVerificationRequestPayload(user.code, user.email, verificationToken)
             ).first()

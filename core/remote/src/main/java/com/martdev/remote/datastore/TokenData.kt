@@ -3,6 +3,7 @@ package com.martdev.remote.datastore
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Serializable
 data class AuthToken(
     val accessToken: String = "",
     val refreshToken: String = "",

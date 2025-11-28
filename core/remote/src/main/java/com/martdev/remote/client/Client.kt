@@ -50,8 +50,6 @@ class Client(
 ) {
 
     val httpClient = HttpClient(engine) {
-        engine {
-        }
         install(ContentNegotiation) {
             json(Json {
                 prettyPrint = true

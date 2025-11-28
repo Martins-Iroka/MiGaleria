@@ -4,10 +4,10 @@ import com.martdev.extension.androidTestImplementation
 import com.martdev.extension.com_android_application
 import com.martdev.extension.configureBuild
 import com.martdev.extension.configureKotlinJvm
+import com.martdev.extension.debugImplementation
 import com.martdev.extension.implementation
 import com.martdev.extension.libs
 import com.martdev.extension.org_jetbrains_kotlin_android
-import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -19,6 +19,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             pluginManager.run {
                 apply(com_android_application)
                 apply(org_jetbrains_kotlin_android)
+                apply("org.jetbrains.kotlin.plugin.compose")
             }
 
             extensions.configure<ApplicationExtension> {
@@ -32,6 +33,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     versionName = "1.0"
 
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+                    vectorDrawables {
+                        useSupportLibrary = true
+                    }
                 }
 
                 packaging {
@@ -51,9 +55,14 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     resources.excludes.add("META-INF/*.kotlin_module")
                 }
 
-                compileOptions {
-                    sourceCompatibility = JavaVersion.VERSION_17
-                    targetCompatibility = JavaVersion.VERSION_17
+                buildTypes {
+                    release {
+                        isMinifyEnabled = false
+                        proguardFiles(
+                            getDefaultProguardFile("proguard-android-optimize.txt"),
+                            "proguard-rules.pro"
+                        )
+                    }
                 }
 
                 configureBuild(this)
@@ -65,8 +74,20 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
                 dependencies {
                     val bom = libs.findLibrary("compose-bom").get()
-                    add(implementation, platform(bom))
-                    add(androidTestImplementation, platform(bom))
+                    implementation(platform(bom))
+                    androidTestImplementation(platform(bom))
+                    debugImplementation(libs.findBundle("composeToolingLib").get())
+                    implementation(libs.findBundle("composeLibs").get())
+                    implementation(libs.findBundle("koinLibsWithCompose").get())
+                    implementation(libs.findBundle("navigation3").get())
+                    implementation(libs.findLibrary("compose-activity").get())
+//                    implementation(libs.findLibrary("kotzilla-sdk-compose").get())
+                    implementation(libs.findLibrary("timber").get())
+                    implementation(project(":core:data"))
+                    implementation(project(":core:ui"))
+                    implementation(project(":feature:login"))
+                    implementation(project(":feature:registration"))
+                    implementation(project(":feature:verification"))
                 }
             }
         }

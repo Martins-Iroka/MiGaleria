@@ -16,8 +16,8 @@ val userVerificationModule = module {
         userVerificationUseCaseModule,
         userVerificationDataModule
     )
+    viewModelOf(::UserVerificationViewModel)
     activityRetainedScope {
-        viewModelOf(::UserVerificationViewModel)
         navigation<NavigateTo.Verification> {
             val navigator = get<Navigator>()
             UserVerificationScreen(
