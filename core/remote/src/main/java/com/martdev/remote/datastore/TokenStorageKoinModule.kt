@@ -1,0 +1,13 @@
+package com.martdev.remote.datastore
+
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
+
+internal val tokenModuleModule = module {
+    single {
+        androidContext().dataStore
+    }
+    singleOf(::TokenStorageImpl) { bind<TokenStorage>() }
+}

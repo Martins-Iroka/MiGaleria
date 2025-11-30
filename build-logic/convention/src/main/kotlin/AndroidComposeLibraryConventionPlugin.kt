@@ -1,0 +1,37 @@
+
+import com.android.build.gradle.LibraryExtension
+import com.martdev.extension.androidTestImplementation
+import com.martdev.extension.implementation
+import com.martdev.extension.libs
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.getByType
+
+class AndroidComposeLibraryConventionPlugin : Plugin<Project> {
+    override fun apply(target: Project) {
+        target.run {
+            pluginManager.apply {
+                apply("com.android.library")
+            }
+
+            val extension = extensions.getByType<LibraryExtension>()
+            extension.run {
+                buildFeatures {
+                    compose = true
+                }
+
+                dependencies {
+                    val bom = libs.findLibrary("compose-bom").get()
+                    androidTestImplementation(platform(bom))
+                    androidTestImplementation(platform(bom))
+                    androidTestImplementation(libs.findLibrary("compose-activity").get())
+                    androidTestImplementation(libs.findLibrary("compose-ui-test").get())
+                    implementation(platform(bom))
+                    implementation(libs.findBundle("composeLibs").get())
+                }
+            }
+        }
+    }
+
+}

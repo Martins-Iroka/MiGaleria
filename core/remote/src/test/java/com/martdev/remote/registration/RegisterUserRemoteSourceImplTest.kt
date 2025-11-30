@@ -1,0 +1,128 @@
+package com.martdev.remote.registration
+
+import com.martdev.common.NetworkResult
+import com.martdev.remote.client.AUTH_REGISTER_PATH
+import com.martdev.remote.util.badRequestJsonResponse
+import com.martdev.remote.util.badRequestMessage
+import com.martdev.remote.util.getMockClient
+import io.ktor.http.HttpStatusCode
+import io.mockk.EqMatcher
+import io.mockk.every
+import io.mockk.mockkConstructor
+import io.mockk.slot
+import io.mockk.verify
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
+import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+
+@Suppress("UnusedFlow")
+class RegisterUserRemoteSourceImplTest {
+
+    private val registerUserResponseJson = "registerUserResponsePayload.json"
+    private val request = UserRegistrationRequestPayload(
+        username = "martdev",
+        email = "ik@gmail.com",
+        password = "123456"
+    )
+    private val authRegisterPath = "/v1$AUTH_REGISTER_PATH"
+
+    @Test
+    fun postRegisterUserRequest_returnSuccessRegisterUserResponse() = runTest {
+        val client = getMockClient(registerUserResponseJson, path = authRegisterPath)
+        mockkConstructor(UserRegistrationRemoteSourceImpl::class)
+        val requestSlot = slot<UserRegistrationRequestPayload>()
+        every {
+            constructedWith<UserRegistrationRemoteSourceImpl>(EqMatcher(client))
+                .registerUser(capture(requestSlot))
+        } answers {
+            assertEquals(request, requestSlot.captured)
+            callOriginal()
+        }
+
+        val result =
+            UserRegistrationRemoteSourceImpl(client).registerUser(request).first()
+        if (result is NetworkResult.Success) {
+            assertTrue(result.data.data.token.isNotEmpty())
+            assertEquals("token", result.data.data.token)
+        }
+
+        verify {
+            constructedWith<UserRegistrationRemoteSourceImpl>(EqMatcher(client))
+                .registerUser(any())
+        }
+    }
+
+    @Test
+    fun postRegisterUserRequest_returnBadRequest() = runTest {
+        val client = getMockClient(statusCode = HttpStatusCode.BadRequest, path = authRegisterPath, json = badRequestJsonResponse)
+        mockkConstructor(UserRegistrationRemoteSourceImpl::class)
+        val requestSlot = slot<UserRegistrationRequestPayload>()
+        every {
+            constructedWith<UserRegistrationRemoteSourceImpl>(EqMatcher(client))
+                .registerUser(capture(requestSlot))
+        } answers {
+            assertEquals(request, requestSlot.captured)
+            callOriginal()
+        }
+        val result =
+            UserRegistrationRemoteSourceImpl(client).registerUser(request).first()
+        if (result is NetworkResult.Failure) {
+            assertEquals(badRequestMessage, result.error)
+        }
+
+        verify {
+            constructedWith<UserRegistrationRemoteSourceImpl>(EqMatcher(client))
+                .registerUser(any())
+        }
+    }
+
+    @Test
+    fun postRegisterUserRequest_returnUnauthorized() = runTest {
+        val client = getMockClient(statusCode = HttpStatusCode.Unauthorized)
+        mockkConstructor(UserRegistrationRemoteSourceImpl::class)
+        val requestSlot = slot<UserRegistrationRequestPayload>()
+        every {
+            constructedWith<UserRegistrationRemoteSourceImpl>(EqMatcher(client))
+                .registerUser(capture(requestSlot))
+        } answers {
+            assertEquals(request, requestSlot.captured)
+            callOriginal()
+        }
+        val result =
+            UserRegistrationRemoteSourceImpl(client).registerUser(request).first()
+        if (result is NetworkResult.Failure) {
+            assertEquals("Unauthorized", result.error)
+        }
+
+        verify {
+            constructedWith<UserRegistrationRemoteSourceImpl>(EqMatcher(client))
+                .registerUser(any())
+        }
+    }
+
+    @Test
+    fun postRegisterUserRequest_returnInternalServerError() = runTest {
+        val client = getMockClient(statusCode = HttpStatusCode.InternalServerError, path = authRegisterPath)
+        mockkConstructor(UserRegistrationRemoteSourceImpl::class)
+        val requestSlot = slot<UserRegistrationRequestPayload>()
+        every {
+            constructedWith<UserRegistrationRemoteSourceImpl>(EqMatcher(client))
+                .registerUser(capture(requestSlot))
+        } answers {
+            assertEquals(request, requestSlot.captured)
+            callOriginal()
+        }
+        val result =
+            UserRegistrationRemoteSourceImpl(client).registerUser(request).first()
+        if (result is NetworkResult.Failure) {
+            assertEquals("Internal Server Error", result.error)
+        }
+
+        verify {
+            constructedWith<UserRegistrationRemoteSourceImpl>(EqMatcher(client))
+                .registerUser(any())
+        }
+    }
+}

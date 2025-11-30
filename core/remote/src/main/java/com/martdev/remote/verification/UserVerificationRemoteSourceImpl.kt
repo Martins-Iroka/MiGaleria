@@ -1,0 +1,23 @@
+package com.martdev.remote.verification
+
+import com.martdev.common.NetworkResult
+import com.martdev.remote.client.AUTH_VERIFY_PATH
+import com.martdev.remote.client.Client
+import com.martdev.remote.ResponseDataPayload
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+
+class UserVerificationRemoteSourceImpl(
+    private val client: Client
+) : UserVerificationRemoteSource {
+    override fun verifyUser(user: UserVerificationRequestPayload): Flow<NetworkResult<ResponseDataPayload<UserVerificationResponsePayload>>> {
+        return flow {
+            val r = client.postData<UserVerificationRequestPayload, ResponseDataPayload<UserVerificationResponsePayload>>(
+                AUTH_VERIFY_PATH,
+                user
+            )
+
+            emit(r)
+        }
+    }
+}

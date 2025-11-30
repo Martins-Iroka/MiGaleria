@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google()
         mavenCentral()
@@ -18,3 +19,13 @@ dependencyResolutionManagement {
 rootProject.name = "MyGallery"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
+include(":core:domain")
+include(":core:remote")
+include(":core:local")
+include(":core:data")
+include(":core:common")
+include(":feature:registration")
+include(":core:ui")
+include(":feature:login")
+include(":feature:verification")
+include(":core:test-shared")

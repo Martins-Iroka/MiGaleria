@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Base.Theme.MyGallery" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Base.Theme.MyGallery" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/blueGrey_900</item>
-        <item name="colorOnPrimary">@color/blueGrey_100_light</item>
         <item name="colorPrimaryDark">@color/blueGrey_900_dark</item>
         <item name="colorAccent">@color/blueGrey_100_light</item>
-        <item name="colorSecondary">@color/blueGrey_100_light</item>
         <item name="android:colorBackground">@color/blueGrey_900</item>
         <item name="android:textColor">@color/blueGrey_100_light</item>
     </style>
@@ -16,12 +14,5 @@
     <style name="Theme.MyGallery.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.MyGallery.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
-
-    <style name="Button_Appearance" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="android:backgroundTint">?attr/colorAccent</item>
     </style>
 </resources>
