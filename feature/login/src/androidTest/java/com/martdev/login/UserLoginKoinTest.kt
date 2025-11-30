@@ -29,9 +29,6 @@ class UserLoginKoinTest : KoinTest {
     val mockK = MockKRule(this)
 
     @MockK
-    private lateinit var dataSource: UserLoginDataSource
-
-    @MockK
     private lateinit var useCase: UserLoginUseCase
 
     @Before
@@ -39,7 +36,7 @@ class UserLoginKoinTest : KoinTest {
         startKoin {
             modules(
                 module {
-                    single { dataSource }
+                    factory<UserLoginDataSource> { MockLoginDataSourceImp() }
                     factory { useCase }
                     viewModelOf(::UserLoginViewModel)
                 }
