@@ -12,7 +12,6 @@ import com.martdev.remote.datastore.TokenStorage
 import com.martdev.remote.verification.UserVerificationRemoteSource
 import com.martdev.remote.verification.UserVerificationResponsePayload
 import io.mockk.Runs
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
 import io.mockk.every
@@ -48,7 +47,6 @@ class UserVerificationDataSourceImplTest {
 
     @Before
     fun setup() {
-        clearAllMocks()
         dataSource = UserVerificationDataSourceImpl(remote, tokenStorage)
     }
 

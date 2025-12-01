@@ -4,7 +4,6 @@ import com.martdev.domain.photodata.PhotoData
 import com.martdev.domain.photodata.PhotoUrlAndIdData
 import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.entity.PhotoUrlAndID
-import com.martdev.remote.photo.model.PhotoPostResponsePayload
 import com.martdev.remote.photo.model.PhotoSrcAPI
 
 fun PhotoEntity.toPhotoData() = PhotoData(
@@ -21,7 +20,7 @@ fun PhotoEntity.toPhotoData() = PhotoData(
     bookmarked
 )
 
-fun PhotoPostResponsePayload.toPhotoEntity() = data.map {
+fun List<PhotoSrcAPI>.toPhotoEntity() = map {
     PhotoEntity(
         it.id,
         it.photographer,

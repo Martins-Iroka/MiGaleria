@@ -6,7 +6,7 @@ import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.entity.PhotoUrlAndID
 import kotlinx.coroutines.flow.Flow
 
-class PhotoDataSourceImpl(
+class PhotoLocalDataSourceImpl(
     private val photoEntityDao: PhotoEntityDao
 ) : PhotoLocalDataSource {
     override suspend fun deletePhotoEntity(): Int {

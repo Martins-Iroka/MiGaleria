@@ -7,7 +7,7 @@ import org.koin.dsl.module
 
 val photoSourceModule = module {
     includes(photoDaoModule)
-    singleOf(::PhotoDataSourceImpl) {
+    singleOf(::PhotoLocalDataSourceImpl) {
         bind<PhotoLocalDataSource>()
     }
 }

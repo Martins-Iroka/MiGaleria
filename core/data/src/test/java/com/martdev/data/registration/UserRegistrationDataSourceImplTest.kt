@@ -9,7 +9,6 @@ import com.martdev.remote.datastore.TokenStorage
 import com.martdev.remote.registration.UserRegistrationRemoteSource
 import com.martdev.remote.registration.UserRegistrationResponsePayload
 import io.mockk.Runs
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
@@ -49,7 +48,6 @@ class UserRegistrationDataSourceImplTest {
 
     @Before
     fun setup() {
-        clearAllMocks()
         dataSource = UserRegistrationDataSourceImpl(remote, tokenStorage)
     }
 

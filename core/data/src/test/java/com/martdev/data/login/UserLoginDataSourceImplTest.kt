@@ -9,11 +9,9 @@ import com.martdev.domain.login.UserLoginDataSource
 import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.datastore.AuthToken
 import com.martdev.remote.datastore.TokenStorage
-import com.martdev.remote.login.UserLoginResponsePayload
-import com.martdev.remote.login.LogoutUserRequest
 import com.martdev.remote.login.UserLoginRemoteSource
+import com.martdev.remote.login.UserLoginResponsePayload
 import io.mockk.Runs
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
@@ -49,11 +47,8 @@ class UserLoginDataSourceImplTest {
         password = "12345"
     )
 
-    private val logoutRequest = LogoutUserRequest("refresh_token")
-
     @Before
     fun setup() {
-        clearAllMocks()
         userDatasource = UserLoginDataSourceImpl(remote, tokenStorage)
     }
 
