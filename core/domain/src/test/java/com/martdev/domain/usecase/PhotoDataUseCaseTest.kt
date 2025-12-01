@@ -1,11 +1,13 @@
 package com.martdev.domain.usecase
 
+import com.martdev.domain.ResponseData
+import com.martdev.domain.photodata.CreatePhotoCommentData
 import com.martdev.domain.photodata.PhotoData
 import com.martdev.domain.photodata.PhotoDataSource
 import com.martdev.domain.photodata.PhotoDataUseCase
+import com.martdev.domain.photodata.PhotoPostComments
 import com.martdev.domain.photodata.PhotoUrlAndIdData
 import io.mockk.Runs
-import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -18,10 +20,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.test.assertTrue
 
 @Suppress("UnusedFlow")
 class PhotoDataUseCaseTest {
@@ -36,7 +38,6 @@ class PhotoDataUseCaseTest {
 
     @Before
     fun setUp() {
-        clearMocks(photoDataSource)
         photoDataUseCase = PhotoDataUseCase(photoDataSource)
     }
 
@@ -131,5 +132,134 @@ class PhotoDataUseCaseTest {
         }
 
         assertEquals(1, row)
+    }
+
+    @Test
+    fun `get all photos confirm response is successful`() = runTest {
+
+        every {
+            photoDataSource.getPhotos(any(), any())
+        } returns flowOf(
+            ResponseData.Success(
+                listOf(
+                    PhotoData(
+                        photoId = 1
+                    ),
+                    PhotoData(
+                        photoId = 1
+                    )
+                )
+            )
+        )
+
+        val r = photoDataUseCase.getPhotos(1, 1).first()
+
+        assertTrue(r is ResponseData.Success)
+        assertTrue(r.data.isNullOrEmpty().not())
+        assertEquals(2, r.data.size)
+    }
+
+    @Test
+    fun `get all photos confirm response failed`() = runTest {
+
+        every {
+            photoDataSource.getPhotos(any(), any())
+        } returns flowOf(
+            ResponseData.Error("error")
+        )
+
+        val r = photoDataUseCase.getPhotos(1, 1).first()
+
+        assertTrue(r is ResponseData.Error)
+        assertEquals("error", r.message)
+
+        verify {
+            photoDataSource.getPhotos(any(), any())
+        }
+    }
+
+    @Test
+    fun `post comments confirm response is successful`() = runTest {
+
+        every {
+            photoDataSource.postComment(any(), any())
+        } returns flowOf(
+            ResponseData.Success(null)
+        )
+
+        val r = photoDataUseCase.postComment("1", CreatePhotoCommentData(1, "content")).first()
+
+        assertTrue(r is ResponseData.Success)
+
+        verify {
+            photoDataSource.postComment(any(), any())
+        }
+    }
+
+    @Test
+    fun `post comments confirm response failed`() = runTest {
+
+        every {
+            photoDataSource.postComment(any(), any())
+        } returns flowOf(
+            ResponseData.Error("error")
+        )
+
+        val r = photoDataUseCase.postComment("1", CreatePhotoCommentData(1, "content")).first()
+
+        assertTrue(r is ResponseData.Error)
+        assertEquals("error", r.message)
+
+        verify {
+            photoDataSource.postComment(any(), any())
+        }
+    }
+
+    @Test
+    fun `get comments by post id confirm response is successful`() = runTest {
+
+        every {
+            photoDataSource.getCommentsByPostID(any())
+        } returns flowOf(
+            ResponseData.Success(
+                listOf(
+                    PhotoPostComments(
+                        content = "content",
+                        createdAt = "2025-12-01",
+                        username = "martdev"
+                    ),
+                    PhotoPostComments(
+                        content = "content2",
+                        createdAt = "2025-11-30",
+                        username = "martdev"
+                    )
+                )
+            )
+        )
+
+        val r = photoDataUseCase.getCommentsByPostId("1").first()
+
+        assertTrue(r is ResponseData.Success)
+        assertTrue(!(r.data.isNullOrEmpty()))
+    }
+
+    @Test
+    fun `get comments by post id confirm response failed`() = runTest {
+
+        every {
+            photoDataSource.getCommentsByPostID(any())
+        } returns flowOf(
+            ResponseData.Error(
+                "error"
+            )
+        )
+
+        val r = photoDataUseCase.getCommentsByPostId("1").first()
+
+        assertTrue(r is ResponseData.Error)
+        assertEquals(
+            "error",
+            r.message
+        )
     }
 }
