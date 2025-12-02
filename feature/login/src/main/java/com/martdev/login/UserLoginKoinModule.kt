@@ -2,8 +2,8 @@ package com.martdev.login
 
 import com.martdev.data.login.userLoginDataModule
 import com.martdev.domain.login.userLoginUseCaseModule
+import com.martdev.ui.reusable.AppNavigator
 import com.martdev.ui.reusable.NavigateTo
-import com.martdev.ui.reusable.Navigator
 import org.koin.androidx.scope.dsl.activityRetainedScope
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.module.dsl.viewModelOf
@@ -16,7 +16,7 @@ val userLoginModule = module {
     viewModelOf(::UserLoginViewModel)
     activityRetainedScope {
         navigation<NavigateTo.Login> {
-            val navigator = get<Navigator>()
+            val navigator = get<AppNavigator>()
             UserLoginScreen(
                 goBack = {
                     navigator.goBack()

@@ -2,8 +2,8 @@ package com.martdev.registration
 
 import com.martdev.data.registration.userRegistrationDataModule
 import com.martdev.domain.registration.userRegistrationUseCaseModule
+import com.martdev.ui.reusable.AppNavigator
 import com.martdev.ui.reusable.NavigateTo
-import com.martdev.ui.reusable.Navigator
 import org.koin.androidx.scope.dsl.activityRetainedScope
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.module.dsl.viewModelOf
@@ -16,7 +16,7 @@ val userRegistrationModule = module {
     viewModelOf(::UserRegistrationViewModel)
     activityRetainedScope {
         navigation<NavigateTo.Registration> {
-            val navigator = get<Navigator>()
+            val navigator = get<AppNavigator>()
             UserRegistrationScreen(
                 goToLogin = {
                     navigator.goBack()

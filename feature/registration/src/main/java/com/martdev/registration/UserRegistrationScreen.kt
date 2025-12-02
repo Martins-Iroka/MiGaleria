@@ -81,7 +81,8 @@ fun UserRegistrationScreen(
         },
         loginUserClicked = goToLogin,
         signUpUserClicked = {email, password, username ->
-            viewModel.registerUser(email, password, username)
+//            viewModel.registerUser(email, password, username)
+            goToVerification(email)
         }
     )
 }

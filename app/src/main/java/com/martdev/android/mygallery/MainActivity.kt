@@ -4,10 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.NavDisplay
-import com.martdev.ui.reusable.Navigator
+import com.martdev.ui.reusable.AppNavigator
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.AndroidScopeComponent
 import org.koin.androidx.compose.navigation3.getEntryProvider
@@ -18,13 +19,19 @@ import org.koin.core.scope.Scope
 @OptIn(KoinExperimentalAPI::class)
 class MainActivity : ComponentActivity(), AndroidScopeComponent {
     override val scope: Scope by activityRetainedScope()
-    val navigator: Navigator by inject()
+    val navigator: AppNavigator by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            Scaffold {
+            Scaffold(
+                bottomBar = {
+                    NavigationBar {
+
+                    }
+                }
+            ) {
                 NavDisplay(
                     backStack = navigator.backStack,
                     modifier = Modifier.padding(it),

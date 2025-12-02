@@ -2,8 +2,8 @@ package com.martdev.verification
 
 import com.martdev.data.verification.userVerificationDataModule
 import com.martdev.domain.verification.userVerificationUseCaseModule
+import com.martdev.ui.reusable.AppNavigator
 import com.martdev.ui.reusable.NavigateTo
-import com.martdev.ui.reusable.Navigator
 import org.koin.androidx.scope.dsl.activityRetainedScope
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.module.dsl.viewModelOf
@@ -19,11 +19,11 @@ val userVerificationModule = module {
     viewModelOf(::UserVerificationViewModel)
     activityRetainedScope {
         navigation<NavigateTo.Verification> {
-            val navigator = get<Navigator>()
+            val navigator = get<AppNavigator>()
             UserVerificationScreen(
                 it.email
             ) {
-                navigator.popUpTo<NavigateTo.Login>()
+                navigator.popUpTo(NavigateTo.Login)
             }
         }
     }
