@@ -1,22 +1,19 @@
 package com.martdev.photo
 
-import app.cash.turbine.test
+import androidx.paging.testing.asSnapshot
+import com.google.common.truth.Truth.assertThat
 import com.martdev.domain.ResponseData
 import com.martdev.domain.photodata.PhotoData
 import com.martdev.domain.photodata.PhotoDataUseCase
 import com.martdev.test_shared.MainCoroutineRule
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
-import io.mockk.slot
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
 
 class PhotoViewModelTest {
 
@@ -37,95 +34,25 @@ class PhotoViewModelTest {
     }
 
     @Test
-    fun `get photos should emit loading then success when use case returns success`() = runTest {
-        val limitSlot = slot<Int>()
-        val offset = slot<Int>()
-
-        every {
-            useCase.getPhotos(capture(limitSlot), capture(offset))
-        } answers {
-            assertEquals(2, limitSlot.captured)
-            assertEquals(1, offset.captured)
-            flowOf(
-                ResponseData.Success(
-                    listOf(
-                        PhotoData(
-                            photoId = 1
-                        ),
-                        PhotoData(
-                            photoId = 2
-                        )
-                    )
-                )
-            )
+    fun `test pager photo list`() = runTest {
+        val mockPhotos = (1L..40).map {
+            PhotoData(photoId = it)
         }
 
-        viewmodel.photos.test {
-            assertEquals(ResponseData.NoResponse, awaitItem())
+        coEvery {
+            useCase.getPhotos(any(), 1)
+        } returns flowOf(
+            ResponseData.Success(mockPhotos.take(20))
+        )
 
-            viewmodel.getPhotos(2, 1)
+        coEvery {
+            useCase.getPhotos(any(), 2)
+        } returns flowOf(
+            ResponseData.Success(mockPhotos.drop(20))
+        )
 
-            assertEquals(ResponseData.Loading, awaitItem())
+        val items = viewmodel.photoList.asSnapshot()
 
-            assertIs<ResponseData.Success<*>>(awaitItem())
-
-            expectNoEvents()
-        }
-    }
-
-    @Test
-    fun `get photos should emit loading then fail when use case returns error`() = runTest {
-        val limitSlot = slot<Int>()
-        val offset = slot<Int>()
-
-        every {
-            useCase.getPhotos(capture(limitSlot), capture(offset))
-        } answers {
-            assertEquals(2, limitSlot.captured)
-            assertEquals(1, offset.captured)
-            flowOf(
-                ResponseData.Error("error")
-            )
-        }
-
-        viewmodel.photos.test {
-            assertEquals(ResponseData.NoResponse, awaitItem())
-
-            viewmodel.getPhotos(2, 1)
-
-            assertEquals(ResponseData.Loading, awaitItem())
-
-            val r = awaitItem()
-            assertIs<ResponseData.Error>(r)
-            assertEquals("error", r.message)
-
-            expectNoEvents()
-        }
-    }
-
-    @Test
-    fun `get photos should emit loading then use case throws an exception`() = runTest {
-        val limitSlot = slot<Int>()
-        val offset = slot<Int>()
-
-        every {
-            useCase.getPhotos(capture(limitSlot), capture(offset))
-        } returns flow {
-            throw Exception("test error")
-        }
-
-        viewmodel.photos.test {
-            assertEquals(ResponseData.NoResponse, awaitItem())
-
-            viewmodel.getPhotos(2, 1)
-
-            assertEquals(ResponseData.Loading, awaitItem())
-
-            val r = awaitItem()
-            assertIs<ResponseData.Error>(r)
-            assertEquals("test error", r.message)
-
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertThat(items).containsExactlyElementsIn(mockPhotos).inOrder()
     }
 }

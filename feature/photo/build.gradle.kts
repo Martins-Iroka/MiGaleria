@@ -8,5 +8,9 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.compose.paging)
+    implementation(libs.paging)
+    implementation(libs.paging.common)
+    testImplementation(libs.paging.testing)
+    testImplementation(libs.google.truth)
 }

@@ -7,6 +7,7 @@ archCoreVersion = "2.2.0"
 composeActivityVersion = "1.12.0"
 composeBom = "2025.11.01"
 composeCompiler = "1.5.7"
+composePaging = "3.4.0-alpha04"
 coreKtx = "1.17.0"
 coroutinesAndroidVersion = "1.10.2"
 datastorePreferences = "1.1.7"
@@ -22,10 +23,12 @@ logbackVersion = "1.5.18"
 materialVersion = "1.13.0"
 mockkVersion = "1.14.6"
 nav3Core = "1.0.0"
+pagingVersion = "3.3.6"
 robolectricVersion = "4.16"
 roomVersion = "2.8.1"
 slf4jAndroidVersion = "1.7.36"
 timber = "5.0.1"
+truthVersion = "1.4.2"
 turbineVersion = "1.2.1"
 
 [libraries]
@@ -46,6 +49,7 @@ compose-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4"}
 compose-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest"}
 compose-material = { group = "androidx.compose.material3", name = "material3"}
 compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended"}
+compose-paging = { group = "androidx.paging", name = "paging-compose", version.ref = "composePaging"}
 compose-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview"}
 compose-ui = { group = "androidx.compose.ui", name = "ui"}
 compose-ui-test = { group = "androidx.compose.ui", name = "ui-test-junit4"}
@@ -53,6 +57,7 @@ compose-tooling = { group = "androidx.compose.ui", name = "ui-tooling"}
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesAndroidVersion"}
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesAndroidVersion"}
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesAndroidVersion"}
+google-truth = { group = "com.google.truth", name = "truth", version.ref = "truthVersion"}
 hamcrest = { group = "org.hamcrest", name = "hamcrest-all", version.ref = "hamcrestVersion"}
 junit = { group = "junit", name = "junit", version.ref = "junitVersion"}
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin_version"}
@@ -74,6 +79,9 @@ ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-jso
 material = { group = "com.google.android.material", name = "material", version.ref = "materialVersion" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockkVersion"}
 mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockkVersion"}
+paging = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "pagingVersion"}
+paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "composePaging"}
+paging-testing = { group = "androidx.paging", name = "paging-testing", version.ref = "pagingVersion" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectricVersion"}
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomVersion"}
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomVersion"}
