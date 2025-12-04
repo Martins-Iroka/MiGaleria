@@ -11,10 +11,10 @@ class PhotoPagingSource(
     val useCase: PhotoDataUseCase
 ) : PagingSource<Int, PhotoData>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PhotoData> {
-        val currentPage = params.key ?: 1
-        val limit = params.loadSize
+        val currentPage = params.key ?: 0
+//        val limit = params.loadSize
         return try {
-            when (val r = useCase.getPhotos(limit, currentPage).first()) {
+            when (val r = useCase.getPhotos(20, currentPage).first()) {
                 is ResponseData.Success -> {
 
                     val photos= r.data.orEmpty()
@@ -39,7 +39,7 @@ class PhotoPagingSource(
     override fun getRefreshKey(state: PagingState<Int, PhotoData>): Int? {
         return state.anchorPosition?.let {
             val anchorPage = state.closestPageToPosition(it)
-            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+            anchorPage?.prevKey?.plus(1)
         }
     }
 }

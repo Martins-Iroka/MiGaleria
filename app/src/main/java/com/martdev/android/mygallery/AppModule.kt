@@ -1,6 +1,7 @@
 package com.martdev.android.mygallery
 
 import com.martdev.login.userLoginModule
+import com.martdev.photo.photoModule
 import com.martdev.registration.userRegistrationModule
 import com.martdev.ui.reusable.AppNavigator
 import com.martdev.ui.reusable.NavigateTo
@@ -12,7 +13,8 @@ val appModule = module {
     includes(
         userLoginModule,
         userRegistrationModule,
-        userVerificationModule
+        userVerificationModule,
+        photoModule
     )
 
     activityRetainedScope {

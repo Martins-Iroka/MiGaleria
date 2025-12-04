@@ -3,6 +3,9 @@ package com.martdev.domain
 import com.martdev.domain.login.UserLoginDataSource
 import com.martdev.domain.login.UserLoginUseCase
 import com.martdev.domain.login.userLoginUseCaseModule
+import com.martdev.domain.photodata.PhotoDataSource
+import com.martdev.domain.photodata.PhotoDataUseCase
+import com.martdev.domain.photodata.photoUseCaseModule
 import com.martdev.domain.registration.UserRegistrationDataSource
 import com.martdev.domain.registration.UserRegistrationUseCase
 import com.martdev.domain.registration.userRegistrationUseCaseModule
@@ -25,9 +28,10 @@ class DomainKoinModuleTest : KoinTest {
     @get:Rule
     val koinTestRule = KoinTestRule.create {
         modules(
+            photoUseCaseModule,
             userLoginUseCaseModule,
             userRegistrationUseCaseModule,
-            userVerificationUseCaseModule
+            userVerificationUseCaseModule,
         )
     }
 
@@ -64,5 +68,15 @@ class DomainKoinModuleTest : KoinTest {
         assertNotNull(mock)
         assertNotNull(useCase)
         assertEquals(mock, useCase.userVerificationDataSource)
+    }
+
+    @Test
+    fun `inject photo data source in photo use case`() {
+
+        val mock = declareMock<PhotoDataSource>()
+        val useCase = get<PhotoDataUseCase>()
+        assertNotNull(mock)
+        assertNotNull(useCase)
+        assertEquals(mock, useCase.photoDataSource)
     }
 }

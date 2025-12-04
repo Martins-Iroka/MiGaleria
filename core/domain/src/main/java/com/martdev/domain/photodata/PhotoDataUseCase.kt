@@ -3,7 +3,7 @@ package com.martdev.domain.photodata
 import kotlinx.coroutines.flow.Flow
 
 class PhotoDataUseCase(
-    private val photoDataSource: PhotoDataSource
+    val photoDataSource: PhotoDataSource
 ) {
 
     fun getPhotoDataById(id: Long): Flow<PhotoData> = photoDataSource.getPhotoDataById(id)

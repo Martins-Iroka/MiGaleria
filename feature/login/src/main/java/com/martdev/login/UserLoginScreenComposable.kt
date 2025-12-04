@@ -45,7 +45,6 @@ import com.martdev.ui.reusable.theme.Color_1F1F1F
 import com.martdev.ui.reusable.theme.Color_4E0189
 import com.martdev.ui.reusable.theme.Color_999EA1
 import org.koin.androidx.compose.koinViewModel
-import timber.log.Timber
 
 sealed interface UserLoginTag {
     data object LoginScreenTag : UserLoginTag
@@ -60,14 +59,22 @@ sealed interface UserLoginTag {
 @Composable
 fun UserLoginScreen(
     goBack: () -> Unit= {},
-    goToSignUp: ()-> Unit = {}
+    goToSignUp: ()-> Unit = {},
+    goToPhoto: () -> Unit = {}
 ) {
 
     val viewModel: UserLoginViewModel = koinViewModel()
 
     val response by viewModel.loginRes.collectAsStateWithLifecycle()
+
     BackHandler {
         goBack()
+    }
+
+    LaunchedEffect(response) {
+        if (response is ResponseData.Success) {
+            goToPhoto()
+        }
     }
 
     UserLogin(
@@ -84,7 +91,7 @@ internal fun UserLogin(
     responseData: ResponseData<Nothing> = ResponseData.NoResponse,
     loginUserClick: (String, String) -> Unit = { _, _ -> },
     forgetPasswordClick: () -> Unit = {},
-    signupClick: ()-> Unit= {}
+    signupClick: ()-> Unit= {},
 ) {
     var email by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
@@ -94,8 +101,6 @@ internal fun UserLogin(
     LaunchedEffect(responseData) {
         if (responseData is ResponseData.Error) {
             error = responseData.message
-        } else if (responseData is ResponseData.Success) {
-            Timber.e("Login successful")
         }
     }
 

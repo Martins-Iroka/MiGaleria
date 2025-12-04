@@ -1,6 +1,7 @@
 package com.martdev.local.dao
 
 import com.martdev.local.database.MyGalleryDB
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 internal val photoDaoModule = module {
@@ -14,5 +15,11 @@ internal val videoDaoModule = module {
     single {
         val database = get<MyGalleryDB>()
         database.videoDataDao()
+    }
+}
+
+internal val myGalleryDB = module {
+    single {
+        MyGalleryDB.getInstance(androidContext())
     }
 }

@@ -10,6 +10,7 @@ sealed class NavigateTo {
     data object Login : NavigateTo()
     data object Registration : NavigateTo()
     data class Verification(val email: String) : NavigateTo()
+    data object Photo : NavigateTo()
 }
 
 class AppNavigator(startDestination: Any) {
