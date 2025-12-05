@@ -2,6 +2,11 @@ package com.martdev.domain.photodata
 
 import java.util.UUID
 
+data class PhotoInfo(
+    val photoItems: List<PhotoData>,
+    val nextOffset: Int
+)
+
 data class PhotoData(
     val photoId: Long = 0,
     val photographer: String = "",

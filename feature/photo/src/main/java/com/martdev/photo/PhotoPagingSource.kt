@@ -12,16 +12,16 @@ class PhotoPagingSource(
 ) : PagingSource<Int, PhotoData>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PhotoData> {
         val currentPage = params.key ?: 0
-//        val limit = params.loadSize
         return try {
-            when (val r = useCase.getPhotos(20, currentPage).first()) {
+            when (val r = useCase.getPhotoInfo(20, currentPage).first()) {
                 is ResponseData.Success -> {
 
-                    val photos= r.data.orEmpty()
+                    val photos= r.data?.photoItems.orEmpty()
+                    val next = r.data?.nextOffset?.takeIf { it >= 0 }
                     LoadResult.Page(
                         data = photos,
-                        prevKey = if (currentPage == 1) null else currentPage - 1,
-                        nextKey = if (photos.isNotEmpty()) currentPage + 1 else null
+                        prevKey = null,
+                        nextKey = next
                     )
                 }
 

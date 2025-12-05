@@ -13,6 +13,8 @@ interface PhotoDataSource {
 
     fun getPhotos(limit: Int, offset: Int): Flow<ResponseData<List<PhotoData>>>
 
+    fun getPhotoInfo(limit: Int, offset: Int): Flow<ResponseData<PhotoInfo>>
+
     suspend fun updateBookmarkStatus(photoId: Long, isBookmarked: Boolean): Int
 
     fun postComment(postId: String, commentData: CreatePhotoCommentData): Flow<ResponseData<Nothing>>

@@ -10,6 +10,8 @@ class PhotoDataUseCase(
 
     fun getPhotos(limit: Int, offset: Int) = photoDataSource.getPhotos(limit, offset)
 
+    fun getPhotoInfo(limit: Int, offset: Int) = photoDataSource.getPhotoInfo(limit, offset)
+
     fun loadPhotos(): Flow<List<PhotoUrlAndIdData>> = photoDataSource.loadLocalPhotos()
 
     suspend fun refreshPhotos() = photoDataSource.refreshPhotos()

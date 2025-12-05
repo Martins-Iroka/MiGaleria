@@ -8,6 +8,7 @@ import com.martdev.domain.ResponseData
 import com.martdev.domain.photodata.CreatePhotoCommentData
 import com.martdev.domain.photodata.PhotoData
 import com.martdev.domain.photodata.PhotoDataSource
+import com.martdev.domain.photodata.PhotoInfo
 import com.martdev.domain.photodata.PhotoPostComments
 import com.martdev.domain.photodata.PhotoUrlAndIdData
 import com.martdev.local.photodatasource.PhotoLocalDataSource
@@ -31,6 +32,16 @@ class PhotoDataRepositoryImpl(
                 it.toResponseData { res ->
                     localPhotoSource.savePhotoEntity(res.data.toPhotoEntity())
                     res.data.toPhotoData()
+                }
+            }
+    }
+
+    override fun getPhotoInfo(limit: Int, offset: Int): Flow<ResponseData<PhotoInfo>> {
+        return remoteSource.getPhotoPosts(limit, offset)
+            .map {
+                it.toResponseData { res ->
+                    localPhotoSource.savePhotoEntity(res.data.photoItems.toPhotoEntity())
+                    PhotoInfo(res.data.photoItems.toPhotoData(), res.data.nextPage)
                 }
             }
     }

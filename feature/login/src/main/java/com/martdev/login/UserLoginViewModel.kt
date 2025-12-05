@@ -34,4 +34,8 @@ class UserLoginViewModel(
 
         }
     }
+
+    fun reset() {
+        _loginRes.value = ResponseData.NoResponse
+    }
 }

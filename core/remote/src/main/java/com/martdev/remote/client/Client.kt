@@ -2,6 +2,7 @@ package com.martdev.remote.client
 
 import com.martdev.common.NetworkResult
 import com.martdev.remote.BuildConfig
+import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.datastore.AuthToken
 import com.martdev.remote.datastore.TokenRefreshRequest
 import com.martdev.remote.datastore.TokenRefreshResponse
@@ -83,13 +84,13 @@ class Client(
                     val refreshToken = oldToken?.refreshToken ?: return@refreshTokens null
 
                     try {
-                        val response: TokenRefreshResponse = client.post("/authentication/refresh") {
+                        val response: ResponseDataPayload<TokenRefreshResponse> = client.post("/authentication/refresh") {
                             markAsRefreshTokenRequest()
                             contentType(ContentType.Application.Json)
                             setBody(TokenRefreshRequest(refreshToken))
                         }.body()
 
-                        val newTokens = AuthToken(response.accessToken, refreshToken)
+                        val newTokens = AuthToken(response.data.accessToken, refreshToken)
                         tokenStorage.saveAuthTokens(newTokens)
 
                         BearerTokens(newTokens.accessToken, newTokens.refreshToken)

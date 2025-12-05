@@ -56,6 +56,7 @@ sealed interface UserLoginTag {
     data object LoginCircularTag : UserLoginTag
 }
 
+//Todo reset response
 @Composable
 fun UserLoginScreen(
     goBack: () -> Unit= {},
@@ -74,6 +75,7 @@ fun UserLoginScreen(
     LaunchedEffect(response) {
         if (response is ResponseData.Success) {
             goToPhoto()
+            viewModel.reset()
         }
     }
 
@@ -92,6 +94,7 @@ internal fun UserLogin(
     loginUserClick: (String, String) -> Unit = { _, _ -> },
     forgetPasswordClick: () -> Unit = {},
     signupClick: ()-> Unit= {},
+    goToPhoto: () -> Unit = {}
 ) {
     var email by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }

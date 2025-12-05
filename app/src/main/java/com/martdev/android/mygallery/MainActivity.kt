@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.NavDisplay
@@ -26,11 +25,6 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
 
         setContent {
             Scaffold(
-                bottomBar = {
-                    NavigationBar {
-
-                    }
-                }
             ) {
                 NavDisplay(
                     backStack = navigator.backStack,
