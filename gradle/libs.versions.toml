@@ -4,6 +4,7 @@ androidJunitVersion = "1.3.0"
 androidTools = "31.13.0"
 appcompat = "1.7.1"
 archCoreVersion = "2.2.0"
+coilVersion = "3.3.0"
 composeActivityVersion = "1.12.0"
 composeBom = "2025.11.01"
 composeCompiler = "1.5.7"
@@ -44,6 +45,8 @@ androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runt
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "composeActivityVersion" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+compose-coil = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coilVersion"}
+compose-coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coilVersion"}
 compose-graphics = { group = "androidx.compose.ui", name = "ui-graphics"}
 compose-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4"}
 compose-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest"}

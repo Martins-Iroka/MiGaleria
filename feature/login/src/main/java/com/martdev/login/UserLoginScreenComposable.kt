@@ -56,7 +56,6 @@ sealed interface UserLoginTag {
     data object LoginCircularTag : UserLoginTag
 }
 
-//Todo reset response
 @Composable
 fun UserLoginScreen(
     goBack: () -> Unit= {},
@@ -82,7 +81,7 @@ fun UserLoginScreen(
     UserLogin(
         responseData = response,
         loginUserClick = { email, password ->
-            viewModel.loginUser(email = email, password = password)
+            viewModel.loginUser(email = email.trim(), password = password.trim())
         },
         signupClick = goToSignUp
     )

@@ -8,6 +8,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.compose.coil)
+    implementation(libs.compose.coil.network)
     implementation(libs.compose.paging)
     implementation(libs.paging)
     implementation(libs.paging.common)
