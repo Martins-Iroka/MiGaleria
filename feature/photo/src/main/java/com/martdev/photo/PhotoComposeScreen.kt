@@ -1,6 +1,7 @@
 package com.martdev.photo
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -37,7 +38,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PhotoComposeScreen(
-    goBack: () -> Unit
+    goToDetail: (Long, String) -> Unit = {_, _ -> },
+    goBack: () -> Unit= {}
 ) {
 
     val viewModel: PhotoViewModel = koinViewModel()
@@ -47,13 +49,14 @@ fun PhotoComposeScreen(
     BackHandler {
         goBack()
     }
-    PhotoScreen(pager)
+    PhotoScreen(pager, goToDetail = goToDetail)
 }
 
 @Suppress("ParamsComparedByRef")
 @Composable
 internal fun PhotoScreen(
-    photos: LazyPagingItems<PhotoData>
+    photos: LazyPagingItems<PhotoData>,
+    goToDetail: (Long, String) -> Unit = {_, _ -> },
 ) {
 
     LazyColumn(
@@ -70,7 +73,9 @@ internal fun PhotoScreen(
         ) {
             val item = photos[it]
             item?.let { photo ->
-                PhotoAndPhotographerCompose(photo)
+                PhotoAndPhotographerCompose(photo) {
+                    goToDetail(photo.photoId, photo.original)
+                }
             }
         }
 
@@ -95,7 +100,8 @@ internal fun PhotoScreen(
 
 @Composable
 private fun PhotoAndPhotographerCompose(
-    photoData: PhotoData
+    photoData: PhotoData,
+    click: () -> Unit= {},
 ) {
 
     val context = LocalContext.current
@@ -104,7 +110,8 @@ private fun PhotoAndPhotographerCompose(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight(),
+            .wrapContentHeight()
+            .clickable(onClick = click),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(

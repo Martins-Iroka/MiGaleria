@@ -11,6 +11,7 @@ sealed class NavigateTo {
     data object Registration : NavigateTo()
     data class Verification(val email: String) : NavigateTo()
     data object Photo : NavigateTo()
+    data class PhotoDetail(val postId: Long, val imageUrl: String): NavigateTo()
 }
 
 class AppNavigator(startDestination: Any) {

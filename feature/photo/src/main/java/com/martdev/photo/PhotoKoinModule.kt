@@ -17,7 +17,21 @@ val photoModule = module {
     activityRetainedScope {
         navigation<NavigateTo.Photo> {
             val navigator = get<AppNavigator>()
-            PhotoComposeScreen {
+            PhotoComposeScreen(
+                goToDetail = { postID, imageUrl ->
+                    navigator.goTo(NavigateTo.PhotoDetail(postID, imageUrl))
+                }
+            ) {
+                navigator.goBack()
+            }
+        }
+
+        navigation<NavigateTo.PhotoDetail> {
+            val navigator = get<AppNavigator>()
+            PhotoDetailCompose(
+                it.postId,
+                it.imageUrl
+            ) {
                 navigator.goBack()
             }
         }
