@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,7 +47,7 @@ import com.martdev.domain.photodata.PhotoPostComments
 import com.martdev.ui.reusable.TextCompose
 import org.koin.androidx.compose.koinViewModel
 
-//todo work on comments screen
+
 @Composable
 fun PhotoDetailCompose(
     postID: Long,
@@ -57,6 +58,7 @@ fun PhotoDetailCompose(
     val viewModel: PhotoViewModel = koinViewModel()
 
     val photoPostComments by viewModel.photoComments.collectAsStateWithLifecycle()
+    val sendCommentResponse by viewModel.sendCommentsResponse.collectAsStateWithLifecycle()
 
     BackHandler {
         goBack()
@@ -65,13 +67,17 @@ fun PhotoDetailCompose(
     LaunchedEffect(Unit) {
         viewModel.getCommentsByPostId(postID.toString())
     }
-    PhotoDetail(imageUrl, photoPostComments)
+    PhotoDetail(imageUrl, photoPostComments, sendCommentResponse) {
+        viewModel.postComment(postID.toString(), it)
+    }
 }
 
 @Composable
 internal fun PhotoDetail(
     imageUrl: String,
-    comments: ResponseData<List<PhotoPostComments>> = ResponseData.NoResponse
+    comments: ResponseData<List<PhotoPostComments>> = ResponseData.NoResponse,
+    sendCommentResponse: ResponseData<Nothing> = ResponseData.NoResponse,
+    sendComment: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
     var showBottomSheet by remember {
@@ -115,7 +121,10 @@ internal fun PhotoDetail(
             showBottomSheet = false
         }, sheetState = sheetState) {
             Box(Modifier.fillMaxSize()) {
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                LazyColumn(modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     when (comments) {
                         is ResponseData.Loading -> {
                             item {
@@ -174,9 +183,16 @@ internal fun PhotoDetail(
                 OutlinedTextField(value = comment, onValueChange = {
                     comment = it
                 }, modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
-                    leadingIcon = {
-                        IconButton(onClick = {}) {
-                            Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send")
+                    trailingIcon = {
+                        if (sendCommentResponse is ResponseData.Loading) {
+                            CircularProgressIndicator()
+                        } else {
+                            IconButton(onClick = {
+                                sendComment(comment)
+                                comment = ""
+                            }) {
+                                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send")
+                            }
                         }
                     })
             }

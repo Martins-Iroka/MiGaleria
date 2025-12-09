@@ -28,7 +28,8 @@ class UserLoginDataSourceImpl(
                 it.toResponseData { loginPayload ->
                     val accessToken = loginPayload.data.accessToken
                     val refreshToken = loginPayload.data.refreshToken
-                    tokenStorage.saveAuthTokens(AuthToken(accessToken, refreshToken))
+                    val userId = loginPayload.data.userId
+                    tokenStorage.saveAuthTokens(AuthToken(accessToken, refreshToken, userID = userId))
                     null
                 }
             }

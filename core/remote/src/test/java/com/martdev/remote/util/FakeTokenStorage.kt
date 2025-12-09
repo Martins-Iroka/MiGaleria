@@ -29,4 +29,10 @@ class FakeTokenStorage : TokenStorage {
         authToken
     }
 
+    override suspend fun saveUserId(userID: Long) {
+        authToken = authToken.copy(
+            userID = userID
+        )
+    }
+
 }

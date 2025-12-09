@@ -12,14 +12,19 @@ import com.martdev.domain.photodata.PhotoInfo
 import com.martdev.domain.photodata.PhotoPostComments
 import com.martdev.domain.photodata.PhotoUrlAndIdData
 import com.martdev.local.photodatasource.PhotoLocalDataSource
+import com.martdev.remote.datastore.TokenStorage
 import com.martdev.remote.photo.PhotoRemoteDataSource
 import com.martdev.remote.photo.model.CreatePhotoCommentRequest
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class PhotoDataRepositoryImpl(
     private val localPhotoSource: PhotoLocalDataSource,
-    private val remoteSource: PhotoRemoteDataSource
+    private val remoteSource: PhotoRemoteDataSource,
+    private val tokenStorage: TokenStorage
 ) : PhotoDataSource {
     override fun getPhotoDataById(id: Long): Flow<PhotoData> {
         return localPhotoSource.getPhotoEntityById(id).map {
@@ -66,13 +71,16 @@ class PhotoDataRepositoryImpl(
         postId: String,
         commentData: CreatePhotoCommentData
     ): Flow<ResponseData<Nothing>> {
-        return remoteSource.postComment(
-            postId,
-            CreatePhotoCommentRequest(
-                commentData.userID,
-                commentData.content
-            )).map {
-                it.toResponseData()
+        return flow {
+            val userId = tokenStorage.getTokens().firstOrNull()?.userID ?: throw IllegalStateException("no user id found")
+            val r = remoteSource.postComment(
+                postId,
+                CreatePhotoCommentRequest(
+                    userId,
+                    commentData.content
+                )).first()
+
+            emit(r.toResponseData())
         }
     }
 

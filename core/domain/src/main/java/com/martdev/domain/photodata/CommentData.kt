@@ -1,7 +1,7 @@
 package com.martdev.domain.photodata
 
 data class CreatePhotoCommentData(
-    val userID: Long,
+    val userID: Long = 0,
     val content: String
 )
 

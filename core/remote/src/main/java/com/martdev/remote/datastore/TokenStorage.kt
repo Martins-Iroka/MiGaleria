@@ -10,5 +10,6 @@ interface TokenStorage {
 
     suspend fun saveVerificationToken(token: String)
 
+    suspend fun saveUserId(userID: Long)
     suspend fun clearTokens()
 }

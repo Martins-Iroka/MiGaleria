@@ -89,7 +89,7 @@ class Client(
                             setBody(TokenRefreshRequest(refreshToken))
                         }.body()
 
-                        val newTokens = AuthToken(response.data.accessToken, refreshToken)
+                        val newTokens = AuthToken(response.data.accessToken, refreshToken, userID = response.data.userID)
                         tokenStorage.saveAuthTokens(newTokens)
 
                         BearerTokens(newTokens.accessToken, newTokens.refreshToken)
