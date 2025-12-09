@@ -20,7 +20,6 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
-import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -118,9 +117,6 @@ class Client(
                 host = BuildConfig.BASE_URL.plus("/v1")
             }
             contentType(ContentType.Application.Json)
-            headers {
-                this
-            }
         }
     }
 

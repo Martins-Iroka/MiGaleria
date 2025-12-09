@@ -8,5 +8,6 @@ data class CreatePhotoCommentData(
 data class PhotoPostComments(
     val content: String,
     val createdAt: String,
-    val username: String
+    val username: String,
+    val id: Long
 )

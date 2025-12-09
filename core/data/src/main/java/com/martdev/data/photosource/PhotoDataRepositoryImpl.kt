@@ -84,7 +84,8 @@ class PhotoDataRepositoryImpl(
                         PhotoPostComments(
                             it.content,
                             it.createdAt,
-                            it.username
+                            it.username,
+                            it.id
                         )
                     }
                 }
