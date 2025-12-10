@@ -1,4 +1,4 @@
-package com.martdev.remote.datastore
+package com.martdev.remote.datastore.token
 
 import androidx.datastore.core.Serializer
 import com.martdev.common.Crypto
@@ -9,7 +9,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.Base64
 
-object UserPreferencesSerializer: Serializer<AuthToken> {
+object AuthTokenSerializer: Serializer<AuthToken> {
     override val defaultValue: AuthToken
         get() = AuthToken()
 

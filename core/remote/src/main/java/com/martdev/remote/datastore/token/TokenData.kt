@@ -1,4 +1,4 @@
-package com.martdev.remote.datastore
+package com.martdev.remote.datastore.token
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -7,8 +7,7 @@ import kotlinx.serialization.Serializable
 data class AuthToken(
     val accessToken: String = "",
     val refreshToken: String = "",
-    val verificationToken: String = "",
-    val userID: Long = 0
+    val verificationToken: String = ""
 )
 
 @Serializable
@@ -20,7 +19,5 @@ data class TokenRefreshRequest(
 @Serializable
 data class TokenRefreshResponse(
     @SerialName("access_token")
-    val accessToken: String,
-    @SerialName("user_id")
-    val userID: Long
+    val accessToken: String
 )

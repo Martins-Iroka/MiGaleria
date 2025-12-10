@@ -47,7 +47,8 @@ import com.martdev.domain.photodata.PhotoPostComments
 import com.martdev.ui.reusable.TextCompose
 import org.koin.androidx.compose.koinViewModel
 
-
+//write unit and ui test for the new implementations
+//refactor the userId storing logic
 @Composable
 fun PhotoDetailCompose(
     postID: Long,

@@ -5,7 +5,7 @@ import com.martdev.domain.ResponseData
 import com.martdev.domain.verification.UserVerificationDataRequest
 import com.martdev.domain.verification.UserVerificationDataSource
 import com.martdev.remote.ResponseDataPayload
-import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.datastore.token.TokenStorage
 import com.martdev.remote.verification.UserVerificationRemoteSource
 import com.martdev.remote.verification.UserVerificationRequestPayload
 import com.martdev.remote.verification.UserVerificationResponsePayload

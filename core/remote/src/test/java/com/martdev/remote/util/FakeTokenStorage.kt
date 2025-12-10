@@ -1,7 +1,7 @@
 package com.martdev.remote.util
 
-import com.martdev.remote.datastore.AuthToken
-import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.datastore.token.AuthToken
+import com.martdev.remote.datastore.token.TokenStorage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
@@ -27,12 +27,6 @@ class FakeTokenStorage : TokenStorage {
 
     override suspend fun clearTokens() {
         authToken
-    }
-
-    override suspend fun saveUserId(userID: Long) {
-        authToken = authToken.copy(
-            userID = userID
-        )
     }
 
 }

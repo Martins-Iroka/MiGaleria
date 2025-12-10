@@ -4,7 +4,7 @@ import com.martdev.data.util.toResponseData
 import com.martdev.domain.ResponseData
 import com.martdev.domain.registration.UserRegistrationDataRequest
 import com.martdev.domain.registration.UserRegistrationDataSource
-import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.datastore.token.TokenStorage
 import com.martdev.remote.registration.UserRegistrationRemoteSource
 import com.martdev.remote.registration.UserRegistrationRequestPayload
 import kotlinx.coroutines.flow.Flow

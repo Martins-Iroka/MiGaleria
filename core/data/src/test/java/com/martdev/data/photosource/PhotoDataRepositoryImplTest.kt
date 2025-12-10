@@ -9,6 +9,7 @@ import com.martdev.domain.photodata.PhotoDataSource
 import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.photodatasource.PhotoLocalDataSource
 import com.martdev.remote.ResponseDataPayload
+import com.martdev.remote.datastore.user.UserStorage
 import com.martdev.remote.photo.PhotoRemoteDataSource
 import com.martdev.remote.photo.model.CreatePhotoCommentRequest
 import com.martdev.remote.photo.model.CreatePhotoCommentResponse
@@ -43,11 +44,14 @@ class PhotoDataRepositoryImplTest {
     @MockK
     private lateinit var local: PhotoLocalDataSource
 
+    @MockK
+    private lateinit var userStorage: UserStorage
+
     private lateinit var source: PhotoDataSource
 
     @Before
     fun setup() {
-        source = PhotoDataRepositoryImpl(local, remote)
+        source = PhotoDataRepositoryImpl(local, remote, userStorage)
     }
 
     @Test
@@ -194,12 +198,14 @@ class PhotoDataRepositoryImplTest {
                             PhotoPostCommentResponse(
                                 content = "content1",
                                 createdAt = "2025-12-01",
-                                username = "martdev"
+                                username = "martdev",
+                                1
                             ),
                             PhotoPostCommentResponse(
                                 content = "content2",
                                 createdAt = "2025-12-02",
-                                username = "martdev"
+                                username = "martdev",
+                                2
                             )
                         )
                     )

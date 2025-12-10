@@ -7,8 +7,9 @@ import com.martdev.domain.ResponseData
 import com.martdev.domain.login.UserLoginDataRequest
 import com.martdev.domain.login.UserLoginDataSource
 import com.martdev.remote.ResponseDataPayload
-import com.martdev.remote.datastore.AuthToken
-import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.datastore.token.AuthToken
+import com.martdev.remote.datastore.token.TokenStorage
+import com.martdev.remote.datastore.user.UserStorage
 import com.martdev.remote.login.UserLoginRemoteSource
 import com.martdev.remote.login.UserLoginResponsePayload
 import io.mockk.Runs
@@ -40,6 +41,8 @@ class UserLoginDataSourceImplTest {
     @MockK
     private lateinit var tokenStorage: TokenStorage
 
+    @MockK
+    private lateinit var userStorage: UserStorage
     private lateinit var userDatasource: UserLoginDataSource
 
     private val request = UserLoginDataRequest(
@@ -49,7 +52,7 @@ class UserLoginDataSourceImplTest {
 
     @Before
     fun setup() {
-        userDatasource = UserLoginDataSourceImpl(remote, tokenStorage)
+        userDatasource = UserLoginDataSourceImpl(remote, tokenStorage, userStorage)
     }
 
     @Test
@@ -57,11 +60,12 @@ class UserLoginDataSourceImplTest {
 
         every { remote.loginUser(any()) } returns flowOf(
             NetworkResult.Success(ResponseDataPayload(
-                data = UserLoginResponsePayload("access_token", "refresh_token")
+                data = UserLoginResponsePayload("access_token", "refresh_token", 1)
             ))
         )
 
         coEvery { tokenStorage.saveAuthTokens(any()) } just Runs
+        coEvery { userStorage.saveUserId(any()) } just Runs
 
         val r = userDatasource.loginUser(request).first()
 
@@ -70,6 +74,7 @@ class UserLoginDataSourceImplTest {
         coVerify {
             remote.loginUser(any())
             tokenStorage.saveAuthTokens(any())
+            userStorage.saveUserId(any())
         }
     }
 

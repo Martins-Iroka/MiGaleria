@@ -2,8 +2,8 @@ package com.martdev.remote
 
 import com.martdev.common.NetworkResult
 import com.martdev.remote.client.Client
-import com.martdev.remote.datastore.AuthToken
-import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.datastore.token.AuthToken
+import com.martdev.remote.datastore.token.TokenStorage
 import com.martdev.remote.photo.model.PhotoSrcAPI
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond

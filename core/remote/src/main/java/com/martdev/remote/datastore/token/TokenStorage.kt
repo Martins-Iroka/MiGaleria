@@ -1,4 +1,4 @@
-package com.martdev.remote.datastore
+package com.martdev.remote.datastore.token
 
 import kotlinx.coroutines.flow.Flow
 
@@ -10,6 +10,5 @@ interface TokenStorage {
 
     suspend fun saveVerificationToken(token: String)
 
-    suspend fun saveUserId(userID: Long)
     suspend fun clearTokens()
 }

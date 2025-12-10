@@ -3,10 +3,10 @@ package com.martdev.remote.client
 import com.martdev.common.NetworkResult
 import com.martdev.remote.BuildConfig
 import com.martdev.remote.ResponseDataPayload
-import com.martdev.remote.datastore.AuthToken
-import com.martdev.remote.datastore.TokenRefreshRequest
-import com.martdev.remote.datastore.TokenRefreshResponse
-import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.datastore.token.AuthToken
+import com.martdev.remote.datastore.token.TokenRefreshRequest
+import com.martdev.remote.datastore.token.TokenRefreshResponse
+import com.martdev.remote.datastore.token.TokenStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
@@ -89,7 +89,7 @@ class Client(
                             setBody(TokenRefreshRequest(refreshToken))
                         }.body()
 
-                        val newTokens = AuthToken(response.data.accessToken, refreshToken, userID = response.data.userID)
+                        val newTokens = AuthToken(response.data.accessToken, refreshToken)
                         tokenStorage.saveAuthTokens(newTokens)
 
                         BearerTokens(newTokens.accessToken, newTokens.refreshToken)
