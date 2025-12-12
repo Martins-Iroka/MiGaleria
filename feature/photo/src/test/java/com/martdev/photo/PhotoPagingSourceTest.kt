@@ -7,6 +7,7 @@ import com.google.common.truth.Truth.assertThat
 import com.martdev.domain.ResponseData
 import com.martdev.domain.photodata.PhotoData
 import com.martdev.domain.photodata.PhotoDataUseCase
+import com.martdev.domain.photodata.PhotoInfo
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
@@ -33,9 +34,14 @@ class PhotoPagingSourceTest {
     @Test
     fun `load returns page when on successful load of item keyed data`() = runTest {
         every {
-            useCase.getPhotos(any(), any())
+            useCase.getPhotoInfo(any(), any())
         } returns flowOf(
-            ResponseData.Success(mockPhotos.take(20))
+            ResponseData.Success(
+                PhotoInfo(
+                    mockPhotos.take(20),
+                    20
+                )
+            )
         )
 
         val pagingSource = PhotoPagingSource(useCase)
@@ -48,15 +54,20 @@ class PhotoPagingSourceTest {
 
         assertThat(result.prevKey).isNull()
 
-        assertThat(result.nextKey).isEqualTo(2)
+        assertThat(result.nextKey).isEqualTo(20)
     }
 
     @Test
     fun `test consecutive loads`() = runTest {
         every {
-            useCase.getPhotos(any(), any())
+            useCase.getPhotoInfo(any(), any())
         } returns flowOf(
-            ResponseData.Success(mockPhotos)
+            ResponseData.Success(
+                PhotoInfo(
+                    mockPhotos,
+                    0
+                )
+            )
         )
 
         val pagingSource = PhotoPagingSource(useCase)
@@ -74,7 +85,7 @@ class PhotoPagingSourceTest {
     @Test
     fun `refresh returns error`() = runTest {
         every {
-            useCase.getPhotos(any(), any())
+            useCase.getPhotoInfo(any(), any())
         } returns flowOf(
             ResponseData.Error("error")
         )

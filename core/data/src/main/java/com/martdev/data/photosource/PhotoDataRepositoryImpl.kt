@@ -5,17 +5,19 @@ import com.martdev.data.util.toPhotoEntity
 import com.martdev.data.util.toPhotoUrlAndIdData
 import com.martdev.data.util.toResponseData
 import com.martdev.domain.ResponseData
-import com.martdev.domain.photodata.CreatePhotoCommentData
 import com.martdev.domain.photodata.PhotoData
 import com.martdev.domain.photodata.PhotoDataSource
 import com.martdev.domain.photodata.PhotoInfo
 import com.martdev.domain.photodata.PhotoPostComments
 import com.martdev.domain.photodata.PhotoUrlAndIdData
 import com.martdev.local.photodatasource.PhotoLocalDataSource
+import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.datastore.user.UserStorage
 import com.martdev.remote.photo.PhotoRemoteDataSource
 import com.martdev.remote.photo.model.CreatePhotoCommentRequest
+import com.martdev.remote.photo.model.CreatePhotoCommentResponse
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
@@ -29,16 +31,6 @@ class PhotoDataRepositoryImpl(
     override fun getPhotoDataById(id: Long): Flow<PhotoData> {
         return localPhotoSource.getPhotoEntityById(id).map {
             it.toPhotoData() }
-    }
-
-    override fun getPhotos(limit: Int, offset: Int): Flow<ResponseData<List<PhotoData>>> {
-        return remoteSource.getAllPhotoPosts(limit, offset)
-            .map {
-                it.toResponseData { res ->
-                    localPhotoSource.savePhotoEntity(res.data.toPhotoEntity())
-                    res.data.toPhotoData()
-                }
-            }
     }
 
     override fun getPhotoInfo(limit: Int, offset: Int): Flow<ResponseData<PhotoInfo>> {
@@ -67,20 +59,19 @@ class PhotoDataRepositoryImpl(
         return localPhotoSource.updateBookmarkStatus(photoId, isBookmarked)
     }
 
-    override fun postComment(
-        postId: String,
-        commentData: CreatePhotoCommentData
-    ): Flow<ResponseData<Nothing>> {
+    override fun postComment(postId: String, content: String): Flow<ResponseData<Nothing>> {
         return flow {
             val userId = userStorage.getUserData().firstOrNull()?.userId ?: throw IllegalStateException("no user id found")
             val r = remoteSource.postComment(
                 postId,
                 CreatePhotoCommentRequest(
                     userId,
-                    commentData.content
+                    content
                 )).first()
 
-            emit(r.toResponseData())
+            emit(r.toResponseData<ResponseDataPayload<CreatePhotoCommentResponse>, Nothing>())
+        }.catch {
+            emit(ResponseData.Error(it.message ?: "An error occurred"))
         }
     }
 

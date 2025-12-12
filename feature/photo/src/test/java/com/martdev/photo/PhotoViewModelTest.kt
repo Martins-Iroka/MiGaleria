@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.martdev.domain.ResponseData
 import com.martdev.domain.photodata.PhotoData
 import com.martdev.domain.photodata.PhotoDataUseCase
+import com.martdev.domain.photodata.PhotoInfo
 import com.martdev.test_shared.MainCoroutineRule
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -40,15 +41,25 @@ class PhotoViewModelTest {
         }
 
         coEvery {
-            useCase.getPhotos(any(), 1)
+            useCase.getPhotoInfo(any(), any())
         } returns flowOf(
-            ResponseData.Success(mockPhotos.take(20))
+            ResponseData.Success(
+                PhotoInfo(
+                    mockPhotos,
+                    20
+                )
+            )
         )
 
         coEvery {
-            useCase.getPhotos(any(), 2)
+            useCase.getPhotoInfo(any(), any())
         } returns flowOf(
-            ResponseData.Success(mockPhotos.drop(20))
+            ResponseData.Success(
+                PhotoInfo(
+                    mockPhotos,
+                    -1
+                )
+            )
         )
 
         val items = viewmodel.photoList.asSnapshot()

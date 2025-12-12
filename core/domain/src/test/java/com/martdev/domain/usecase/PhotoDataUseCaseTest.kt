@@ -1,10 +1,10 @@
 package com.martdev.domain.usecase
 
 import com.martdev.domain.ResponseData
-import com.martdev.domain.photodata.CreatePhotoCommentData
 import com.martdev.domain.photodata.PhotoData
 import com.martdev.domain.photodata.PhotoDataSource
 import com.martdev.domain.photodata.PhotoDataUseCase
+import com.martdev.domain.photodata.PhotoInfo
 import com.martdev.domain.photodata.PhotoPostComments
 import com.martdev.domain.photodata.PhotoUrlAndIdData
 import io.mockk.Runs
@@ -23,6 +23,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 @Suppress("UnusedFlow")
@@ -138,43 +139,51 @@ class PhotoDataUseCaseTest {
     fun `get all photos confirm response is successful`() = runTest {
 
         every {
-            photoDataSource.getPhotos(any(), any())
+            photoDataSource.getPhotoInfo(any(), any())
         } returns flowOf(
             ResponseData.Success(
-                listOf(
-                    PhotoData(
-                        photoId = 1
+                PhotoInfo(
+                    photoItems = listOf(
+                        PhotoData(
+                            photoId = 1
+                        ),
+                        PhotoData(
+                            photoId = 1
+                        )
                     ),
-                    PhotoData(
-                        photoId = 1
-                    )
+                    nextOffset = 1
                 )
             )
         )
 
-        val r = photoDataUseCase.getPhotos(1, 1).first()
+        val r = photoDataUseCase.getPhotoInfo(1, 1).first()
 
         assertTrue(r is ResponseData.Success)
-        assertTrue(r.data.isNullOrEmpty().not())
-        assertEquals(2, r.data.size)
+        assertNotNull(r.data)
+        assertTrue(r.data.photoItems.isEmpty().not())
+        assertEquals(2, r.data.photoItems.size)
+
+        verify {
+            photoDataSource.getPhotoInfo(any(), any())
+        }
     }
 
     @Test
     fun `get all photos confirm response failed`() = runTest {
 
         every {
-            photoDataSource.getPhotos(any(), any())
+            photoDataSource.getPhotoInfo(any(), any())
         } returns flowOf(
             ResponseData.Error("error")
         )
 
-        val r = photoDataUseCase.getPhotos(1, 1).first()
+        val r = photoDataUseCase.getPhotoInfo(1, 1).first()
 
         assertTrue(r is ResponseData.Error)
         assertEquals("error", r.message)
 
         verify {
-            photoDataSource.getPhotos(any(), any())
+            photoDataSource.getPhotoInfo(any(), any())
         }
     }
 
@@ -187,7 +196,7 @@ class PhotoDataUseCaseTest {
             ResponseData.Success(null)
         )
 
-        val r = photoDataUseCase.postComment("1", CreatePhotoCommentData(1, "content")).first()
+        val r = photoDataUseCase.postComment("1", "content").first()
 
         assertTrue(r is ResponseData.Success)
 
@@ -205,7 +214,7 @@ class PhotoDataUseCaseTest {
             ResponseData.Error("error")
         )
 
-        val r = photoDataUseCase.postComment("1", CreatePhotoCommentData(1, "content")).first()
+        val r = photoDataUseCase.postComment("1", "content").first()
 
         assertTrue(r is ResponseData.Error)
         assertEquals("error", r.message)
@@ -226,12 +235,14 @@ class PhotoDataUseCaseTest {
                     PhotoPostComments(
                         content = "content",
                         createdAt = "2025-12-01",
-                        username = "martdev"
+                        username = "martdev",
+                        id = 1
                     ),
                     PhotoPostComments(
                         content = "content2",
                         createdAt = "2025-11-30",
-                        username = "martdev"
+                        username = "martdev",
+                        id = 2
                     )
                 )
             )

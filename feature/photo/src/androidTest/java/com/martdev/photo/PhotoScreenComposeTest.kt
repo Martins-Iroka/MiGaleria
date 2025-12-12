@@ -2,13 +2,16 @@ package com.martdev.photo
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToNode
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.martdev.domain.ResponseData
 import com.martdev.domain.photodata.PhotoData
 import com.martdev.domain.photodata.PhotoDataUseCase
+import com.martdev.domain.photodata.PhotoInfo
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
@@ -39,19 +42,27 @@ class PhotoScreenComposeTest {
     @Test
     fun testPhotoCompose() = runTest {
         val mockPhotos = (1L..40).map {
-            PhotoData(photoId = it, original = "Original $it")
+            PhotoData(photoId = it, original = "https://images.pexels.com/photos/34622874/pexels-photo-34622874.jpeg", photographer = "photographer $it")
         }
 
         coEvery {
-            useCase.getPhotos(any(), 1)
+            useCase.getPhotoInfo(any(), any())
         } returns flowOf(
-            ResponseData.Success(mockPhotos.take(20))
+            ResponseData.Success(
+                        PhotoInfo(
+                        mockPhotos,
+                40
+            ))
         )
 
         coEvery {
-            useCase.getPhotos(any(), 2)
+            useCase.getPhotoInfo(any(), any())
         } returns flowOf(
-            ResponseData.Success(mockPhotos.drop(20))
+            ResponseData.Success(
+                PhotoInfo(
+                    mockPhotos,
+                    -1
+                ))
         )
 
         val items = viewmodel.photoList
@@ -63,9 +74,15 @@ class PhotoScreenComposeTest {
                 PhotoScreen(photos = lazyPagingItems)
             }
 
-            onNodeWithText("Original 1").assertIsDisplayed()
-            onNodeWithText("Original 20").assertIsDisplayed()
-            onNodeWithText("Original 40").assertExists().performScrollTo()
+            onNodeWithText("Photo by photographer 1").assertIsDisplayed()
+
+            onNodeWithTag(PHOTO_LAZY_COLUMN).assertIsDisplayed().performScrollToNode(hasText("Photo by photographer 20"))
+
+            onNodeWithText("Photo by photographer 20").assertIsDisplayed()
+
+            onNodeWithTag(PHOTO_LAZY_COLUMN).assertIsDisplayed().performScrollToNode(hasText("Photo by photographer 40"))
+
+            onNodeWithText("Photo by photographer 40").assertIsDisplayed()
         }
     }
 }

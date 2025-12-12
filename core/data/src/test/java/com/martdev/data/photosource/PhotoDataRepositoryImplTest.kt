@@ -9,6 +9,7 @@ import com.martdev.domain.photodata.PhotoDataSource
 import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.photodatasource.PhotoLocalDataSource
 import com.martdev.remote.ResponseDataPayload
+import com.martdev.remote.datastore.user.UserData
 import com.martdev.remote.datastore.user.UserStorage
 import com.martdev.remote.photo.PhotoRemoteDataSource
 import com.martdev.remote.photo.model.CreatePhotoCommentRequest
@@ -24,6 +25,7 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -136,9 +138,14 @@ class PhotoDataRepositoryImplTest {
         val postIdSlot = slot<String>()
         val commentSlot = slot<CreatePhotoCommentRequest>()
         val createCommentRequest = CreatePhotoCommentRequest(
-            userID = 1,
+            userID = 5,
             content = "test"
         )
+
+        every {
+            userStorage.getUserData()
+        } returns flowOf(UserData(5))
+
         every {
             remote.postComment(capture(postIdSlot), capture(commentSlot))
         } answers {
@@ -147,11 +154,34 @@ class PhotoDataRepositoryImplTest {
             flowOf(NetworkResult.Success(ResponseDataPayload(CreatePhotoCommentResponse(true))))
         }
 
-        val r = source.postComment("1", CreatePhotoCommentData(1, "test")).first()
+        val r = source.postComment("1", CreatePhotoCommentData("test")).first()
 
         assertTrue(r is ResponseData.Success)
 
         verify {
+            userStorage.getUserData()
+            remote.postComment(any(), any())
+        }
+    }
+
+    @Test
+    fun `post comment confirm IllegalStateException was thrown`() = runTest {
+        val errorMessage = "no user id found"
+        every {
+            userStorage.getUserData()
+        } returns flow {
+            throw IllegalStateException(errorMessage)
+        }
+
+        val r = source.postComment("1", CreatePhotoCommentData("test")).first()
+
+        assertTrue(r is ResponseData.Error)
+        assertEquals(errorMessage, r.message)
+
+        verify {
+            userStorage.getUserData()
+        }
+        verify(atLeast = 0, atMost = 0) {
             remote.postComment(any(), any())
         }
     }
@@ -173,7 +203,7 @@ class PhotoDataRepositoryImplTest {
             flowOf(NetworkResult.Failure.InternalServerError())
         }
 
-        val r = source.postComment("1", CreatePhotoCommentData(1, "test")).first()
+        val r = source.postComment("1", CreatePhotoCommentData( "test")).first()
 
         assertTrue(r is ResponseData.Error)
         assertEquals("Internal Server Error", r.message)

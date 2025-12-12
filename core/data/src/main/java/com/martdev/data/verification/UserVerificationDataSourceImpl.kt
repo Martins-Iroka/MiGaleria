@@ -10,6 +10,7 @@ import com.martdev.remote.verification.UserVerificationRemoteSource
 import com.martdev.remote.verification.UserVerificationRequestPayload
 import com.martdev.remote.verification.UserVerificationResponsePayload
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
@@ -32,6 +33,8 @@ class UserVerificationDataSourceImpl(
             ).first()
 
             emit(r.toResponseData<ResponseDataPayload<UserVerificationResponsePayload>, Nothing>())
+        }.catch {
+            emit(ResponseData.Error(it.message ?: "An error occurred"))
         }.onCompletion {
             tokenStorage.clearTokens()
         }

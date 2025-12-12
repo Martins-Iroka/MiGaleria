@@ -19,6 +19,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import io.mockk.just
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -74,6 +75,31 @@ class UserVerificationDataSourceImplTest {
         coVerifyOrder {
             tokenStorage.getTokens()
             remote.verifyUser(any())
+            tokenStorage.clearTokens()
+        }
+    }
+
+    @Test
+    fun `call verify user response throw IllegalStateException`() = runTest {
+
+        val errorMessage = "No verification token found"
+        every {
+            tokenStorage.getTokens()
+        } returns flow {
+            throw IllegalStateException(errorMessage)
+        }
+
+        coEvery {
+            tokenStorage.clearTokens()
+        } just Runs
+
+        val r = dataSource.verifyUser(request).first()
+
+        assertTrue(r is ResponseData.Error)
+        assertEquals(errorMessage, r.message)
+
+        coVerifyOrder {
+            tokenStorage.getTokens()
             tokenStorage.clearTokens()
         }
     }

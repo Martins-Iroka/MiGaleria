@@ -8,8 +8,6 @@ class PhotoDataUseCase(
 
     fun getPhotoDataById(id: Long): Flow<PhotoData> = photoDataSource.getPhotoDataById(id)
 
-    fun getPhotos(limit: Int, offset: Int) = photoDataSource.getPhotos(limit, offset)
-
     fun getPhotoInfo(limit: Int, offset: Int) = photoDataSource.getPhotoInfo(limit, offset)
 
     fun loadPhotos(): Flow<List<PhotoUrlAndIdData>> = photoDataSource.loadLocalPhotos()
@@ -19,7 +17,7 @@ class PhotoDataUseCase(
     suspend fun updateBookmarkStatus(photoId: Long, isBookmarked: Boolean) =
         photoDataSource.updateBookmarkStatus(photoId, isBookmarked)
 
-    fun postComment(postId: String, commentData: CreatePhotoCommentData) = photoDataSource.postComment(postId, commentData)
+    fun postComment(postId: String, content: String) = photoDataSource.postComment(postId, content)
 
     fun getCommentsByPostId(postId: String) = photoDataSource.getCommentsByPostID(postId)
 }

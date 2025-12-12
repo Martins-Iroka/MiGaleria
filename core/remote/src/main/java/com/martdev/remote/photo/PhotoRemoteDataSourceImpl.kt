@@ -10,7 +10,6 @@ import com.martdev.remote.photo.model.CreatePhotoCommentRequest
 import com.martdev.remote.photo.model.CreatePhotoCommentResponse
 import com.martdev.remote.photo.model.PhotoPostCommentResponse
 import com.martdev.remote.photo.model.PhotoPostResponse
-import com.martdev.remote.photo.model.PhotoSrcAPI
 import io.ktor.client.request.parameter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,17 +17,6 @@ import kotlinx.coroutines.flow.flow
 class PhotoRemoteDataSourceImpl(
     private val client: Client
 ) : PhotoRemoteDataSource{
-
-    override fun getAllPhotoPosts(limit: Int, offset: Int): Flow<NetworkResult<ResponseDataPayload<List<PhotoSrcAPI>>>> {
-        return flow {
-            val result =
-                client.getRequest<ResponseDataPayload<List<PhotoSrcAPI>>>(PHOTOS_PATH) {
-                    parameter("limit", limit)
-                    parameter("offset", offset)
-                }
-            emit(result)
-        }
-    }
 
     override fun getPhotoPosts(
         limit: Int,

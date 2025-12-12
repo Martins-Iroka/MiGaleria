@@ -6,7 +6,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.martdev.domain.ResponseData
-import com.martdev.domain.photodata.CreatePhotoCommentData
 import com.martdev.domain.photodata.PhotoDataUseCase
 import com.martdev.domain.photodata.PhotoPostComments
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,7 +50,7 @@ class PhotoViewModel(
 
     fun postComment(postId: String, content: String) {
         viewModelScope.launch {
-            photoUseCase.postComment(postId, CreatePhotoCommentData(content = content))
+            photoUseCase.postComment(postId, content)
                 .onStart {
                     _sendCommentsResponse.value = ResponseData.Loading
                 }.catch {
