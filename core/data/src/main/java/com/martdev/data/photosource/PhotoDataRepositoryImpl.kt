@@ -1,7 +1,6 @@
 package com.martdev.data.photosource
 
 import com.martdev.data.util.toPhotoData
-import com.martdev.data.util.toPhotoEntity
 import com.martdev.data.util.toPhotoUrlAndIdData
 import com.martdev.data.util.toResponseData
 import com.martdev.domain.ResponseData
@@ -37,7 +36,6 @@ class PhotoDataRepositoryImpl(
         return remoteSource.getAllPhotoPosts(limit, offset)
             .map {
                 it.toResponseData { res ->
-                    localPhotoSource.savePhotoEntity(res.data.photoItems.toPhotoEntity())
                     PhotoInfo(res.data.photoItems.toPhotoData(), res.data.nextPage)
                 }
             }
@@ -50,9 +48,7 @@ class PhotoDataRepositoryImpl(
     }
 
     override suspend fun refreshPhotos() {
-        /*localPhotoSource.deletePhotoEntity()
-        val remotePhotos = remoteSource.load().firstOrNull()
-        remotePhotos?.let { localPhotoSource.savePhotoEntity(it.toPhotoEntity()) }*/
+        //nothing here
     }
 
     override suspend fun updateBookmarkStatus(photoId: Long, isBookmarked: Boolean): Int {

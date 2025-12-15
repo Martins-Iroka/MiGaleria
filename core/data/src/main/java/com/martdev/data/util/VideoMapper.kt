@@ -1,7 +1,6 @@
 package com.martdev.data.util
 
 import com.martdev.domain.videodata.VideoData
-import com.martdev.domain.videodata.VideoFileData
 import com.martdev.domain.videodata.VideoImageUrlAndIdData
 import com.martdev.local.entity.VideoEntity
 import com.martdev.local.entity.VideoFileEntity
@@ -11,13 +10,8 @@ import com.martdev.remote.video.model.VideoPost
 fun Map<VideoEntity, List<VideoFileEntity>>.toVideoDataInfo(): VideoData {
     require(size == 1) { "Input map must contain exactly one entry."}
 
-    val (videoEntity, videoFiles) = entries.first()
-    return VideoData(
-        videoEntity.id, videoEntity.url, videoEntity.duration, videoEntity.bookmarked,
-        videoFiles.map {
-            VideoFileData(it.videoLink, it.videoSize)
-        }
-    )
+//    val (videoEntity, videoFiles) = entries.first()
+    return VideoData()
 }
 
 fun List<VideoPost>.toVideoEntity() = map {

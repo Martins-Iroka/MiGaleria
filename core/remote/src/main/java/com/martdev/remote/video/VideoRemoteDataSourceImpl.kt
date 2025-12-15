@@ -8,7 +8,6 @@ import com.martdev.remote.client.VIDEOS_PATH
 import com.martdev.remote.client.VIDEO_COMMENTS_PATH
 import com.martdev.remote.video.model.CreateVideoCommentRequest
 import com.martdev.remote.video.model.CreateVideoCommentResponse
-import com.martdev.remote.video.model.VideoPost
 import com.martdev.remote.video.model.VideoPostCommentResponse
 import com.martdev.remote.video.model.VideoPostListResponse
 import kotlinx.coroutines.flow.Flow
@@ -17,14 +16,6 @@ import kotlinx.coroutines.flow.flow
 class VideoRemoteDataSourceImpl(
     private val client: Client
 ) : VideoRemoteDataSource {
-
-    override fun getAllVideoPosts(limit: Int, offset: Int): Flow<NetworkResult<ResponseDataPayload<List<VideoPost>>>> {
-        return flow {
-            val result =
-                client.getRequest<ResponseDataPayload<List<VideoPost>>>(VIDEOS_PATH)
-            emit(result)
-        }
-    }
 
     override fun getVideoPosts(
         limit: Int,
