@@ -34,7 +34,7 @@ class PhotoDataRepositoryImpl(
     }
 
     override fun getPhotoInfo(limit: Int, offset: Int): Flow<ResponseData<PhotoInfo>> {
-        return remoteSource.getPhotoPosts(limit, offset)
+        return remoteSource.getAllPhotoPosts(limit, offset)
             .map {
                 it.toResponseData { res ->
                     localPhotoSource.savePhotoEntity(res.data.photoItems.toPhotoEntity())

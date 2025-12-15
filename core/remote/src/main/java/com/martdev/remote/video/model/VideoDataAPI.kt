@@ -4,12 +4,15 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VideoPostResponsePayload(
-    val data: List<VideoPostResponse>
+data class VideoPostListResponse(
+    @SerialName("video_items")
+    val videoItems: List<VideoPost> = emptyList(),
+    @SerialName("next_page")
+    val nextOffset: Int = 0
 )
 
 @Serializable
-data class VideoPostResponse(
+data class VideoPost(
     val id: Long,
     @SerialName("video_image")
     val videoImage: String = "",

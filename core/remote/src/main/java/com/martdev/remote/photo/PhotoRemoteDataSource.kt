@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PhotoRemoteDataSource {
 
-    fun getPhotoPosts(limit: Int, offset: Int): Flow<NetworkResult<ResponseDataPayload<PhotoPostResponse>>>
+    fun getAllPhotoPosts(limit: Int, offset: Int): Flow<NetworkResult<ResponseDataPayload<PhotoPostResponse>>>
 
     fun postComment(postID: String, commentRequest: CreatePhotoCommentRequest): Flow<NetworkResult<ResponseDataPayload<CreatePhotoCommentResponse>>>
 

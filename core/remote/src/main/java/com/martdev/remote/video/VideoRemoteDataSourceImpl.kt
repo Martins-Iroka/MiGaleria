@@ -1,15 +1,16 @@
 package com.martdev.remote.video
 
 import com.martdev.common.NetworkResult
+import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.client.CREATE_VIDEOS_COMMENT_PATH
 import com.martdev.remote.client.Client
-import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.client.VIDEOS_PATH
 import com.martdev.remote.client.VIDEO_COMMENTS_PATH
 import com.martdev.remote.video.model.CreateVideoCommentRequest
 import com.martdev.remote.video.model.CreateVideoCommentResponse
+import com.martdev.remote.video.model.VideoPost
 import com.martdev.remote.video.model.VideoPostCommentResponse
-import com.martdev.remote.video.model.VideoPostResponse
+import com.martdev.remote.video.model.VideoPostListResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -17,10 +18,20 @@ class VideoRemoteDataSourceImpl(
     private val client: Client
 ) : VideoRemoteDataSource {
 
-    override fun getAllVideoPosts(limit: Int, offset: Int): Flow<NetworkResult<ResponseDataPayload<List<VideoPostResponse>>>> {
+    override fun getAllVideoPosts(limit: Int, offset: Int): Flow<NetworkResult<ResponseDataPayload<List<VideoPost>>>> {
         return flow {
             val result =
-                client.getRequest<ResponseDataPayload<List<VideoPostResponse>>>(VIDEOS_PATH)
+                client.getRequest<ResponseDataPayload<List<VideoPost>>>(VIDEOS_PATH)
+            emit(result)
+        }
+    }
+
+    override fun getVideoPosts(
+        limit: Int,
+        offset: Int
+    ): Flow<NetworkResult<ResponseDataPayload<VideoPostListResponse>>> {
+        return flow {
+            val result = client.getRequest<ResponseDataPayload<VideoPostListResponse>>(VIDEOS_PATH)
             emit(result)
         }
     }

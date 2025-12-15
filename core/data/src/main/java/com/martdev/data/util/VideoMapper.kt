@@ -6,7 +6,7 @@ import com.martdev.domain.videodata.VideoImageUrlAndIdData
 import com.martdev.local.entity.VideoEntity
 import com.martdev.local.entity.VideoFileEntity
 import com.martdev.local.entity.VideoImageUrlAndID
-import com.martdev.remote.video.model.VideoPostResponse
+import com.martdev.remote.video.model.VideoPost
 
 fun Map<VideoEntity, List<VideoFileEntity>>.toVideoDataInfo(): VideoData {
     require(size == 1) { "Input map must contain exactly one entry."}
@@ -20,11 +20,11 @@ fun Map<VideoEntity, List<VideoFileEntity>>.toVideoDataInfo(): VideoData {
     )
 }
 
-fun List<VideoPostResponse>.toVideoEntity() = map {
+fun List<VideoPost>.toVideoEntity() = map {
     VideoEntity(it.id, it.videoUrl, it.videoImage, it.duration)
 }
 
-fun List<VideoPostResponse>.toVideoFileEntity() = map { videoAPI ->
+fun List<VideoPost>.toVideoFileEntity() = map { videoAPI ->
     videoAPI.videoFiles.map {
         VideoFileEntity(
             videoId = videoAPI.id,

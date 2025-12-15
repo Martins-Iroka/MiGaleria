@@ -18,7 +18,7 @@ class PhotoRemoteDataSourceImpl(
     private val client: Client
 ) : PhotoRemoteDataSource{
 
-    override fun getPhotoPosts(
+    override fun getAllPhotoPosts(
         limit: Int,
         offset: Int
     ): Flow<NetworkResult<ResponseDataPayload<PhotoPostResponse>>> {
