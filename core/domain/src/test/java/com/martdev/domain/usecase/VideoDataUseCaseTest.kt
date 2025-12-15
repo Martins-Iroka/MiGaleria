@@ -1,28 +1,26 @@
 package com.martdev.domain.usecase
 
+import com.martdev.domain.ResponseData
 import com.martdev.domain.videodata.VideoData
 import com.martdev.domain.videodata.VideoDataSource
 import com.martdev.domain.videodata.VideoDataUseCase
 import com.martdev.domain.videodata.VideoFileData
-import com.martdev.domain.videodata.VideoImageUrlAndIdData
-import io.mockk.Runs
+import com.martdev.domain.videodata.VideoPost
+import com.martdev.domain.videodata.VideoPostComments
 import io.mockk.clearMocks
-import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
-import io.mockk.just
-import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 @Suppress("UnusedFlow")
 class VideoDataUseCaseTest {
@@ -42,84 +40,151 @@ class VideoDataUseCaseTest {
     }
 
     @Test
-    fun getVideoDataById_returnVideoData_verifyCall() = runTest {
-
-
-        val videoData = VideoData(
-            id = 1,
-            videoFiles = listOf(
-                VideoFileData(),
-                VideoFileData()
+    fun `get video posts response is successful`() = runTest {
+        every {
+            videoDataSource.getVideoPosts(any(), any())
+        } returns flowOf(
+            ResponseData.Success(
+                VideoPost(
+                    videoItems = listOf(
+                        VideoData(
+                            id = 1
+                        ),
+                        VideoData(
+                            id = 2,
+                            videoFiles = listOf(
+                                VideoFileData(
+                                    link = "link1",
+                                    size = 1
+                                ),
+                                VideoFileData(
+                                    link = "link2",
+                                    size = 2
+                                )
+                            )
+                        )
+                    ),
+                    nextOffset = 20
+                )
             )
         )
 
-        val id = slot<Long>()
+        val r = videoUC.getVideoPosts(1, 0).first()
 
-        every { videoDataSource.getVideoDataById(capture(id)) } answers {
-            assertEquals(1, id.captured)
-            flowOf(videoData)
-        }
-
-        val result = videoUC.getVideoDataById(1).first()
+        assertTrue(r is ResponseData.Success)
+        assertNotNull(r.data)
+        assertTrue(r.data.videoItems.isNotEmpty())
+        assertTrue(r.data.videoItems.last().videoFiles.isNotEmpty())
 
         verify {
-            videoDataSource.getVideoDataById(1)
+            videoDataSource.getVideoPosts(any(), any())
         }
-
-        assertEquals(1, result.id)
-        assertTrue(result.videoFiles.isNotEmpty())
-        assertEquals(2, result.videoFiles.size)
     }
 
     @Test
-    fun getVideoImageUrlAndId_returnList_verifyCallAndList() = runTest {
-
-        val l = listOf(
-            VideoImageUrlAndIdData(1, "image1"),
-            VideoImageUrlAndIdData(2, "image2"),
+    fun `get video posts response failed`() = runTest {
+        every {
+            videoDataSource.getVideoPosts(any(), any())
+        } returns flowOf(
+            ResponseData.Error("error")
         )
 
-        every { videoDataSource.getVideoImageUrlAndId() } returns flowOf(l)
+        val r = videoUC.getVideoPosts(1, 0).first()
 
-        val result = videoUC.getVideoImageUrlAndId().first()
+        assertTrue(r is ResponseData.Error)
+        assertEquals("error", r.message)
 
         verify {
-            videoDataSource.getVideoImageUrlAndId()
+            videoDataSource.getVideoPosts(any(), any())
         }
-
-        assertTrue(result.isNotEmpty())
-        assertEquals(2, result.size)
-        assertEquals(1, result.component1().id)
-        assertEquals(2, result.component2().id)
     }
 
     @Test
-    fun refreshVideos_verifyCall() = runTest {
+    fun `post comments response is successful`() = runTest {
 
-        coEvery { videoDataSource.refreshVideos() } just Runs
+        every {
+            videoDataSource.postComment(any(), any())
+        } returns flowOf(
+            ResponseData.Success(null)
+        )
 
-        videoUC.refreshVideos()
+        val r = videoUC.postComment("1", "content").first()
 
-        coVerify { videoDataSource.refreshVideos() }
+        assertTrue(r is ResponseData.Success)
+
+        verify {
+            videoDataSource.postComment(any(), any())
+        }
     }
 
     @Test
-    fun updateBookmarkStatus_verifyCall_assertRowUpdatedValue() = runTest {
+    fun `post comments response failed`() = runTest {
 
-        val id = slot<Long>()
-        val isBookmarked = slot<Boolean>()
-        coEvery { videoDataSource.updateBookmarkStatus(capture(id), capture(isBookmarked)) } answers {
-            assertEquals(2, id.captured)
-            assertTrue(isBookmarked.captured)
-            1
+        every {
+            videoDataSource.postComment(any(), any())
+        } returns flowOf(
+            ResponseData.Error("error")
+        )
+
+        val r = videoUC.postComment("1", "content").first()
+
+        assertTrue(
+            r is ResponseData.Error
+        )
+        assertEquals("error", r.message)
+
+        verify {
+            videoDataSource.postComment(any(),any())
         }
+    }
 
-        val row = videoUC.updateBookmarkStatus(2, true)
+    @Test
+    fun `get comments by post id response is successful`() = runTest {
+        every {
+            videoDataSource.getCommentsByPostID(any())
+        } returns flowOf(
+            ResponseData.Success(
+                listOf(
+                    VideoPostComments(
+                        content = "content",
+                        createdAt = "10/10/10",
+                        username = "username",
+                        id = 1
+                    ),
+                    VideoPostComments(
+                        content = "content",
+                        createdAt = "10/10/10",
+                        username = "username",
+                        id = 2
+                    ),
+                    VideoPostComments(
+                        content = "content",
+                        createdAt = "10/10/10",
+                        username = "username",
+                        id = 3
+                    )
+                )
+            )
+        )
 
-        coVerify {
-            videoDataSource.updateBookmarkStatus(2, true)
-        }
+        val r = videoUC.getCommentsByPostId("1").first()
 
-        assertEquals(1, row)
+        assertTrue(r is ResponseData.Success)
+        assertNotNull(r.data)
+        assertTrue(r.data.isNotEmpty())
+    }
+
+    @Test
+    fun `get comments by post id response failed`() = runTest {
+        every {
+            videoDataSource.getCommentsByPostID(any())
+        } returns flowOf(
+            ResponseData.Error("error")
+        )
+
+        val r = videoDataSource.getCommentsByPostID("1").first()
+
+        assertTrue(r is ResponseData.Error)
+        assertEquals("error", r.message)
     }
 }

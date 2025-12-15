@@ -12,6 +12,9 @@ import com.martdev.domain.registration.userRegistrationUseCaseModule
 import com.martdev.domain.verification.UserVerificationDataSource
 import com.martdev.domain.verification.UserVerificationUseCase
 import com.martdev.domain.verification.userVerificationUseCaseModule
+import com.martdev.domain.videodata.VideoDataSource
+import com.martdev.domain.videodata.VideoDataUseCase
+import com.martdev.domain.videodata.videoUseCaseModule
 import io.mockk.mockkClass
 import org.junit.Rule
 import org.junit.Test
@@ -32,6 +35,7 @@ class DomainKoinModuleTest : KoinTest {
             userLoginUseCaseModule,
             userRegistrationUseCaseModule,
             userVerificationUseCaseModule,
+            videoUseCaseModule
         )
     }
 
@@ -78,5 +82,15 @@ class DomainKoinModuleTest : KoinTest {
         assertNotNull(mock)
         assertNotNull(useCase)
         assertEquals(mock, useCase.photoDataSource)
+    }
+
+    @Test
+    fun `inject video data source in video use case`() {
+
+        val mock = declareMock<VideoDataSource>()
+        val useCase = get<VideoDataUseCase>()
+        assertNotNull(mock)
+        assertNotNull(useCase)
+        assertEquals(mock, useCase.videoDataSource)
     }
 }

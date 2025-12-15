@@ -160,7 +160,7 @@ class PhotoDataUseCaseTest {
 
         assertTrue(r is ResponseData.Success)
         assertNotNull(r.data)
-        assertTrue(r.data.photoItems.isEmpty().not())
+        assertTrue(r.data.photoItems.isNotEmpty())
         assertEquals(2, r.data.photoItems.size)
 
         verify {
