@@ -6,7 +6,7 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-val videoSourceKoinModule = module {
+val videoLocalSourceKoinModule = module {
     includes(videoDaoModule, myGalleryDB)
     singleOf(::VideoLocalDataSourceImpl) {
         bind<VideoLocalDataSource>()

@@ -4,7 +4,6 @@ import com.martdev.common.NetworkResult
 import com.martdev.data.util.toPhotoData
 import com.martdev.data.util.toPhotoEntity
 import com.martdev.domain.ResponseData
-import com.martdev.domain.photodata.CreatePhotoCommentData
 import com.martdev.domain.photodata.PhotoDataSource
 import com.martdev.local.entity.PhotoEntity
 import com.martdev.local.photodatasource.PhotoLocalDataSource
@@ -15,9 +14,8 @@ import com.martdev.remote.photo.PhotoRemoteDataSource
 import com.martdev.remote.photo.model.CreatePhotoCommentRequest
 import com.martdev.remote.photo.model.CreatePhotoCommentResponse
 import com.martdev.remote.photo.model.PhotoPostCommentResponse
+import com.martdev.remote.photo.model.PhotoPostResponse
 import com.martdev.remote.photo.model.PhotoSrcAPI
-import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
@@ -91,30 +89,28 @@ class PhotoDataRepositoryImplTest {
         } returns flowOf(
             NetworkResult.Success(
                 ResponseDataPayload(
-                    listOf(
-                        PhotoSrcAPI(
-                            id = 1,
-                            original = "original"
+                    PhotoPostResponse(
+                        listOf(
+                            PhotoSrcAPI(
+                                id = 1,
+                                original = "original"
+                            ),
+                            PhotoSrcAPI(
+                                id = 2,
+                                original = "original2"
+                            )
                         ),
-                        PhotoSrcAPI(
-                            id = 2,
-                            original = "original2"
-                        )
+                        20
                     )
                 )
             )
         )
 
-        coEvery { local.savePhotoEntity(any()) } returns listOf(2)
-
-        val r = source.getPhotos(1, 1).first()
+        val r = source.getPhotoInfo(1, 1).first()
 
         assertTrue(r is ResponseData.Success)
-        assertTrue(r.data.isNullOrEmpty().not())
+        assertTrue(r.data?.photoItems.isNullOrEmpty().not())
 
-        coVerify {
-            local.savePhotoEntity(any())
-        }
     }
 
     @Test
@@ -126,7 +122,7 @@ class PhotoDataRepositoryImplTest {
             NetworkResult.Failure.InternalServerError()
         )
 
-        val r = source.getPhotos(1, 1).first()
+        val r = source.getPhotoInfo(1, 1).first()
 
         assertTrue(r is ResponseData.Error)
         assertEquals("Internal Server Error", r.message)
@@ -139,7 +135,7 @@ class PhotoDataRepositoryImplTest {
         val commentSlot = slot<CreatePhotoCommentRequest>()
         val createCommentRequest = CreatePhotoCommentRequest(
             userID = 5,
-            content = "test"
+            content = "content"
         )
 
         every {
@@ -154,7 +150,7 @@ class PhotoDataRepositoryImplTest {
             flowOf(NetworkResult.Success(ResponseDataPayload(CreatePhotoCommentResponse(true))))
         }
 
-        val r = source.postComment("1", CreatePhotoCommentData("test")).first()
+        val r = source.postComment("1", "content").first()
 
         assertTrue(r is ResponseData.Success)
 
@@ -173,7 +169,7 @@ class PhotoDataRepositoryImplTest {
             throw IllegalStateException(errorMessage)
         }
 
-        val r = source.postComment("1", CreatePhotoCommentData("test")).first()
+        val r = source.postComment("1", "content").first()
 
         assertTrue(r is ResponseData.Error)
         assertEquals(errorMessage, r.message)
@@ -193,8 +189,13 @@ class PhotoDataRepositoryImplTest {
         val commentSlot = slot<CreatePhotoCommentRequest>()
         val createCommentRequest = CreatePhotoCommentRequest(
             userID = 1,
-            content = "test"
+            content = "content"
         )
+
+        every {
+            userStorage.getUserData()
+        } returns flowOf(UserData(1))
+
         every {
             remote.postComment(capture(postIdSlot), capture(commentSlot))
         } answers {
@@ -203,7 +204,7 @@ class PhotoDataRepositoryImplTest {
             flowOf(NetworkResult.Failure.InternalServerError())
         }
 
-        val r = source.postComment("1", CreatePhotoCommentData( "test")).first()
+        val r = source.postComment("1", "content").first()
 
         assertTrue(r is ResponseData.Error)
         assertEquals("Internal Server Error", r.message)

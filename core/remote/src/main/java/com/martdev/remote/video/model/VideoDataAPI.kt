@@ -20,7 +20,7 @@ data class VideoPost(
     val videoUrl: String = "",
     val duration: Int = 0,
     @SerialName("video_files")
-    val videoFiles: List<VideoFilesResponse>
+    val videoFiles: List<VideoFilesResponse> = emptyList()
 )
 
 @Serializable
