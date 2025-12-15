@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class PhotoViewModel(
     private val photoUseCase: PhotoDataUseCase
@@ -24,8 +23,8 @@ class PhotoViewModel(
     )
     val photoComments = _photoComments.asStateFlow()
 
-    private val _sendCommentsResponse = MutableStateFlow<ResponseData<Nothing>>(ResponseData.NoResponse)
-    val sendCommentsResponse = _sendCommentsResponse.asStateFlow()
+    private val _createCommentsResponse = MutableStateFlow<ResponseData<Nothing>>(ResponseData.NoResponse)
+    val createCommentsResponse = _createCommentsResponse.asStateFlow()
 
     val photoList = Pager(
         PagingConfig(
@@ -52,12 +51,11 @@ class PhotoViewModel(
         viewModelScope.launch {
             photoUseCase.postComment(postId, content)
                 .onStart {
-                    _sendCommentsResponse.value = ResponseData.Loading
+                    _createCommentsResponse.value = ResponseData.Loading
                 }.catch {
-                    _sendCommentsResponse.value = ResponseData.Error(it.localizedMessage?: "An error occurred")
+                    _createCommentsResponse.value = ResponseData.Error(it.localizedMessage?: "An error occurred")
                 }.collect {
-                    _sendCommentsResponse.value = it
-                    Timber.e(it.toString())
+                    _createCommentsResponse.value = it
                     if (it is ResponseData.Success) {
                         getCommentsByPostId(postId)
                     }

@@ -38,6 +38,7 @@
             <option value="$PROJECT_DIR$/feature/photo" />
             <option value="$PROJECT_DIR$/feature/registration" />
             <option value="$PROJECT_DIR$/feature/verification" />
+            <option value="$PROJECT_DIR$/feature/video" />
           </set>
         </option>
       </GradleProjectSettings>

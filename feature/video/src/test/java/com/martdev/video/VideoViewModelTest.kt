@@ -1,19 +1,19 @@
-package com.martdev.photo
+package com.martdev.video
 
 import androidx.paging.testing.asSnapshot
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.martdev.domain.ResponseData
-import com.martdev.domain.photodata.PhotoData
-import com.martdev.domain.photodata.PhotoDataUseCase
-import com.martdev.domain.photodata.PhotoInfo
-import com.martdev.domain.photodata.PhotoPostComments
+import com.martdev.domain.videodata.VideoData
+import com.martdev.domain.videodata.VideoDataUseCase
+import com.martdev.domain.videodata.VideoPost
+import com.martdev.domain.videodata.VideoPostComments
 import com.martdev.test_shared.MainCoroutineRule
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import io.mockk.slot
+import io.mockk.verify
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -23,7 +23,7 @@ import org.junit.Test
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
-class PhotoViewModelTest {
+class VideoViewModelTest {
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
@@ -32,46 +32,54 @@ class PhotoViewModelTest {
     val mockKRule = MockKRule(this)
 
     @MockK
-    private lateinit var useCase: PhotoDataUseCase
+    private lateinit var useCase: VideoDataUseCase
 
-    private lateinit var viewmodel: PhotoViewModel
+    private lateinit var viewmodel: VideoViewModel
 
     @Before
     fun setUp() {
-        viewmodel = PhotoViewModel(useCase)
+        viewmodel = VideoViewModel(useCase)
     }
 
+
+    @Suppress("UnusedFlow")
     @Test
-    fun `test pager photo list`() = runTest {
-        val mockPhotos = (1L..40).map {
-            PhotoData(photoId = it)
+    fun `test video pager list`() = runTest {
+
+        val mockVideos = (1L..40L).map {
+            VideoData(
+                id = it
+            )
         }
 
-        coEvery {
-            useCase.getPhotoInfo(20, 0)
+        every {
+            useCase.getVideoPosts(20, 0)
         } returns flowOf(
             ResponseData.Success(
-                PhotoInfo(
-                    mockPhotos.take(20),
+                VideoPost(
+                    mockVideos.take(20),
                     20
                 )
             )
         )
 
-        coEvery {
-            useCase.getPhotoInfo(20, 20)
+        every {
+            useCase.getVideoPosts(20, 20)
         } returns flowOf(
             ResponseData.Success(
-                PhotoInfo(
-                    mockPhotos.drop(20),
+                VideoPost(
+                    mockVideos.drop(20),
                     -1
                 )
             )
         )
 
-        val items = viewmodel.photoList.asSnapshot()
+        val items = viewmodel.videoList.asSnapshot()
 
-        assertThat(items).containsExactlyElementsIn(mockPhotos).inOrder()
+        assertThat(items).containsExactlyElementsIn(mockVideos).inOrder()
+        verify(exactly = 2) {
+            useCase.getVideoPosts(any(), any())
+        }
     }
 
     @Test
@@ -94,7 +102,7 @@ class PhotoViewModelTest {
             flowOf(
                 ResponseData.Success(
                     listOf(
-                        PhotoPostComments(
+                        VideoPostComments(
                             id = 1,
                             content = "content"
                         )
@@ -103,7 +111,7 @@ class PhotoViewModelTest {
             )
         }
 
-        viewmodel.createCommentsResponse.test {
+        viewmodel.createCommentResponse.test {
             assertThat(awaitItem()).isEqualTo(ResponseData.NoResponse)
 
             viewmodel.postComment("1", "content")
@@ -124,7 +132,7 @@ class PhotoViewModelTest {
         } returns flowOf(ResponseData.Error("error"))
 
 
-        viewmodel.createCommentsResponse.test {
+        viewmodel.createCommentResponse.test {
             assertThat(awaitItem()).isEqualTo(ResponseData.NoResponse)
 
             viewmodel.postComment("1", "content")
@@ -150,7 +158,7 @@ class PhotoViewModelTest {
         }
 
 
-        viewmodel.createCommentsResponse.test {
+        viewmodel.createCommentResponse.test {
             assertThat(awaitItem()).isEqualTo(ResponseData.NoResponse)
 
             viewmodel.postComment("1", "content")
@@ -174,7 +182,7 @@ class PhotoViewModelTest {
         } returns flowOf(
             ResponseData.Success(
                 listOf(
-                    PhotoPostComments(
+                    VideoPostComments(
                         id = 1,
                         content = "content"
                     )
@@ -182,7 +190,7 @@ class PhotoViewModelTest {
             )
         )
 
-        viewmodel.photoComments.test {
+        viewmodel.videoComments.test {
             assertThat(awaitItem()).isEqualTo(ResponseData.NoResponse)
 
             viewmodel.getCommentsByPostId("1")
@@ -205,7 +213,7 @@ class PhotoViewModelTest {
             ResponseData.Error("error")
         )
 
-        viewmodel.photoComments.test {
+        viewmodel.videoComments.test {
             assertThat(awaitItem()).isEqualTo(ResponseData.NoResponse)
 
             viewmodel.getCommentsByPostId("1")
@@ -228,7 +236,7 @@ class PhotoViewModelTest {
             throw Exception("error from flow")
         }
 
-        viewmodel.photoComments.test {
+        viewmodel.videoComments.test {
             assertThat(awaitItem()).isEqualTo(ResponseData.NoResponse)
 
             viewmodel.getCommentsByPostId("1")
