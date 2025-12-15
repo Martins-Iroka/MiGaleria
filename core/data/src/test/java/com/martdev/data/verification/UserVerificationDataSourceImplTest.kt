@@ -26,7 +26,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class UserVerificationDataSourceImplTest {
@@ -196,16 +195,17 @@ class UserVerificationDataSourceImplTest {
 
         every {
             tokenStorage.getTokens()
-        } throws IllegalStateException("Error")
+        } returns flow {
+            throw IllegalStateException("Error")
+        }
 
         coEvery {
             tokenStorage.clearTokens()
         } just Runs
 
-        val r = assertFailsWith<IllegalStateException> {
-            dataSource.verifyUser(request).first()
-        }
+        val r = dataSource.verifyUser(request).first()
 
+        assertTrue(r is ResponseData.Error)
         assertEquals("Error", r.message)
 
         coVerifyOrder {

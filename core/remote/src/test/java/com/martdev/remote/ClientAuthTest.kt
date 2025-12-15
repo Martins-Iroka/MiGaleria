@@ -5,6 +5,7 @@ import com.martdev.remote.client.Client
 import com.martdev.remote.datastore.token.AuthToken
 import com.martdev.remote.datastore.token.TokenStorage
 import com.martdev.remote.photo.model.PhotoSrcAPI
+import com.martdev.remote.util.readJsonFile
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.respondError
@@ -68,7 +69,7 @@ class ClientAuthTest {
                 2 -> {
                     assertEquals("/v1/authentication/refresh", request.url.encodedPath)
                     respond(
-                        content = ByteReadChannel("""{"access_token":"new_access_token"}"""),
+                        content = ByteReadChannel(readJsonFile("authResponse.json")),
                         status = HttpStatusCode.OK,
                         headers = headersOf(HttpHeaders.ContentType, "application/json")
                     )
