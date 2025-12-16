@@ -18,8 +18,8 @@ class PhotoScreenTest {
     @Test
     fun photoScreen_displaysPhotos() {
         val mockPhotos = listOf(
-            PhotoData(1, original = "Original 1"),
-            PhotoData(2, original = "Original 2")
+            PhotoData(1, photographer = "photographer 1"),
+            PhotoData(2, photographer = "photographer 2")
         )
 
         val pagingData = PagingData.from(mockPhotos)
@@ -32,8 +32,8 @@ class PhotoScreenTest {
                 PhotoScreen(photos = lazyPagingItems)
             }
 
-            onNodeWithText("Original 1").assertIsDisplayed()
-            onNodeWithText("Original 2").assertIsDisplayed()
+            onNodeWithText("Photo by photographer 1").assertIsDisplayed()
+            onNodeWithText("Photo by photographer 2").assertIsDisplayed()
         }
     }
 }
