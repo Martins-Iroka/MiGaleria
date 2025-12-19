@@ -12,11 +12,13 @@ import com.martdev.remote.login.UserLoginRemoteSource
 import com.martdev.remote.login.UserLoginRequestPayload
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
+import timber.log.Timber
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserLoginDataSourceImpl(
@@ -35,6 +37,9 @@ class UserLoginDataSourceImpl(
                     userDataStorage.saveUserId(userId)
                     null
                 }
+            }.catch {
+                Timber.e(it)
+                throw it
             }
     }
 

@@ -25,6 +25,7 @@ class UserLoginViewModel(
                     _loginRes.value = ResponseData.Loading
                 }.catch {
                     _loginRes.value = ResponseData.Error(it.message?: "An unknown error")
+                    Timber.e(it)
                 }
                 .collect { data ->
                     println(data.toString())

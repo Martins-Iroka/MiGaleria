@@ -6,14 +6,15 @@ import androidx.datastore.dataStore
 import kotlinx.coroutines.flow.map
 
 val Context.dataStore by dataStore(
-    fileName = "token-preferences",
+    fileName = "token-preferences.pb",
     serializer = AuthTokenSerializer
 )
 
 class TokenStorageImpl(
-    private val dataStore: DataStore<AuthToken>
+    context: Context
 ) : TokenStorage{
 
+    val dataStore: DataStore<AuthToken> = context.dataStore
     override fun getTokens() = dataStore.data.map { AuthToken(
         accessToken = it.accessToken,
         refreshToken = it.refreshToken,

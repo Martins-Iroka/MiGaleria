@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 val Context.userDataStore by dataStore(
-    fileName = "user-preferences",
+    fileName = "user-preferences.pb",
     serializer = UserDataSerializer
 )
 class UserStorageImpl(

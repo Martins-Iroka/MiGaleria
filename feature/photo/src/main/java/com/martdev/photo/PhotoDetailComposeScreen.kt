@@ -5,13 +5,17 @@ package com.martdev.photo
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,6 +49,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.martdev.domain.ResponseData
 import com.martdev.domain.photodata.PhotoPostComments
+import com.martdev.ui.reusable.CustomLayout
 import com.martdev.ui.reusable.TextCompose
 import org.koin.androidx.compose.koinViewModel
 
@@ -84,118 +90,123 @@ internal fun PhotoDetail(
     var showBottomSheet by remember {
         mutableStateOf(false)
     }
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(true)
 
     var comment by remember {
         mutableStateOf("")
     }
 
-    Column(modifier = Modifier.fillMaxSize()
-        .background(Color.Black).padding(16.dp)) {
+    CustomLayout(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.padding(it).fillMaxSize()
+            .background(Color.Black).padding(16.dp)) {
 
-        AsyncImage(model = ImageRequest.Builder(context)
-            .data(imageUrl)
-            .crossfade(true)
-            .build(),
-            contentDescription = imageUrl,
-            contentScale = ContentScale.Fit,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(Modifier.height(16.dp))
-
-        IconButton(onClick = {
-            showBottomSheet = true
-        },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-            Icon(
-                Icons.AutoMirrored.Filled.Comment,
-                "",
-                tint = Color.White
+            AsyncImage(model = ImageRequest.Builder(context)
+                .data(imageUrl)
+                .crossfade(true)
+                .build(),
+                contentDescription = imageUrl,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.fillMaxWidth()
             )
-        }
-    }
 
-    if (showBottomSheet) {
-        ModalBottomSheet(onDismissRequest = {
-            showBottomSheet = false
-        }, sheetState = sheetState) {
-            Box(Modifier.fillMaxSize()) {
-                LazyColumn(modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    when (comments) {
-                        is ResponseData.Loading -> {
-                            item {
-                                CircularProgressIndicator()
-                            }
-                        }
+            Spacer(Modifier.height(16.dp))
 
-                        is ResponseData.Success -> {
-                            if (comments.data.isNullOrEmpty()) {
-                                item {
-                                    Column(
-                                        Modifier.fillMaxSize(),
-                                        verticalArrangement = Arrangement.Center,
-                                        horizontalAlignment = Alignment.CenterHorizontally) {
+            IconButton(onClick = {
+                showBottomSheet = true
+            },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Icon(
+                    Icons.AutoMirrored.Filled.Comment,
+                    "",
+                    tint = Color.White
+                )
+            }
 
-                                        TextCompose("Nothing to see")
-
+            if (showBottomSheet) {
+                ModalBottomSheet(onDismissRequest = {
+                    showBottomSheet = false
+                }, sheetState = sheetState, contentWindowInsets = {
+                    WindowInsets.ime
+                }) {
+                    Scaffold(modifier = Modifier.fillMaxWidth().fillMaxHeight(0.9f).imePadding(),
+                        bottomBar = {
+                            OutlinedTextField(value = comment, onValueChange = {
+                                comment = it
+                            }, modifier = Modifier.fillMaxWidth().padding(16.dp).navigationBarsPadding().imePadding(),
+                                trailingIcon = {
+                                    if (sendCommentResponse is ResponseData.Loading) {
+                                        CircularProgressIndicator()
+                                    } else {
+                                        IconButton(onClick = {
+                                            sendComment(comment)
+                                            comment = ""
+                                        }) {
+                                            Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send")
+                                        }
+                                    }
+                                })
+                        }) { innerPadding ->
+                        LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize(),
+                            contentPadding = PaddingValues(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            when (comments) {
+                                is ResponseData.Loading -> {
+                                    item {
+                                        CircularProgressIndicator()
                                     }
                                 }
-                            } else {
-                                items(items = comments.data.orEmpty(), key = {
-                                    it.id
-                                }) {
-                                    CommentCompose(it.content, it.username, it.createdAt)
+
+                                is ResponseData.Success -> {
+                                    if (comments.data.isNullOrEmpty()) {
+                                        item {
+                                            Column(
+                                                Modifier.fillMaxSize(),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally) {
+
+                                                TextCompose("Nothing to see")
+
+                                            }
+                                        }
+                                    } else {
+                                        items(items = comments.data.orEmpty(), key = {
+                                            it.id
+                                        }) {
+                                            CommentCompose(it.content, it.username, it.createdAt)
+                                        }
+                                    }
                                 }
-                            }
-                        }
 
-                        is ResponseData.Error -> {
-                            item {
-                                Column(
-                                    Modifier.fillMaxSize(),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally) {
+                                is ResponseData.Error -> {
+                                    item {
+                                        Column(
+                                            Modifier.fillMaxSize(),
+                                            verticalArrangement = Arrangement.Center,
+                                            horizontalAlignment = Alignment.CenterHorizontally) {
 
-                                    TextCompose(comments.message)
+                                            TextCompose(comments.message)
 
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                        ResponseData.NoResponse -> {
-                            item {
-                                Column(
-                                    Modifier.fillMaxSize(),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally) {
+                                ResponseData.NoResponse -> {
+                                    item {
+                                        Column(
+                                            Modifier.fillMaxSize(),
+                                            verticalArrangement = Arrangement.Center,
+                                            horizontalAlignment = Alignment.CenterHorizontally) {
 
-                                    TextCompose("Nothing to see")
+                                            TextCompose("Nothing to see")
 
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
-                OutlinedTextField(value = comment, onValueChange = {
-                    comment = it
-                }, modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
-                    trailingIcon = {
-                        if (sendCommentResponse is ResponseData.Loading) {
-                            CircularProgressIndicator()
-                        } else {
-                            IconButton(onClick = {
-                                sendComment(comment)
-                                comment = ""
-                            }) {
-                                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send")
-                            }
-                        }
-                    })
             }
         }
     }

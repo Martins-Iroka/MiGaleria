@@ -27,6 +27,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
+import io.ktor.http.encodedPath
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.firstOrNull
@@ -103,10 +104,10 @@ class Client(
                 }
 
                 sendWithoutRequest { request ->
-                    request.url.pathSegments.contains("register").not() ||
-                            request.url.pathSegments.contains("verify").not() ||
-                            request.url.pathSegments.contains("login").not() ||
-                            request.url.pathSegments.contains("logout").not()
+                    request.url.encodedPath.contains("register").not() ||
+                            request.url.encodedPath.contains("verify").not() ||
+                            request.url.encodedPath.contains("login").not() ||
+                            request.url.encodedPath.contains("logout").not()
                 }
             }
         }
