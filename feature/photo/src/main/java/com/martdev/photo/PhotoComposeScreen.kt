@@ -84,17 +84,17 @@ internal fun PhotoScreen(
         }
 
         photos.loadState.apply {
+            val refreshState = refresh
+            val appendState = append
             when {
-                refresh is LoadState.Error -> {
-                    val e = refresh as LoadState.Error
+                refreshState is LoadState.Error -> {
                     item {
-                        TextCompose("Error: ${e.error.localizedMessage}")
+                        TextCompose("Error: ${refreshState.error.localizedMessage}")
                     }
                 }
-                append is LoadState.Error -> {
-                    val e = append as LoadState.Error
+                appendState is LoadState.Error -> {
                     item {
-                        TextCompose("Error: ${e.error.localizedMessage}")
+                        TextCompose("Error: ${appendState.error.localizedMessage}")
                     }
                 }
             }
@@ -102,6 +102,7 @@ internal fun PhotoScreen(
     }
 }
 
+@Suppress("ParamsComparedByRef")
 @Composable
 private fun PhotoAndPhotographerCompose(
     photoData: PhotoData,
@@ -126,6 +127,9 @@ private fun PhotoAndPhotographerCompose(
                     .data(photoData.original)
                     .crossfade(true)
                     .listener(
+                        onStart = {
+                            isLoading = true
+                        },
                         onSuccess = {_, _ -> isLoading = false},
                         onError = {_, _ -> isLoading = false}
                     )
@@ -135,7 +139,7 @@ private fun PhotoAndPhotographerCompose(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(4f / 3f)
-                    .shimmer(true)
+                    .shimmer(isLoading)
             )
 
             TextCompose(

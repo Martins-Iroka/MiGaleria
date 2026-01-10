@@ -22,6 +22,7 @@ ksp_version = "2.2.20-2.0.3"
 ktorVersion = "3.3.2"
 logbackVersion = "1.5.18"
 materialVersion = "1.13.0"
+mediaVersion = "1.9.0"
 mockkVersion = "1.14.6"
 nav3Core = "1.0.0"
 pagingVersion = "3.3.6"
@@ -31,7 +32,6 @@ slf4jAndroidVersion = "1.7.36"
 timber = "5.0.1"
 truthVersion = "1.4.2"
 turbineVersion = "1.2.1"
-
 [libraries]
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp"}
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools"}
@@ -45,8 +45,8 @@ androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runt
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "composeActivityVersion" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-compose-coil = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coilVersion"}
-compose-coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coilVersion"}
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coilVersion"}
+coil-compose-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coilVersion"}
 compose-graphics = { group = "androidx.compose.ui", name = "ui-graphics"}
 compose-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4"}
 compose-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest"}
@@ -80,6 +80,8 @@ ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = 
 ktor-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktorVersion"}
 ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktorVersion"}
 material = { group = "com.google.android.material", name = "material", version.ref = "materialVersion" }
+media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "mediaVersion"}
+media3-ui-compose = { group = "androidx.media3", name = "media3-ui-compose-material3", version.ref = "mediaVersion"}
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockkVersion"}
 mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockkVersion"}
 paging = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "pagingVersion"}

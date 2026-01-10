@@ -13,6 +13,7 @@ import com.martdev.domain.photodata.PhotoData
 import com.martdev.domain.photodata.PhotoDataUseCase
 import com.martdev.domain.photodata.PhotoInfo
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import kotlinx.coroutines.flow.flowOf
@@ -45,7 +46,7 @@ class PhotoScreenComposeTest {
             PhotoData(photoId = it, original = "https://images.pexels.com/photos/34622874/pexels-photo-34622874.jpeg", photographer = "photographer $it")
         }
 
-        coEvery {
+        every {
             useCase.getPhotoInfo(any(), any())
         } returns flowOf(
             ResponseData.Success(

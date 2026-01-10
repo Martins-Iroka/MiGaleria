@@ -8,9 +8,11 @@ android {
 }
 
 dependencies {
-    implementation(libs.compose.coil)
-    implementation(libs.compose.coil.network)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.compose.network)
     implementation(libs.compose.paging)
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.ui.compose)
     implementation(libs.paging)
     implementation(libs.paging.common)
     androidTestImplementation(libs.paging.testing)

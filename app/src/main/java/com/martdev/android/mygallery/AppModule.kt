@@ -6,6 +6,7 @@ import com.martdev.registration.userRegistrationModule
 import com.martdev.ui.reusable.AppNavigator
 import com.martdev.ui.reusable.NavigateTo
 import com.martdev.verification.userVerificationModule
+import com.martdev.video.videoModule
 import org.koin.androidx.scope.dsl.activityRetainedScope
 import org.koin.dsl.module
 
@@ -14,7 +15,8 @@ val appModule = module {
         userLoginModule,
         userRegistrationModule,
         userVerificationModule,
-        photoModule
+        photoModule,
+        videoModule
     )
 
     activityRetainedScope {
