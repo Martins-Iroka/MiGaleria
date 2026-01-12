@@ -46,22 +46,24 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
             val unselectedIcons = listOf(Icons.Outlined.PhotoLibrary, Icons.Outlined.VideoLibrary)
             Scaffold(
                 bottomBar = {
-                    NavigationBar {
-                        items.forEachIndexed { index, item ->
-                            NavigationBarItem(
-                                icon = {
-                                    Icon(
-                                        imageVector = if (selectedItem == index) selectedIcons[index] else unselectedIcons[index],
-                                        contentDescription = item.toString()
-                                    )
-                                },
-                                label = { TextCompose(item.toString()) },
-                                selected = selectedItem == index,
-                                onClick = {
-                                    selectedItem = index
-                                    navigator.addTopLevel(item)
-                                }
-                            )
+                    if (navigator.topLevelDestination is NavigateTo.Photo || navigator.topLevelDestination is NavigateTo.Video) {
+                        NavigationBar {
+                            items.forEachIndexed { index, item ->
+                                NavigationBarItem(
+                                    icon = {
+                                        Icon(
+                                            imageVector = if (selectedItem == index) selectedIcons[index] else unselectedIcons[index],
+                                            contentDescription = item.toString()
+                                        )
+                                    },
+                                    label = { TextCompose(item.toString()) },
+                                    selected = selectedItem == index,
+                                    onClick = {
+                                        selectedItem = index
+                                        navigator.addTopLevel(item)
+                                    }
+                                )
+                            }
                         }
                     }
                 }
