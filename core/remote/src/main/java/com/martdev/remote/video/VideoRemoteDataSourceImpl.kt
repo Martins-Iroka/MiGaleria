@@ -10,6 +10,7 @@ import com.martdev.remote.video.model.CreateVideoCommentRequest
 import com.martdev.remote.video.model.CreateVideoCommentResponse
 import com.martdev.remote.video.model.VideoPostCommentResponse
 import com.martdev.remote.video.model.VideoPostListResponse
+import io.ktor.client.request.parameter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -22,7 +23,10 @@ class VideoRemoteDataSourceImpl(
         offset: Int
     ): Flow<NetworkResult<ResponseDataPayload<VideoPostListResponse>>> {
         return flow {
-            val result = client.getRequest<ResponseDataPayload<VideoPostListResponse>>(VIDEOS_PATH)
+            val result = client.getRequest<ResponseDataPayload<VideoPostListResponse>>(VIDEOS_PATH) {
+                parameter("limit", limit)
+                parameter("offset", offset)
+            }
             emit(result)
         }
     }

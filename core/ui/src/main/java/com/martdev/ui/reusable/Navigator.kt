@@ -15,9 +15,9 @@ sealed class NavigateTo {
     data object Video : NavigateTo()
 }
 
-class AppNavigator(startDestination: Any) {
+class AppNavigator(startDestination: NavigateTo) {
 
-    private var topLevelStacks : LinkedHashMap<Any, SnapshotStateList<Any>> = linkedMapOf(
+    private var topLevelStacks : LinkedHashMap<NavigateTo, SnapshotStateList<NavigateTo>> = linkedMapOf(
         startDestination to mutableStateListOf(startDestination)
     )
 
@@ -31,7 +31,7 @@ class AppNavigator(startDestination: Any) {
         addAll(topLevelStacks.flatMap { it.value })
     }
 
-    fun addTopLevel(destination: Any) {
+    fun addTopLevel(destination: NavigateTo) {
         if (topLevelStacks[destination] == null) {
             topLevelStacks[destination] = mutableStateListOf(destination)
         } else {
@@ -45,7 +45,7 @@ class AppNavigator(startDestination: Any) {
         updateBackStack()
     }
 
-    fun goTo(destination: Any) {
+    fun goTo(destination: NavigateTo) {
         topLevelStacks[topLevelDestination]?.add(destination)
         updateBackStack()
     }

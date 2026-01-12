@@ -16,6 +16,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -109,7 +113,7 @@ private fun VideoItemCompose(
     click: () -> Unit = {}
 ) {
     val context = LocalContext.current
-
+    var isLoading by remember { mutableStateOf(true) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -118,17 +122,25 @@ private fun VideoItemCompose(
             .testTag(videoData.id.toString())
     ) {
 
-        Box(modifier = Modifier.fillMaxSize().shimmer(true)) {
+        Box(modifier = Modifier.fillMaxSize()) {
             AsyncImage(
                 model = ImageRequest.Builder(context)
                     .data(videoData.videoImage)
                     .crossfade(true)
+                    .listener(
+                        onStart = {
+                            isLoading = true
+                        },
+                        onSuccess = {_, _ -> isLoading = false},
+                        onError = {_, _ -> isLoading = false}
+                    )
                     .build(),
                 contentDescription = videoData.videoImage,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(4f / 3f)
+                    .shimmer(isLoading)
             )
 
             Image(imageVector = Icons.Filled.PlayCircle,

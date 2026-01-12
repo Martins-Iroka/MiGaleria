@@ -61,7 +61,8 @@ class VideoDataRepositoryImpl(
                                 )
                             }
                         )
-                    }
+                    },
+                    nextOffset = res.data.nextOffset
                 )
             }
         }

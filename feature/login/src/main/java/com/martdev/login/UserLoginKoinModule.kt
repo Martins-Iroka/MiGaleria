@@ -25,7 +25,7 @@ val userLoginModule = module {
                     navigator.goTo(NavigateTo.Registration)
                 },
                 goToPhoto = {
-                    navigator.goTo(NavigateTo.Photo)
+                    navigator.addTopLevel(NavigateTo.Photo)
                 }
             )
         }
