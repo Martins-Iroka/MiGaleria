@@ -22,6 +22,7 @@ val CONTENT_SCALES = listOf(
     "FillHeight" to ContentScale.FillHeight,
     "FillWidth" to ContentScale.FillWidth
 )
+
 @Composable
 internal fun BoxScope.MediaPlayer(
     player: Player,
