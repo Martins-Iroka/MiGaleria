@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
             val unselectedIcons = listOf(Icons.Outlined.PhotoLibrary, Icons.Outlined.VideoLibrary)
             Scaffold(
                 bottomBar = {
-                    if (navigator.topLevelDestination is NavigateTo.Photo || navigator.topLevelDestination is NavigateTo.Video) {
+                    if (navigator.currentDestination is NavigateTo.Photo || navigator.currentDestination is NavigateTo.Video) {
                         NavigationBar {
                             items.forEachIndexed { index, item ->
                                 NavigationBarItem(

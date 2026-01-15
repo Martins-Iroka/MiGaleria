@@ -29,7 +29,7 @@ private fun RowControls(
     buttons: List<@Composable () -> Unit>
 ) {
     Row(modifier, horizontalArrangement, verticalAlignment) {
-        buttons.forEachIndexed { index, button ->
+        buttons.forEach { button ->
             button()
         }
     }

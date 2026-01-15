@@ -13,6 +13,7 @@ sealed class NavigateTo {
     data object Photo : NavigateTo()
     data class PhotoDetail(val postId: Long, val imageUrl: String): NavigateTo()
     data object Video : NavigateTo()
+    data class VideoPlayer(val postId: Long, val videoUrl: String) : NavigateTo()
 }
 
 class AppNavigator(startDestination: NavigateTo) {
@@ -26,12 +27,16 @@ class AppNavigator(startDestination: NavigateTo) {
 
     val backStack = mutableStateListOf(startDestination)
 
+    var currentDestination by mutableStateOf(startDestination)
+        private set
+
     private fun updateBackStack() = backStack.apply {
         clear()
         addAll(topLevelStacks.flatMap { it.value })
     }
 
     fun addTopLevel(destination: NavigateTo) {
+        currentDestination = destination
         if (topLevelStacks[destination] == null) {
             topLevelStacks[destination] = mutableStateListOf(destination)
         } else {
@@ -46,6 +51,7 @@ class AppNavigator(startDestination: NavigateTo) {
     }
 
     fun goTo(destination: NavigateTo) {
+        currentDestination = destination
         topLevelStacks[topLevelDestination]?.add(destination)
         updateBackStack()
     }

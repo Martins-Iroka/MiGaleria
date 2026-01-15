@@ -12,6 +12,7 @@ import com.google.common.truth.Truth.assertThat
 import com.martdev.domain.ResponseData
 import com.martdev.domain.videodata.VideoData
 import com.martdev.domain.videodata.VideoDataUseCase
+import com.martdev.domain.videodata.VideoFileData
 import com.martdev.domain.videodata.VideoPost
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -42,7 +43,13 @@ class VideoScreenTest {
     @Test
     fun testVideoScreen_displayVideos() {
         val mockVideos = (1L..20).map {
-            VideoData(id = it, videoImage = "https://images.pexels.com/videos/6963395/eco-friendly-environment-environmentally-friendly-mothernature-6963395.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630")
+            VideoData(id = it,
+                videoImage = "https://images.pexels.com/videos/6963395/eco-friendly-environment-environmentally-friendly-mothernature-6963395.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+                videoFiles = listOf(
+                    VideoFileData(
+                        link = "Video url link $it"
+                    )
+                ))
         }
 
         every {
@@ -70,7 +77,7 @@ class VideoScreenTest {
                 val lazyPagingItems = items.collectAsLazyPagingItems()
 
                 VideoScreen(lazyPagingItems) {
-                    assertThat(it).isEqualTo(15)
+                    assertThat(it).isEqualTo("Video url link 15")
                 }
             }
 

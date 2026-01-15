@@ -1,6 +1,7 @@
 package com.martdev.video.utils
 
 import androidx.annotation.IntRange
+import androidx.annotation.OptIn
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -29,8 +30,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.compose.state.rememberProgressStateWithTickCount
 
+
+@OptIn(UnstableApi::class)
 @Composable
 fun HorizontalLinearProgressIndicatorCompose(
     player: Player,
@@ -41,6 +45,12 @@ fun HorizontalLinearProgressIndicatorCompose(
         mutableIntStateOf(totalTickCount)
     }
     val progressState = rememberProgressStateWithTickCount(player, ticks)
+    HorizontalLinearProgressIndicator(
+        modifier,
+        currentPositionProgress = { progressState.currentPositionProgress },
+        bufferedPositionProgress = { progressState.bufferedPositionProgress },
+        onLayoutWidthChanged = { widthPx -> if (totalTickCount == 0) ticks = widthPx}
+    )
 }
 
 @Composable
@@ -49,12 +59,12 @@ private fun HorizontalLinearProgressIndicator(
     currentPositionProgress: () -> Float,
     bufferedPositionProgress: () -> Float = currentPositionProgress,
     onLayoutWidthChanged: (Int) -> Unit = {},
-    playedColor: Color = Color.Red,
+    playedColor: Color = Color.DarkGray,
     bufferedColor: Color = Color.LightGray,
     unplayedColor: Color = Color.DarkGray,
     scrubberColor: Color = playedColor,
     scrubberShape: Shape = CircleShape,
-    rectHeightDp: Dp = 10.dp
+    rectHeightDp: Dp = 5.dp
 ) {
     var positionX by remember { mutableFloatStateOf(0f) }
     var scrubberX by remember { mutableFloatStateOf(0f) }

@@ -17,7 +17,15 @@ val videoModule = module {
     activityRetainedScope {
         navigation<NavigateTo.Video> {
             val navigator = get<AppNavigator>()
-            VideoComposeScreen {
+            VideoComposeScreen (
+                { navigator.goBack() },
+                {navigator.goTo(NavigateTo.VideoPlayer(1, it))}
+            )
+        }
+
+        navigation<NavigateTo.VideoPlayer> {
+            val navigator = get<AppNavigator>()
+            VideoPlayerCompose(it.videoUrl) {
                 navigator.goBack()
             }
         }

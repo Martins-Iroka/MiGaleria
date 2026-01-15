@@ -2,6 +2,7 @@ package com.martdev.video
 
 import android.content.Context
 import android.os.Build
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,14 +25,16 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.martdev.video.utils.CONTENT_SCALES
 import com.martdev.video.utils.MediaPlayer
+import timber.log.Timber
 
 @Composable
-internal fun VideoPlayerCompose(videoURL: String) {
+internal fun VideoPlayerCompose(videoURL: String, goBack: () -> Unit = {}) {
     val context = LocalContext.current
     var player by remember { mutableStateOf<Player?>(null) }
 
     if (Build.VERSION.SDK_INT > 23) {
         LifecycleStartEffect(Unit) {
+            Timber.e(videoURL)
             player = initializePlayer(context, videoURL)
             onStopOrDispose {
                 player?.apply { release() }
@@ -48,6 +51,9 @@ internal fun VideoPlayerCompose(videoURL: String) {
         }
     }
 
+    BackHandler {
+        goBack()
+    }
     player?.let {
         VidePlayer(player = it)
     }
