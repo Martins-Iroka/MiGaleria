@@ -47,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.martdev.common.convertToUTCDateTime
 import com.martdev.domain.ResponseData
 import com.martdev.domain.photodata.PhotoPostComments
 import com.martdev.ui.reusable.CustomLayout
@@ -214,13 +215,21 @@ internal fun PhotoDetail(
 
 @Composable
 private fun CommentCompose(content: String, username: String, createdAt: String) {
+    val localTime = remember(createdAt) {
+        try {
+            convertToUTCDateTime(createdAt)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            createdAt
+        }
+    }
     Column(Modifier.fillMaxWidth()) {
         TextCompose(
             text = content,
             textColor = Color.Black
         )
         TextCompose(
-            text = "By $username at $createdAt",
+            text = "By $username at $localTime",
             textColor = Color.DarkGray
         )
     }
