@@ -60,6 +60,7 @@ class AppNavigator(startDestination: NavigateTo) {
         val removedKey = topLevelStacks[topLevelDestination]?.removeLastOrNull()
         topLevelStacks.remove(removedKey)
         topLevelDestination = topLevelStacks.keys.last()
+        currentDestination = topLevelDestination
         updateBackStack()
     }
 

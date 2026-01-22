@@ -27,7 +27,8 @@ val CONTENT_SCALES = listOf(
 internal fun BoxScope.MediaPlayer(
     player: Player,
     contentScale: ContentScale,
-    keetContentOnReset: Boolean
+    keetContentOnReset: Boolean,
+    showComments: () -> Unit = {}
 ) {
     var showControls by remember { mutableStateOf(true) }
 
@@ -39,7 +40,7 @@ internal fun BoxScope.MediaPlayer(
     )
 
     if (showControls) {
-        Controls(player)
+        Controls(player, showComments)
     }
 }
 

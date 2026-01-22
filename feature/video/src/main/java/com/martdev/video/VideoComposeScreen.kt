@@ -46,7 +46,7 @@ const val VIDEO_LAZY_COLUMN = "video_lazy_colum"
 @Composable
 fun VideoComposeScreen(
     goBack: () -> Unit = {},
-    goToPlayer: (String) -> Unit = {}
+    goToPlayer: (Long, String) -> Unit = {_, _ -> }
 ) {
     val viewModel: VideoViewModel = koinViewModel()
 
@@ -63,7 +63,7 @@ fun VideoComposeScreen(
 @Composable
 internal fun VideoScreen(
     videos: LazyPagingItems<VideoData>,
-    click: (String) -> Unit = {}
+    click: (Long, String) -> Unit = {_, _->}
 ) {
 
     LazyColumn(
@@ -82,7 +82,7 @@ internal fun VideoScreen(
             val item = videos[it]
             item?.let { video ->
                 VideoItemCompose(video) {
-                    click(video.videoFiles.first().link)
+                    click(video.id, video.videoFiles.first().link)
                 }
             }
         }

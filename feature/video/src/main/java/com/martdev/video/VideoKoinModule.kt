@@ -19,13 +19,14 @@ val videoModule = module {
             val navigator = get<AppNavigator>()
             VideoComposeScreen (
                 { navigator.goBack() },
-                {navigator.goTo(NavigateTo.VideoPlayer(1, it))}
+                { id, link ->
+                    navigator.goTo(NavigateTo.VideoPlayer(id, link))}
             )
         }
 
         navigation<NavigateTo.VideoPlayer> {
             val navigator = get<AppNavigator>()
-            VideoPlayerCompose(it.videoUrl) {
+            VideoPlayerCompose(it.postId, it.videoUrl) {
                 navigator.goBack()
             }
         }
