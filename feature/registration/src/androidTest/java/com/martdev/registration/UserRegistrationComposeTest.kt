@@ -7,7 +7,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import com.martdev.domain.ResponseData
-import kotlinx.coroutines.test.runTest
+import com.martdev.domain.registration.UserRegistrationDataResponse
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -86,7 +86,7 @@ class UserRegistrationComposeTest {
     }
 
     @Test
-    fun setResponseDataToError_showSnackBarWithMessage() = runTest {
+    fun setResponseDataToError_showSnackBarWithMessage() {
         with(composeTestRule) {
             setContent {
                 UserRegistration(
@@ -95,6 +95,21 @@ class UserRegistrationComposeTest {
             }
 
             onNodeWithText("error").assertExists().assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun setResponseDataToSuccess_assertGoToVerification() {
+        with(composeTestRule) {
+            setContent {
+                UserRegistration(
+                    responseData = ResponseData.Success(UserRegistrationDataResponse("emailID")),
+                    goToVerification = {email, emailID ->
+                        assertTrue(email.isEmpty())
+                        assertEquals("emailID", emailID)
+                    }
+                )
+            }
         }
     }
 }
