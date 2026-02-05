@@ -22,7 +22,7 @@ class UserVerificationRemoteSourceImplTest {
     private val verifyUserResponseJson = "verifyUserResponsePayload.json"
     private val request = UserVerificationRequestPayload(
         code = "code",
-        email = "t@g.com",
+        emailID = "emailID",
         token = "token"
     )
 

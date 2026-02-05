@@ -21,7 +21,7 @@ val userVerificationModule = module {
         navigation<NavigateTo.Verification> {
             val navigator = get<AppNavigator>()
             UserVerificationScreen(
-                it.email
+                it.emailID
             ) {
                 navigator.popUpTo(NavigateTo.Login)
             }

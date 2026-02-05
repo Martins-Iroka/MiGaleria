@@ -22,14 +22,12 @@ class UserVerificationViewModel(
 
     val response = _response.asStateFlow()
 
-    fun verifyCode(code: String, email: String) {
+    fun verifyCode(code: String, emailID: String) {
         viewModelScope.launch {
-            userVerificationUseCase(code = code, email = email)
+            userVerificationUseCase(code = code, emailID = emailID)
                 .onStart {
                     _response.value = ResponseData.Loading
                 }.catch {
-                    println(it.message)
-                    Timber.e(it.message)
                     _response.value = ResponseData.Error(it.message ?: "An unknown error")
                 }.collect {
                     println(data.toString())

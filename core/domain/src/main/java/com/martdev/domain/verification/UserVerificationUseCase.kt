@@ -4,6 +4,6 @@ class UserVerificationUseCase(
     val userVerificationDataSource: UserVerificationDataSource
 ) {
 
-    operator fun invoke(code: String, email: String) =
-        userVerificationDataSource.verifyUser(UserVerificationDataRequest(code, email))
+    operator fun invoke(code: String, emailID: String) =
+        userVerificationDataSource.verifyUser(UserVerificationDataRequest(code, emailID))
 }

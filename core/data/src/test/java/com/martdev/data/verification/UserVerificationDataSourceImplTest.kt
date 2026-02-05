@@ -42,7 +42,7 @@ class UserVerificationDataSourceImplTest {
     private lateinit var dataSource: UserVerificationDataSource
 
     private val request = UserVerificationDataRequest(
-        "code", "email"
+        "code", "emailID"
     )
 
     @Before

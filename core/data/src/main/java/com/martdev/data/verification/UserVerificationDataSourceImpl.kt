@@ -29,7 +29,7 @@ class UserVerificationDataSourceImpl(
                 ?: throw IllegalStateException("No verification token found")
             Timber.e("Verification token is $verificationToken")
             val r = remote.verifyUser(
-                UserVerificationRequestPayload(user.code, user.email, verificationToken)
+                UserVerificationRequestPayload(user.code, user.emailID, verificationToken)
             ).first()
 
             emit(r.toResponseData<ResponseDataPayload<UserVerificationResponsePayload>, Nothing>())

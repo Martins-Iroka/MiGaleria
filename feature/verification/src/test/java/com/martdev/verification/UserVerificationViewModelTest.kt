@@ -43,7 +43,7 @@ class UserVerificationViewModelTest {
             useCase(capture(codeSlot), capture((emailSlot)))
         } answers {
             assertEquals("code", codeSlot.captured)
-            assertEquals("email", emailSlot.captured)
+            assertEquals("emailID", emailSlot.captured)
             flowOf(
                 ResponseData.Success(null)
             )
@@ -52,7 +52,7 @@ class UserVerificationViewModelTest {
         viewmodel.response.test {
             assertEquals(ResponseData.NoResponse, awaitItem())
 
-            viewmodel.verifyCode("code", "email")
+            viewmodel.verifyCode("code", "emailID")
 
             assertEquals(ResponseData.Loading, awaitItem())
 
@@ -69,7 +69,7 @@ class UserVerificationViewModelTest {
             useCase(capture(codeSlot), capture(emailSlot))
         } answers {
             assertEquals("code", codeSlot.captured)
-            assertEquals("email", emailSlot.captured)
+            assertEquals("emailID", emailSlot.captured)
             flowOf(
                 ResponseData.Error("error")
             )
@@ -78,7 +78,7 @@ class UserVerificationViewModelTest {
         viewmodel.response.test {
             assertEquals(ResponseData.NoResponse, awaitItem())
 
-            viewmodel.verifyCode("code", "email")
+            viewmodel.verifyCode("code", "emailID")
 
             assertEquals(ResponseData.Loading, awaitItem())
 
