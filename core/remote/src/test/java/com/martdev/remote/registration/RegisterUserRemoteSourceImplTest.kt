@@ -46,6 +46,7 @@ class RegisterUserRemoteSourceImplTest {
         if (result is NetworkResult.Success) {
             assertTrue(result.data.data.token.isNotEmpty())
             assertEquals("token", result.data.data.token)
+            assertEquals("email_id", result.data.data.emailId)
         }
 
         verify {

@@ -55,7 +55,7 @@ class UserRegistrationDataSourceImplTest {
     fun `register user, return success and response data is success`() = runTest {
 
         every { remote.registerUser(any()) } returns flowOf(
-            NetworkResult.Success(ResponseDataPayload(UserRegistrationResponsePayload(token = "token")))
+            NetworkResult.Success(ResponseDataPayload(UserRegistrationResponsePayload(token = "token", emailId = "emailId")))
         )
 
         coEvery { tokenStorage.saveVerificationToken(any()) } just Runs
