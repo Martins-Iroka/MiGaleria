@@ -3,6 +3,7 @@ package com.martdev.data.registration
 import com.martdev.data.util.toResponseData
 import com.martdev.domain.ResponseData
 import com.martdev.domain.registration.UserRegistrationDataRequest
+import com.martdev.domain.registration.UserRegistrationDataResponse
 import com.martdev.domain.registration.UserRegistrationDataSource
 import com.martdev.remote.datastore.token.TokenStorage
 import com.martdev.remote.registration.UserRegistrationRemoteSource
@@ -15,7 +16,7 @@ class UserRegistrationDataSourceImpl(
     private val remote: UserRegistrationRemoteSource,
     private val tokenStorage: TokenStorage
 ) : UserRegistrationDataSource {
-    override fun registerUser(user: UserRegistrationDataRequest): Flow<ResponseData<Nothing>> {
+    override fun registerUser(user: UserRegistrationDataRequest): Flow<ResponseData<UserRegistrationDataResponse>> {
         return remote.registerUser(UserRegistrationRequestPayload(
             username = user.username,
             email = user.email,
@@ -24,7 +25,7 @@ class UserRegistrationDataSourceImpl(
             it.toResponseData(onSuccess = { response ->
                 Timber.e("Token from registration $response")
                 tokenStorage.saveVerificationToken(response.data.token)
-                null
+                UserRegistrationDataResponse(response.data.emailId)
             })
         }
     }

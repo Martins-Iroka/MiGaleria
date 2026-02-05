@@ -16,6 +16,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class UserRegistrationUseCaseTest {
@@ -47,13 +48,14 @@ class UserRegistrationUseCaseTest {
             assertEquals("email", requestSlot.captured.email)
             assertEquals("martdev", requestSlot.captured.username)
             assertEquals("password", requestSlot.captured.password)
-            flowOf(ResponseData.Success(null))
+            flowOf(ResponseData.Success(UserRegistrationDataResponse(emailID = "emailID")))
         }
 
         val r = useCase("email", "password", "martdev").first()
 
         assertTrue(r is ResponseData.Success)
-        assertEquals(null, r.data)
+        assertNotNull(r.data)
+        assertEquals("emailID", r.data.emailID)
 
         verify {
             source.registerUser(any())

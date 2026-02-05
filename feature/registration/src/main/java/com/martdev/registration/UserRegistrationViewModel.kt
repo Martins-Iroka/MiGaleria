@@ -31,7 +31,7 @@ class UserRegistrationViewModel(
                 }.collect {
                     println(data.toString())
                     Timber.e(data.toString())
-                    _response.value = it
+//                    _response.value = it
                 }
         }
     }

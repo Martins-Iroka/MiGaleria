@@ -24,6 +24,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 @Suppress("UnusedFlow")
@@ -63,6 +64,8 @@ class UserRegistrationDataSourceImplTest {
         val r = dataSource.registerUser(request).first()
 
         assertTrue(r is ResponseData.Success)
+        assertNotNull(r.data)
+        assertEquals("emailId", r.data!!.emailID)
 
         coVerifyOrder {
             remote.registerUser(any())
