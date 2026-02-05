@@ -42,7 +42,7 @@ sealed interface UserVerificationTag {
 
 @Composable
 fun UserVerificationScreen(
-    email: String = "",
+    emailID: String = "",
     navigate: () -> Unit = {}
 ) {
     val viewModel = koinViewModel<UserVerificationViewModel>()
@@ -56,7 +56,7 @@ fun UserVerificationScreen(
     UserVerification(
         responseData = response,
         verifyCode = {
-            viewModel.verifyCode(it, email)
+            viewModel.verifyCode(it, emailID)
         }
     )
 }
