@@ -34,10 +34,13 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-const val AUTH_REGISTER_PATH = "/authentication/register"
-const val AUTH_LOGIN_PATH = "/authentication/login"
-const val AUTH_LOGOUT_PATH = "/authentication/logout"
-const val AUTH_VERIFY_PATH = "/authentication/verify"
+const val AUTHENTICATION_PATH = "/authentication"
+const val AUTH_REGISTER_PATH = "$AUTHENTICATION_PATH/register"
+const val AUTH_LOGIN_PATH = "$AUTHENTICATION_PATH/login"
+const val AUTH_LOGOUT_PATH = "$AUTHENTICATION_PATH/logout"
+const val AUTH_VERIFY_PATH = "$AUTHENTICATION_PATH/verify"
+const val RESEND_OTP_PATH = "$AUTHENTICATION_PATH/resendOTP"
+
 const val PHOTOS_PATH = "/photos"
 const val CREATE_PHOTOS_COMMENT_PATH = "$PHOTOS_PATH/{postID}/create-comment"
 const val PHOTO_COMMENTS_PATH = "$PHOTOS_PATH/{postID}/comments"
@@ -84,7 +87,7 @@ class Client(
                     val refreshToken = oldToken?.refreshToken ?: return@refreshTokens null
 
                     try {
-                        val response: ResponseDataPayload<TokenRefreshResponse> = client.post("/authentication/refresh") {
+                        val response: ResponseDataPayload<TokenRefreshResponse> = client.post("$AUTHENTICATION_PATH/refresh") {
                             markAsRefreshTokenRequest()
                             contentType(ContentType.Application.Json)
                             setBody(TokenRefreshRequest(refreshToken))
