@@ -4,6 +4,7 @@ import android.R.attr.data
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.martdev.domain.ResponseData
+import com.martdev.domain.registration.UserRegistrationDataResponse
 import com.martdev.domain.registration.UserRegistrationUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +17,7 @@ class UserRegistrationViewModel(
     private val userRegistrationUseCase: UserRegistrationUseCase
 ) : ViewModel() {
 
-    private val _response = MutableStateFlow<ResponseData<Nothing>>(
+    private val _response = MutableStateFlow<ResponseData<UserRegistrationDataResponse>>(
         ResponseData.NoResponse
     )
     val response = _response.asStateFlow()
@@ -31,7 +32,7 @@ class UserRegistrationViewModel(
                 }.collect {
                     println(data.toString())
                     Timber.e(data.toString())
-//                    _response.value = it
+                    _response.value = it
                 }
         }
     }

@@ -2,6 +2,7 @@ package com.martdev.registration
 
 import app.cash.turbine.test
 import com.martdev.domain.ResponseData
+import com.martdev.domain.registration.UserRegistrationDataResponse
 import com.martdev.domain.registration.UserRegistrationUseCase
 import com.martdev.test_shared.MainCoroutineRule
 import io.mockk.every
@@ -15,6 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertNotNull
 
 class UserRegistrationViewModelTest {
 
@@ -47,7 +49,7 @@ class UserRegistrationViewModelTest {
             assertEquals("password", passwordSlot.captured)
             assertEquals("martdev", usernameSlot.captured)
             flowOf(
-                ResponseData.Success(null)
+                ResponseData.Success(UserRegistrationDataResponse("emailID"))
             )
         }
 
@@ -59,7 +61,9 @@ class UserRegistrationViewModelTest {
             assertEquals(ResponseData.Loading, awaitItem())
 
             val finalState = awaitItem()
-            assertIs<ResponseData.Success<*>>(finalState)
+            assertIs<ResponseData.Success<UserRegistrationDataResponse>>(finalState)
+            assertNotNull(finalState.data)
+            assertEquals("emailID", finalState.data!!.emailID)
 
             expectNoEvents()
         }
