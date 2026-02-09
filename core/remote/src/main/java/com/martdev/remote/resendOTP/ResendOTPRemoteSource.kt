@@ -11,7 +11,7 @@ fun interface ResendOTPRemoteSource {
     fun resendOTP(request: ResendOTPRequestAPI): Flow<NetworkResult<ResponseDataPayload<ResendOTPResponseAPI>>>
 }
 
-fun resendOTPRemoteSourceImpl(client: Client) = ResendOTPRemoteSource { request ->
+fun resendOTPRemoteSource(client: Client) = ResendOTPRemoteSource { request ->
     flow {
         emit(client.postData<ResendOTPRequestAPI, ResponseDataPayload<ResendOTPResponseAPI>>(
             RESEND_OTP_PATH,

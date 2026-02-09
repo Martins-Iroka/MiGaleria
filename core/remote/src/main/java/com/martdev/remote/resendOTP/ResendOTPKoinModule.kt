@@ -6,6 +6,6 @@ import org.koin.dsl.module
 val resendOTPRemoteModule = module {
     includes(clientModule)
     factory<ResendOTPRemoteSource> {
-        resendOTPRemoteSourceImpl(get())
+        resendOTPRemoteSource(get())
     }
 }

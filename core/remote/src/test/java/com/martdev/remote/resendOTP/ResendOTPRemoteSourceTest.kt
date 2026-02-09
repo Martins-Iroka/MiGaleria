@@ -22,7 +22,7 @@ class ResendOTPRemoteSourceTest {
     @Test
     fun postResendOTPRequest_returnSuccessOTPResponse() = runTest {
         val client = getMockClient(resendOTPResponseJson, path = resendOTPPath)
-        val resendOTPSource = resendOTPRemoteSourceImpl(client)
+        val resendOTPSource = resendOTPRemoteSource(client)
         val result = resendOTPSource.resendOTP(request).first()
 
         assertTrue(result is NetworkResult.Success)
@@ -32,7 +32,7 @@ class ResendOTPRemoteSourceTest {
     @Test
     fun postResendOTPRequest_returnBadRequest() = runTest {
         val client = getMockClient(statusCode = HttpStatusCode.BadRequest, path = resendOTPPath, json = badRequestJsonResponse)
-        val resendOTPSource = resendOTPRemoteSourceImpl(client)
+        val resendOTPSource = resendOTPRemoteSource(client)
         val result = resendOTPSource.resendOTP(request).first()
 
         assertTrue(result is NetworkResult.Failure)
@@ -42,7 +42,7 @@ class ResendOTPRemoteSourceTest {
     @Test
     fun postResendOTPRequest_returnInternalServerError() = runTest {
         val client = getMockClient(statusCode = HttpStatusCode.InternalServerError, path = resendOTPPath)
-        val resendOTPSource = resendOTPRemoteSourceImpl(client)
+        val resendOTPSource = resendOTPRemoteSource(client)
         val result = resendOTPSource.resendOTP(request).first()
 
         assertTrue(result is NetworkResult.Failure)
