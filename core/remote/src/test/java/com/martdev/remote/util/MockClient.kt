@@ -12,6 +12,7 @@ import kotlin.test.assertEquals
 
 const val badRequestJsonResponse = "badRequestJsonResponse.json"
 const val badRequestMessage = "bad request from server"
+const val internalServerError = "Internal Server Error"
 fun getMockClient(
     json: String = "",
     path: String = "",

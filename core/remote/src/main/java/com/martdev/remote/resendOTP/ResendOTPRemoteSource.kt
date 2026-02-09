@@ -8,15 +8,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 fun interface ResendOTPRemoteSource {
-    fun resendOTP(request: ResendOTPRequest): Flow<NetworkResult<ResponseDataPayload<ResendOTPResponse>>>
+    fun resendOTP(request: ResendOTPRequestAPI): Flow<NetworkResult<ResponseDataPayload<ResendOTPResponseAPI>>>
 }
 
-fun resendOTPRemoteSourceImpl(client: Client) = ResendOTPRemoteSource {
+fun resendOTPRemoteSourceImpl(client: Client) = ResendOTPRemoteSource { request ->
     flow {
-        val r = client.postData<ResendOTPRequest, ResponseDataPayload<ResendOTPResponse>>(
+        emit(client.postData<ResendOTPRequestAPI, ResponseDataPayload<ResendOTPResponseAPI>>(
             RESEND_OTP_PATH,
-            it
-        )
-        emit(r)
+            request
+        ))
     }
 }

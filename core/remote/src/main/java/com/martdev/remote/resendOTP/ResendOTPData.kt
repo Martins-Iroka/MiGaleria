@@ -4,12 +4,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResendOTPRequest(
+data class ResendOTPRequestAPI(
     private val email: String
 )
 
 @Serializable
-data class ResendOTPResponse(
+data class ResendOTPResponseAPI(
     @SerialName("email_id")
-    private val emailId: String
+    val emailId: String
 )
