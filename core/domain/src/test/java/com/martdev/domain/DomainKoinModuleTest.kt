@@ -9,6 +9,9 @@ import com.martdev.domain.photodata.photoUseCaseModule
 import com.martdev.domain.registration.UserRegistrationDataSource
 import com.martdev.domain.registration.UserRegistrationUseCase
 import com.martdev.domain.registration.userRegistrationUseCaseModule
+import com.martdev.domain.resendOTP.ResendOTPDataSource
+import com.martdev.domain.resendOTP.ResendOTPUseCase
+import com.martdev.domain.resendOTP.resendOTPUseCaseModule
 import com.martdev.domain.verification.UserVerificationDataSource
 import com.martdev.domain.verification.UserVerificationUseCase
 import com.martdev.domain.verification.userVerificationUseCaseModule
@@ -35,7 +38,8 @@ class DomainKoinModuleTest : KoinTest {
             userLoginUseCaseModule,
             userRegistrationUseCaseModule,
             userVerificationUseCaseModule,
-            videoUseCaseModule
+            videoUseCaseModule,
+            resendOTPUseCaseModule
         )
     }
 
@@ -92,5 +96,14 @@ class DomainKoinModuleTest : KoinTest {
         assertNotNull(mock)
         assertNotNull(useCase)
         assertEquals(mock, useCase.videoDataSource)
+    }
+
+    @Test
+    fun `inject resend otp data source in resend otp usecase`() {
+        val mock = declareMock<ResendOTPDataSource>()
+        val useCase = get<ResendOTPUseCase>()
+        assertNotNull(mock)
+        assertNotNull(useCase)
+        assertEquals(mock, useCase.resendOTPDataSource)
     }
 }
