@@ -1,6 +1,8 @@
 package com.martdev.verification
 
+import com.martdev.data.resendOTP.resendOTPDataModule
 import com.martdev.data.verification.userVerificationDataModule
+import com.martdev.domain.resendOTP.resendOTPUseCaseModule
 import com.martdev.domain.verification.userVerificationUseCaseModule
 import com.martdev.ui.reusable.AppNavigator
 import com.martdev.ui.reusable.NavigateTo
@@ -13,6 +15,8 @@ import org.koin.dsl.navigation3.navigation
 @OptIn(KoinExperimentalAPI::class)
 val userVerificationModule = module {
     includes(
+        resendOTPUseCaseModule,
+        resendOTPDataModule,
         userVerificationUseCaseModule,
         userVerificationDataModule
     )
@@ -21,7 +25,8 @@ val userVerificationModule = module {
         navigation<NavigateTo.Verification> {
             val navigator = get<AppNavigator>()
             UserVerificationScreen(
-                it.emailID
+                it.emailID,
+                it.email
             ) {
                 navigator.popUpTo(NavigateTo.Login)
             }
