@@ -9,7 +9,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 sealed class NavigateTo {
     data object Login : NavigateTo()
     data object Registration : NavigateTo()
-    data class Verification(val emailID: String) : NavigateTo()
+    data class Verification(val emailID: String, val email: String) : NavigateTo()
     data object Photo : NavigateTo()
     data class PhotoDetail(val postId: Long, val imageUrl: String): NavigateTo()
     data object Video : NavigateTo()

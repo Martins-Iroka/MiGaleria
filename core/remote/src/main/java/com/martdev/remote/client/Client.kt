@@ -110,7 +110,8 @@ class Client(
                     request.url.encodedPath.contains("register").not() ||
                             request.url.encodedPath.contains("verify").not() ||
                             request.url.encodedPath.contains("login").not() ||
-                            request.url.encodedPath.contains("logout").not()
+                            request.url.encodedPath.contains("logout").not() ||
+                            request.url.encodedPath.contains("resendOTP")
                 }
             }
         }

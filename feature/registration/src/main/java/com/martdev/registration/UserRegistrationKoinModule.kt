@@ -21,8 +21,8 @@ val userRegistrationModule = module {
                 goToLogin = {
                     navigator.goBack()
                 },
-                goToVerification = {  emailID ->
-                    navigator.goTo(NavigateTo.Verification(emailID))
+                goToVerification = {  emailID, email ->
+                    navigator.goTo(NavigateTo.Verification(emailID, email))
                 }
             )
         }

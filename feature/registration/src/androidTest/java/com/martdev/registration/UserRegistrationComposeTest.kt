@@ -104,7 +104,7 @@ class UserRegistrationComposeTest {
             setContent {
                 UserRegistration(
                     responseData = ResponseData.Success(UserRegistrationDataResponse("emailID")),
-                    goToVerification = { emailID ->
+                    goToVerification = { emailID, _ ->
                         assertEquals("emailID", emailID)
                     }
                 )

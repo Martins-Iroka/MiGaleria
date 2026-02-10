@@ -63,7 +63,7 @@ sealed interface UserRegistrationTag {
 @Composable
 fun UserRegistrationScreen(
     goToLogin: () -> Unit = {},
-    goToVerification: (String) -> Unit = {},
+    goToVerification: (String, String) -> Unit = {_,_ ->},
 ) {
 
     val viewModel: UserRegistrationViewModel = koinViewModel()
@@ -76,8 +76,8 @@ fun UserRegistrationScreen(
 
     UserRegistration(
         responseData = response,
-        goToVerification = {  emailID ->
-            goToVerification( emailID)
+        goToVerification = {  emailID, email ->
+            goToVerification(emailID, email)
             viewModel.resetResponseState()
         },
         loginUserClicked = goToLogin,
@@ -90,7 +90,7 @@ fun UserRegistrationScreen(
 @Composable
 internal fun UserRegistration(
     responseData: ResponseData<UserRegistrationDataResponse> = ResponseData.NoResponse,
-    goToVerification: (String) -> Unit = {},
+    goToVerification: (String, String) -> Unit = {_, _ -> },
     loginUserClicked: () -> Unit = {},
     signUpUserClicked: (String, String, String) -> Unit = { _, _, _ -> }
 ) {
@@ -115,7 +115,7 @@ internal fun UserRegistration(
         if (responseData is ResponseData.Error) {
             error = responseData.message
         } else if (responseData is ResponseData.Success) {
-            goToVerification(responseData.data!!.emailID)
+            goToVerification(responseData.data!!.emailID, email)
         }
     }
 

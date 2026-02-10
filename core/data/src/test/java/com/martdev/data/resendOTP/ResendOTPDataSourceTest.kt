@@ -4,6 +4,7 @@ package com.martdev.data.resendOTP
 
 import com.martdev.common.NetworkResult
 import com.martdev.domain.ResponseData
+import com.martdev.domain.resendOTP.ResendOTPDataSource
 import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.resendOTP.ResendOTPRemoteSource
 import com.martdev.remote.resendOTP.ResendOTPResponseAPI
