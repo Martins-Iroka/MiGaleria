@@ -3,6 +3,9 @@
 </p>
 
 # MiGaleria
+
+> **⚠️ Note: This project is currently under refactoring.** Some features may be temporarily unavailable or undergoing significant changes as we improve the codebase architecture and modernize the tech stack.
+
 MiGaleria is a spanish word for My Gallery (according to Google of course). The application retrieves 
 curated and popular photos and videos from [Pexels](https://www.pexels.com/) to be displayed to a user.
 A user can also search for photos and videos using a keyword, e.g nature or programming. Please don't

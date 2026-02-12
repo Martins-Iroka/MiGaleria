@@ -47,7 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.martdev.common.convertToUTCDateTime
+import com.martdev.common.convertUTCToLocalDateTime
 import com.martdev.domain.ResponseData
 import com.martdev.domain.photodata.PhotoPostComments
 import com.martdev.ui.reusable.CustomLayout
@@ -217,7 +217,7 @@ internal fun PhotoDetail(
 private fun CommentCompose(content: String, username: String, createdAt: String) {
     val localTime = remember(createdAt) {
         try {
-            convertToUTCDateTime(createdAt)
+            convertUTCToLocalDateTime(createdAt)
         } catch (e: Exception) {
             e.printStackTrace()
             createdAt

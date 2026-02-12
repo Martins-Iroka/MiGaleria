@@ -29,6 +29,7 @@ import org.koin.androidx.scope.activityRetainedScope
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.scope.Scope
 
+//work on the app navigation
 @OptIn(KoinExperimentalAPI::class)
 class MainActivity : ComponentActivity(), AndroidScopeComponent {
     override val scope: Scope by activityRetainedScope()

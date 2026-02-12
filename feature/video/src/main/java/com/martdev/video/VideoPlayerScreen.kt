@@ -49,7 +49,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import com.martdev.common.convertToUTCDateTime
+import com.martdev.common.convertUTCToLocalDateTime
 import com.martdev.domain.ResponseData
 import com.martdev.domain.videodata.VideoPostComments
 import com.martdev.ui.reusable.TextCompose
@@ -225,7 +225,7 @@ private fun ContentScaleButton(
 private fun CommentCompose(content: String, username: String, createdAt: String) {
     val localTime = remember(createdAt) {
         try {
-            convertToUTCDateTime(createdAt)
+            convertUTCToLocalDateTime(createdAt)
         } catch (e: Exception) {
             e.printStackTrace()
             createdAt
