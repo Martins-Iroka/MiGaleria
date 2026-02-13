@@ -48,6 +48,7 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.martdev.common.convertUTCToLocalDateTime
 import com.martdev.domain.ResponseData
@@ -58,6 +59,7 @@ import com.martdev.video.utils.MediaPlayer
 import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 
+@androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 internal fun VideoPlayerCompose(
     postId: Long,
@@ -105,6 +107,7 @@ internal fun VideoPlayerCompose(
     }
 }
 
+@androidx.annotation.OptIn(UnstableApi::class)
 @Suppress("ParamsComparedByRef")
 @Composable
 private fun VidePlayer(

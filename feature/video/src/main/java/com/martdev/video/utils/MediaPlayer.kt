@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.compose.ContentFrame
 
 val CONTENT_SCALES = listOf(
@@ -23,6 +24,7 @@ val CONTENT_SCALES = listOf(
     "FillWidth" to ContentScale.FillWidth
 )
 
+@androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 internal fun BoxScope.MediaPlayer(
     player: Player,

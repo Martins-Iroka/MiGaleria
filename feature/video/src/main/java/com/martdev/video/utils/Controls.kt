@@ -42,7 +42,7 @@ private fun RowControls(
     }
 }
 
-@UnstableApi
+@androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 internal fun BoxScope.Controls(
     player: Player,
