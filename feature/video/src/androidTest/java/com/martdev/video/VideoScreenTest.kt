@@ -76,8 +76,8 @@ class VideoScreenTest {
             setContent {
                 val lazyPagingItems = items.collectAsLazyPagingItems()
 
-                VideoScreen(lazyPagingItems) {
-                    assertThat(it).isEqualTo("Video url link 15")
+                VideoScreen(lazyPagingItems) { _, link ->
+                    assertThat(link).isEqualTo("Video url link 15")
                 }
             }
 

@@ -10,9 +10,9 @@ import androidx.compose.ui.test.performScrollToNode
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.martdev.domain.ResponseData
 import com.martdev.domain.photodata.PhotoData
+import com.martdev.domain.photodata.PhotoDataSource
 import com.martdev.domain.photodata.PhotoDataUseCase
 import com.martdev.domain.photodata.PhotoInfo
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
@@ -31,12 +31,13 @@ class PhotoScreenComposeTest {
     val mockKRule = MockKRule(this)
 
     @MockK
-    private lateinit var useCase: PhotoDataUseCase
+    private lateinit var photoDataSource: PhotoDataSource
 
     private lateinit var viewmodel: PhotoViewModel
 
     @Before
     fun setUp() {
+        val useCase = PhotoDataUseCase(photoDataSource)
         viewmodel = PhotoViewModel(useCase)
     }
 
@@ -47,17 +48,17 @@ class PhotoScreenComposeTest {
         }
 
         every {
-            useCase.getPhotoInfo(any(), any())
+            photoDataSource.getPhotoInfo(any(), any())
         } returns flowOf(
             ResponseData.Success(
-                        PhotoInfo(
-                        mockPhotos,
-                40
-            ))
+                PhotoInfo(
+                    mockPhotos,
+                    40
+                ))
         )
 
-        coEvery {
-            useCase.getPhotoInfo(any(), any())
+        every {
+            photoDataSource.getPhotoInfo(any(), any())
         } returns flowOf(
             ResponseData.Success(
                 PhotoInfo(
