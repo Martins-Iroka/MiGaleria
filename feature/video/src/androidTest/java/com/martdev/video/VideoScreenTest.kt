@@ -11,6 +11,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.common.truth.Truth.assertThat
 import com.martdev.domain.ResponseData
 import com.martdev.domain.videodata.VideoData
+import com.martdev.domain.videodata.VideoDataSource
 import com.martdev.domain.videodata.VideoDataUseCase
 import com.martdev.domain.videodata.VideoFileData
 import com.martdev.domain.videodata.VideoPost
@@ -31,12 +32,16 @@ class VideoScreenTest {
     val mockKRule = MockKRule(this)
 
     @MockK
+    private lateinit var videoDataSource: VideoDataSource
+
+    @MockK
     private lateinit var useCase: VideoDataUseCase
 
     private lateinit var viewModel: VideoViewModel
 
     @Before
     fun setup() {
+        val useCase = VideoDataUseCase(videoDataSource)
         viewModel = VideoViewModel(useCase)
     }
 
@@ -53,7 +58,7 @@ class VideoScreenTest {
         }
 
         every {
-            useCase.getVideoPosts(any(), any())
+            videoDataSource.getVideoPosts(any(), any())
         } returns flowOf(
             ResponseData.Success(
                 data = VideoPost(mockVideos, 20)
@@ -61,7 +66,7 @@ class VideoScreenTest {
         )
 
         every {
-            useCase.getVideoPosts(any(), any())
+            videoDataSource.getVideoPosts(any(), any())
         } returns flowOf(
             ResponseData.Success(
                 VideoPost(
@@ -76,8 +81,8 @@ class VideoScreenTest {
             setContent {
                 val lazyPagingItems = items.collectAsLazyPagingItems()
 
-                VideoScreen(lazyPagingItems) {
-                    assertThat(it).isEqualTo("Video url link 15")
+                VideoScreen(lazyPagingItems) { _, link ->
+                    assertThat(link).isEqualTo("Video url link 15")
                 }
             }
 

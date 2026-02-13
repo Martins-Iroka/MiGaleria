@@ -1,5 +1,5 @@
 <p align="center">
-   <a href="https://github.com/Martins-Iroka/MiGaleria/actions/workflows/AndroidBuild.yml"><img alt="Build Status" src="https://github.com/Martins-Iroka/MiGaleria/actions/workflows/AndroidBuild.yml/badge.svg"/></a>
+   <a href="https://github.com/Martins-Iroka/MiGaleria/actions/workflows/AndroidBuild.yml"><img alt="Build Status" src="https://github.com/Martins-Iroka/MiGaleria/actions/workflows/android-ci.yml/badge.svg"/></a>
 </p>
 
 # MiGaleria
