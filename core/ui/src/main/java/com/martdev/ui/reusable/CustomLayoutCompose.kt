@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 fun CustomLayout(
     message: String= "",
     modifier: Modifier = Modifier,
+    bottomView: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
 
@@ -27,6 +28,7 @@ fun CustomLayout(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        bottomBar = bottomView,
         snackbarHost = {
         SnackbarHost(hostState = snackBackHostState)
     }) {

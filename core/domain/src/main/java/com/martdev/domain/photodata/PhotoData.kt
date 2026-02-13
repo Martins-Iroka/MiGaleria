@@ -1,5 +1,12 @@
 package com.martdev.domain.photodata
 
+import java.util.UUID
+
+data class PhotoInfo(
+    val photoItems: List<PhotoData>,
+    val nextOffset: Int
+)
+
 data class PhotoData(
     val photoId: Long = 0,
     val photographer: String = "",
@@ -11,7 +18,8 @@ data class PhotoData(
     val portrait: String = "",
     val landscape: String = "",
     val tiny: String = "",
-    val bookmarked: Boolean = false
+    val bookmarked: Boolean = false,
+    val id: String = UUID.randomUUID().toString()
 )
 
 data class PhotoUrlAndIdData(

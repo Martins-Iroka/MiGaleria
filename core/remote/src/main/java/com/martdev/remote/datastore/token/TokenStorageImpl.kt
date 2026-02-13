@@ -1,4 +1,4 @@
-package com.martdev.remote.datastore
+package com.martdev.remote.datastore.token
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -6,14 +6,15 @@ import androidx.datastore.dataStore
 import kotlinx.coroutines.flow.map
 
 val Context.dataStore by dataStore(
-    fileName = "user-preferences",
-    serializer = UserPreferencesSerializer
+    fileName = "token-preferences.pb",
+    serializer = AuthTokenSerializer
 )
 
 class TokenStorageImpl(
-    private val dataStore: DataStore<AuthToken>
+    context: Context
 ) : TokenStorage{
 
+    val dataStore: DataStore<AuthToken> = context.dataStore
     override fun getTokens() = dataStore.data.map { AuthToken(
         accessToken = it.accessToken,
         refreshToken = it.refreshToken,

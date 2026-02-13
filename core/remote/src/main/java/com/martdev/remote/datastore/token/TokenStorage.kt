@@ -1,4 +1,4 @@
-package com.martdev.remote.datastore
+package com.martdev.remote.datastore.token
 
 import kotlinx.coroutines.flow.Flow
 

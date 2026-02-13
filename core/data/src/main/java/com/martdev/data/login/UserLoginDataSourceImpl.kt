@@ -4,23 +4,27 @@ import com.martdev.data.util.toResponseData
 import com.martdev.domain.ResponseData
 import com.martdev.domain.login.UserLoginDataRequest
 import com.martdev.domain.login.UserLoginDataSource
-import com.martdev.remote.datastore.AuthToken
-import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.datastore.token.AuthToken
+import com.martdev.remote.datastore.token.TokenStorage
+import com.martdev.remote.datastore.user.UserStorage
 import com.martdev.remote.login.LogoutUserRequest
 import com.martdev.remote.login.UserLoginRemoteSource
 import com.martdev.remote.login.UserLoginRequestPayload
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
+import timber.log.Timber
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserLoginDataSourceImpl(
     private val remote: UserLoginRemoteSource,
-    private val tokenStorage: TokenStorage
+    private val tokenStorage: TokenStorage,
+    private val userDataStorage: UserStorage
 ) : UserLoginDataSource {
     override fun loginUser(user: UserLoginDataRequest): Flow<ResponseData<Nothing>> {
         return remote.loginUser(UserLoginRequestPayload(user.email, user.password))
@@ -28,9 +32,14 @@ class UserLoginDataSourceImpl(
                 it.toResponseData { loginPayload ->
                     val accessToken = loginPayload.data.accessToken
                     val refreshToken = loginPayload.data.refreshToken
+                    val userId = loginPayload.data.userId
                     tokenStorage.saveAuthTokens(AuthToken(accessToken, refreshToken))
+                    userDataStorage.saveUserId(userId)
                     null
                 }
+            }.catch {
+                Timber.e(it)
+                throw it
             }
     }
 

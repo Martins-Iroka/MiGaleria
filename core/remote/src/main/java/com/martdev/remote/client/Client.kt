@@ -2,10 +2,11 @@ package com.martdev.remote.client
 
 import com.martdev.common.NetworkResult
 import com.martdev.remote.BuildConfig
-import com.martdev.remote.datastore.AuthToken
-import com.martdev.remote.datastore.TokenRefreshRequest
-import com.martdev.remote.datastore.TokenRefreshResponse
-import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.ResponseDataPayload
+import com.martdev.remote.datastore.token.AuthToken
+import com.martdev.remote.datastore.token.TokenRefreshRequest
+import com.martdev.remote.datastore.token.TokenRefreshResponse
+import com.martdev.remote.datastore.token.TokenStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
@@ -19,7 +20,6 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
-import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -27,16 +27,20 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
+import io.ktor.http.encodedPath
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-const val AUTH_REGISTER_PATH = "/authentication/register"
-const val AUTH_LOGIN_PATH = "/authentication/login"
-const val AUTH_LOGOUT_PATH = "/authentication/logout"
-const val AUTH_VERIFY_PATH = "/authentication/verify"
+const val AUTHENTICATION_PATH = "/authentication"
+const val AUTH_REGISTER_PATH = "$AUTHENTICATION_PATH/register"
+const val AUTH_LOGIN_PATH = "$AUTHENTICATION_PATH/login"
+const val AUTH_LOGOUT_PATH = "$AUTHENTICATION_PATH/logout"
+const val AUTH_VERIFY_PATH = "$AUTHENTICATION_PATH/verify"
+const val RESEND_OTP_PATH = "$AUTHENTICATION_PATH/resendOTP"
+
 const val PHOTOS_PATH = "/photos"
 const val CREATE_PHOTOS_COMMENT_PATH = "$PHOTOS_PATH/{postID}/create-comment"
 const val PHOTO_COMMENTS_PATH = "$PHOTOS_PATH/{postID}/comments"
@@ -83,13 +87,13 @@ class Client(
                     val refreshToken = oldToken?.refreshToken ?: return@refreshTokens null
 
                     try {
-                        val response: TokenRefreshResponse = client.post("/authentication/refresh") {
+                        val response: ResponseDataPayload<TokenRefreshResponse> = client.post("$AUTHENTICATION_PATH/refresh") {
                             markAsRefreshTokenRequest()
                             contentType(ContentType.Application.Json)
                             setBody(TokenRefreshRequest(refreshToken))
                         }.body()
 
-                        val newTokens = AuthToken(response.accessToken, refreshToken)
+                        val newTokens = AuthToken(response.data.accessToken, refreshToken)
                         tokenStorage.saveAuthTokens(newTokens)
 
                         BearerTokens(newTokens.accessToken, newTokens.refreshToken)
@@ -103,10 +107,11 @@ class Client(
                 }
 
                 sendWithoutRequest { request ->
-                    request.url.pathSegments.contains("register").not() ||
-                            request.url.pathSegments.contains("verify").not() ||
-                            request.url.pathSegments.contains("login").not() ||
-                            request.url.pathSegments.contains("logout").not()
+                    request.url.encodedPath.contains("register").not() ||
+                            request.url.encodedPath.contains("verify").not() ||
+                            request.url.encodedPath.contains("login").not() ||
+                            request.url.encodedPath.contains("logout").not() ||
+                            request.url.encodedPath.contains("resendOTP")
                 }
             }
         }
@@ -117,9 +122,6 @@ class Client(
                 host = BuildConfig.BASE_URL.plus("/v1")
             }
             contentType(ContentType.Application.Json)
-            headers {
-                this
-            }
         }
     }
 

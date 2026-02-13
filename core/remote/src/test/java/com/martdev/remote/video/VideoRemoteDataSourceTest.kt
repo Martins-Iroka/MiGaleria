@@ -44,16 +44,16 @@ class VideoRemoteDataSourceTest {
         mockkConstructor(VideoRemoteDataSourceImpl::class)
 
         every { constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client))
-            .getAllVideoPosts(20, 0) } answers { callOriginal() }
-        val result = VideoRemoteDataSourceImpl(client).getAllVideoPosts(20, 0).first()
+            .getVideoPosts(20, 0) } answers { callOriginal() }
+        val result = VideoRemoteDataSourceImpl(client).getVideoPosts(20, 0).first()
         if (result is NetworkResult.Success) {
-            assertTrue(result.data.data.isNotEmpty())
-            assertEquals(7677511, result.data.data.first().id)
+            assertTrue(result.data.data.videoItems.isNotEmpty())
+            assertEquals(7677511, result.data.data.videoItems.first().id)
         }
 
         verify {
             constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client))
-                .getAllVideoPosts(20, 0)
+                .getVideoPosts(20, 0)
         }
     }
 
@@ -63,11 +63,11 @@ class VideoRemoteDataSourceTest {
         mockkConstructor(VideoRemoteDataSourceImpl::class)
 
         every { constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client))
-            .getAllVideoPosts(20, 0) } answers { callOriginal() }
+            .getVideoPosts(20, 0) } answers { callOriginal() }
 
-        val result = VideoRemoteDataSourceImpl(client).getAllVideoPosts(20, 0).first()
+        val result = VideoRemoteDataSourceImpl(client).getVideoPosts(20, 0).first()
         if (result is NetworkResult.Success) {
-            assertTrue(result.data.data.isEmpty())
+            assertTrue(result.data.data.videoItems.isEmpty())
         }
     }
 
@@ -77,14 +77,14 @@ class VideoRemoteDataSourceTest {
         val client = getMockClient(statusCode = HttpStatusCode.BadRequest, path = videoPath, json = badRequestJsonResponse)
         mockkConstructor(VideoRemoteDataSourceImpl::class)
 
-        every { constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client)).getAllVideoPosts(20, 0) } answers { callOriginal() }
-        val r = VideoRemoteDataSourceImpl(client).getAllVideoPosts(20, 0).first()
+        every { constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client)).getVideoPosts(20, 0) } answers { callOriginal() }
+        val r = VideoRemoteDataSourceImpl(client).getVideoPosts(20, 0).first()
         if (r is NetworkResult.Failure) {
             Assert.assertEquals(badRequestMessage, r.error)
         }
 
         verify {
-            constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client)).getAllVideoPosts(20, 0)
+            constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client)).getVideoPosts(20, 0)
         }
     }
 
@@ -94,14 +94,14 @@ class VideoRemoteDataSourceTest {
         val client = getMockClient(statusCode = HttpStatusCode.Unauthorized)
         mockkConstructor(VideoRemoteDataSourceImpl::class)
 
-        every { constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client)).getAllVideoPosts(20, 0) } answers { callOriginal() }
-        val r = VideoRemoteDataSourceImpl(client).getAllVideoPosts(20, 0).first()
+        every { constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client)).getVideoPosts(20, 0) } answers { callOriginal() }
+        val r = VideoRemoteDataSourceImpl(client).getVideoPosts(20, 0).first()
         if (r is NetworkResult.Failure) {
             Assert.assertEquals("Unauthorized", r.error)
         }
 
         verify {
-            constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client)).getAllVideoPosts(20, 0)
+            constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client)).getVideoPosts(20, 0)
         }
     }
 
@@ -111,14 +111,14 @@ class VideoRemoteDataSourceTest {
         val client = getMockClient(statusCode = HttpStatusCode.NotFound, path = videoPath)
         mockkConstructor(VideoRemoteDataSourceImpl::class)
 
-        every { constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client)).getAllVideoPosts(20, 0) } answers { callOriginal() }
-        val r = VideoRemoteDataSourceImpl(client).getAllVideoPosts(20, 0).first()
+        every { constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client)).getVideoPosts(20, 0) } answers { callOriginal() }
+        val r = VideoRemoteDataSourceImpl(client).getVideoPosts(20, 0).first()
         if (r is NetworkResult.Failure) {
             Assert.assertEquals("Not Found", r.error)
         }
 
         verify {
-            constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client)).getAllVideoPosts(20, 0)
+            constructedWith<VideoRemoteDataSourceImpl>(EqMatcher(client)).getVideoPosts(20, 0)
         }
     }
 

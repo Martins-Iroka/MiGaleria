@@ -5,12 +5,12 @@ import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.photo.model.CreatePhotoCommentRequest
 import com.martdev.remote.photo.model.CreatePhotoCommentResponse
 import com.martdev.remote.photo.model.PhotoPostCommentResponse
-import com.martdev.remote.photo.model.PhotoSrcAPI
+import com.martdev.remote.photo.model.PhotoPostResponse
 import kotlinx.coroutines.flow.Flow
 
 interface PhotoRemoteDataSource {
 
-    fun getAllPhotoPosts(limit: Int, offset: Int): Flow<NetworkResult<ResponseDataPayload<List<PhotoSrcAPI>>>>
+    fun getAllPhotoPosts(limit: Int, offset: Int): Flow<NetworkResult<ResponseDataPayload<PhotoPostResponse>>>
 
     fun postComment(postID: String, commentRequest: CreatePhotoCommentRequest): Flow<NetworkResult<ResponseDataPayload<CreatePhotoCommentResponse>>>
 

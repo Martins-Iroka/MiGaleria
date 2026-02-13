@@ -45,8 +45,8 @@ class PhotoRemoteDataSourceTest {
         every { constructedWith<PhotoRemoteDataSourceImpl>(EqMatcher(client)).getAllPhotoPosts(20, 0) } answers { callOriginal() }
         val result = PhotoRemoteDataSourceImpl(client).getAllPhotoPosts(20, 0).first()
         if (result is NetworkResult.Success) {
-            assertTrue(result.data.data.isNotEmpty())
-            assertEquals(34611213, result.data.data.first().id)
+            assertTrue(result.data.data.photoItems.isNotEmpty())
+            assertEquals(34611213, result.data.data.photoItems.first().id)
         }
 
         verify {
@@ -62,7 +62,7 @@ class PhotoRemoteDataSourceTest {
         every { constructedWith<PhotoRemoteDataSourceImpl>(EqMatcher(client)).getAllPhotoPosts(20, 0) } answers { callOriginal() }
         val result = PhotoRemoteDataSourceImpl(client).getAllPhotoPosts(20, 0).first()
         if (result is NetworkResult.Success) {
-            assertTrue(result.data.data.isEmpty())
+            assertTrue(result.data.data.photoItems.isEmpty())
         }
 
         verify {

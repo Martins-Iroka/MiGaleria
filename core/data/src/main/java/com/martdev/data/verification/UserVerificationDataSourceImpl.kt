@@ -5,11 +5,12 @@ import com.martdev.domain.ResponseData
 import com.martdev.domain.verification.UserVerificationDataRequest
 import com.martdev.domain.verification.UserVerificationDataSource
 import com.martdev.remote.ResponseDataPayload
-import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.datastore.token.TokenStorage
 import com.martdev.remote.verification.UserVerificationRemoteSource
 import com.martdev.remote.verification.UserVerificationRequestPayload
 import com.martdev.remote.verification.UserVerificationResponsePayload
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
@@ -28,10 +29,12 @@ class UserVerificationDataSourceImpl(
                 ?: throw IllegalStateException("No verification token found")
             Timber.e("Verification token is $verificationToken")
             val r = remote.verifyUser(
-                UserVerificationRequestPayload(user.code, user.email, verificationToken)
+                UserVerificationRequestPayload(user.code, user.emailID, verificationToken)
             ).first()
 
             emit(r.toResponseData<ResponseDataPayload<UserVerificationResponsePayload>, Nothing>())
+        }.catch {
+            emit(ResponseData.Error(it.message ?: "An error occurred"))
         }.onCompletion {
             tokenStorage.clearTokens()
         }

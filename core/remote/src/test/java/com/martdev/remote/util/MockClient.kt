@@ -1,7 +1,7 @@
 package com.martdev.remote.util
 
 import com.martdev.remote.client.Client
-import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.datastore.token.TokenStorage
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpHeaders
@@ -12,6 +12,7 @@ import kotlin.test.assertEquals
 
 const val badRequestJsonResponse = "badRequestJsonResponse.json"
 const val badRequestMessage = "bad request from server"
+const val internalServerError = "Internal Server Error"
 fun getMockClient(
     json: String = "",
     path: String = "",

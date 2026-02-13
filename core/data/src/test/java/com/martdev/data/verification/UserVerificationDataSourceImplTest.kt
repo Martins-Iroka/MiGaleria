@@ -7,12 +7,11 @@ import com.martdev.domain.ResponseData
 import com.martdev.domain.verification.UserVerificationDataRequest
 import com.martdev.domain.verification.UserVerificationDataSource
 import com.martdev.remote.ResponseDataPayload
-import com.martdev.remote.datastore.AuthToken
-import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.datastore.token.AuthToken
+import com.martdev.remote.datastore.token.TokenStorage
 import com.martdev.remote.verification.UserVerificationRemoteSource
 import com.martdev.remote.verification.UserVerificationResponsePayload
 import io.mockk.Runs
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
 import io.mockk.every
@@ -20,13 +19,13 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import io.mockk.just
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class UserVerificationDataSourceImplTest {
@@ -43,12 +42,11 @@ class UserVerificationDataSourceImplTest {
     private lateinit var dataSource: UserVerificationDataSource
 
     private val request = UserVerificationDataRequest(
-        "code", "email"
+        "code", "emailID"
     )
 
     @Before
     fun setup() {
-        clearAllMocks()
         dataSource = UserVerificationDataSourceImpl(remote, tokenStorage)
     }
 
@@ -76,6 +74,31 @@ class UserVerificationDataSourceImplTest {
         coVerifyOrder {
             tokenStorage.getTokens()
             remote.verifyUser(any())
+            tokenStorage.clearTokens()
+        }
+    }
+
+    @Test
+    fun `call verify user response throw IllegalStateException`() = runTest {
+
+        val errorMessage = "No verification token found"
+        every {
+            tokenStorage.getTokens()
+        } returns flow {
+            throw IllegalStateException(errorMessage)
+        }
+
+        coEvery {
+            tokenStorage.clearTokens()
+        } just Runs
+
+        val r = dataSource.verifyUser(request).first()
+
+        assertTrue(r is ResponseData.Error)
+        assertEquals(errorMessage, r.message)
+
+        coVerifyOrder {
+            tokenStorage.getTokens()
             tokenStorage.clearTokens()
         }
     }
@@ -172,16 +195,17 @@ class UserVerificationDataSourceImplTest {
 
         every {
             tokenStorage.getTokens()
-        } throws IllegalStateException("Error")
+        } returns flow {
+            throw IllegalStateException("Error")
+        }
 
         coEvery {
             tokenStorage.clearTokens()
         } just Runs
 
-        val r = assertFailsWith<IllegalStateException> {
-            dataSource.verifyUser(request).first()
-        }
+        val r = dataSource.verifyUser(request).first()
 
+        assertTrue(r is ResponseData.Error)
         assertEquals("Error", r.message)
 
         coVerifyOrder {

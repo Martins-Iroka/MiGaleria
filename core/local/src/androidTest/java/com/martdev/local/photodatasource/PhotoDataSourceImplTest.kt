@@ -36,7 +36,7 @@ class PhotoDataSourceImplTest {
             MyGalleryDB::class.java
         ).build()
 
-        photoDataSource = PhotoDataSourceImpl(database.photoDataDao())
+        photoDataSource = PhotoLocalDataSourceImpl(database.photoDataDao())
     }
 
     @After

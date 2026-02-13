@@ -12,9 +12,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,6 +33,8 @@ import com.martdev.ui.reusable.MANROP_SEMI_BOLD
 import com.martdev.ui.reusable.TextCompose
 import com.martdev.ui.reusable.theme.Color_1F1F1F
 import com.martdev.ui.reusable.theme.Color_4E0189
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import org.koin.androidx.compose.koinViewModel
 
 sealed interface UserVerificationTag {
@@ -42,6 +46,7 @@ sealed interface UserVerificationTag {
 
 @Composable
 fun UserVerificationScreen(
+    emailID: String = "",
     email: String = "",
     navigate: () -> Unit = {}
 ) {
@@ -49,23 +54,44 @@ fun UserVerificationScreen(
 
     val response by viewModel.response.collectAsStateWithLifecycle()
 
+    val resendOTPResponse by viewModel.resendOTPResponse.collectAsStateWithLifecycle()
+
     BackHandler {
         navigate()
     }
 
     UserVerification(
+        emailID = emailID,
         responseData = response,
-        verifyCode = {
-            viewModel.verifyCode(it, email)
+        resendOTPResponse,
+        resendOTP = {
+            viewModel.resendOTP(email)
+        },
+        resetOTP = {
+            viewModel.resetResendOTPResponse()
+        },
+        verifyCode = { code, emailID ->
+            viewModel.verifyCode(code, emailID)
         }
     )
 }
 
 @Composable
 internal fun UserVerification(
+    emailID: String = "",
     responseData: ResponseData<Nothing> = ResponseData.NoResponse,
-    verifyCode: (String) -> Unit = {}
+    resendOTPResponse: ResponseData<String> = ResponseData.NoResponse,
+    resendOTP: () -> Unit = {},
+    resetOTP: () -> Unit = {},
+    verifyCode: (String, String) -> Unit = {_, _ ->}
 ) {
+
+    var eid by remember {
+        mutableStateOf(emailID)
+    }
+    var timeLeft by remember { mutableLongStateOf(10000) }
+
+    val seconds = (timeLeft / 1000) % 60
 
     var code by remember {
         mutableStateOf("")
@@ -74,9 +100,35 @@ internal fun UserVerification(
         mutableStateOf("")
     }
 
+    LaunchedEffect(key1 = timeLeft) {
+        if (timeLeft > 0) {
+            while (isActive && timeLeft > 0) { // Check isActive to ensure coroutine is still active
+                delay(1000L) // Wait for 1 second
+                timeLeft -= 1000L
+            }
+        }
+    }
+
     LaunchedEffect(responseData) {
         if (responseData is ResponseData.Error){
             error = responseData.message
+        }
+    }
+
+    LaunchedEffect(resendOTPResponse) {
+        when (resendOTPResponse) {
+            is ResponseData.Error -> {
+                error = resendOTPResponse.message
+            }
+            is ResponseData.Success -> {
+                resendOTPResponse.data?.let {
+                    eid = it
+                } ?: run {
+                    error = "Failed to send OTP"
+                    resetOTP()
+                }
+            }
+            else -> { /* NoResponse or other states */ }
         }
     }
 
@@ -124,7 +176,7 @@ internal fun UserVerification(
             } else {
                 Button(
                     onClick = {
-                        verifyCode(code)
+                        verifyCode(code, eid)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -134,6 +186,21 @@ internal fun UserVerification(
                 ) {
                     TextCompose("Verify", fontSize = 17, textColor = Color.White)
                 }
+            }
+
+            if (seconds != 0L) {
+                TextCompose("$seconds seconds",
+                    textColor = Color.DarkGray,
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp))
+            }
+
+            TextButton(onClick = {
+                timeLeft = 10000L
+                resendOTP()
+            },
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                enabled = seconds == 0L) {
+                TextCompose("Resend OTP", textColor = if (seconds != 0L) Color.DarkGray else Color_4E0189)
             }
         }
     }

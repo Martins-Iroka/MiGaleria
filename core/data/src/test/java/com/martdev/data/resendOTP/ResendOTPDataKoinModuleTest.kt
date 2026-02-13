@@ -1,14 +1,14 @@
-package com.martdev.data
+package com.martdev.data.resendOTP
 
 import org.junit.Test
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.test.verify.verify
 
 @OptIn(KoinExperimentalAPI::class)
-class DataKoinModuleTest {
+class ResendOTPDataKoinModuleTest {
 
     @Test
-    fun testDataKoinModules() {
-        dataKoinModule.verify()
+    fun testResendOTPKoinModule() {
+        resendOTPDataModule.verify()
     }
 }

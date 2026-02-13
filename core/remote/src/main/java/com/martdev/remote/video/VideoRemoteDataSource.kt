@@ -5,12 +5,12 @@ import com.martdev.remote.ResponseDataPayload
 import com.martdev.remote.video.model.CreateVideoCommentRequest
 import com.martdev.remote.video.model.CreateVideoCommentResponse
 import com.martdev.remote.video.model.VideoPostCommentResponse
-import com.martdev.remote.video.model.VideoPostResponse
+import com.martdev.remote.video.model.VideoPostListResponse
 import kotlinx.coroutines.flow.Flow
 
 interface VideoRemoteDataSource {
 
-    fun getAllVideoPosts(limit: Int, offset: Int): Flow<NetworkResult<ResponseDataPayload<List<VideoPostResponse>>>>
+    fun getVideoPosts(limit: Int, offset: Int): Flow<NetworkResult<ResponseDataPayload<VideoPostListResponse>>>
 
     fun postComment(postID: String, commentRequest: CreateVideoCommentRequest):
             Flow<NetworkResult<ResponseDataPayload<CreateVideoCommentResponse>>>

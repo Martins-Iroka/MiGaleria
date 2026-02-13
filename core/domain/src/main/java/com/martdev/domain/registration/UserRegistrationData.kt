@@ -5,3 +5,7 @@ data class UserRegistrationDataRequest(
     val username: String,
     val password: String
 )
+
+data class UserRegistrationDataResponse(
+    val emailID: String
+)

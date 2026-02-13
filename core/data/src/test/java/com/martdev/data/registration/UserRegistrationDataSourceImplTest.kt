@@ -5,11 +5,10 @@ import com.martdev.domain.ResponseData
 import com.martdev.domain.registration.UserRegistrationDataRequest
 import com.martdev.domain.registration.UserRegistrationDataSource
 import com.martdev.remote.ResponseDataPayload
-import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.datastore.token.TokenStorage
 import com.martdev.remote.registration.UserRegistrationRemoteSource
 import com.martdev.remote.registration.UserRegistrationResponsePayload
 import io.mockk.Runs
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
@@ -25,6 +24,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 @Suppress("UnusedFlow")
@@ -49,7 +49,6 @@ class UserRegistrationDataSourceImplTest {
 
     @Before
     fun setup() {
-        clearAllMocks()
         dataSource = UserRegistrationDataSourceImpl(remote, tokenStorage)
     }
 
@@ -57,7 +56,7 @@ class UserRegistrationDataSourceImplTest {
     fun `register user, return success and response data is success`() = runTest {
 
         every { remote.registerUser(any()) } returns flowOf(
-            NetworkResult.Success(ResponseDataPayload(UserRegistrationResponsePayload(token = "token")))
+            NetworkResult.Success(ResponseDataPayload(UserRegistrationResponsePayload(token = "token", emailId = "emailId")))
         )
 
         coEvery { tokenStorage.saveVerificationToken(any()) } just Runs
@@ -65,6 +64,8 @@ class UserRegistrationDataSourceImplTest {
         val r = dataSource.registerUser(request).first()
 
         assertTrue(r is ResponseData.Success)
+        assertNotNull(r.data)
+        assertEquals("emailId", r.data!!.emailID)
 
         coVerifyOrder {
             remote.registerUser(any())

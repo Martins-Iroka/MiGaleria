@@ -86,8 +86,10 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     implementation(project(":core:data"))
                     implementation(project(":core:ui"))
                     implementation(project(":feature:login"))
+                    implementation(project(":feature:photo"))
                     implementation(project(":feature:registration"))
                     implementation(project(":feature:verification"))
+                    implementation(project(":feature:video"))
                 }
             }
         }

@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.martdev.domain.ResponseData
+import com.martdev.domain.registration.UserRegistrationDataResponse
 import com.martdev.ui.reusable.CustomLayout
 import com.martdev.ui.reusable.MANROP_SEMI_BOLD
 import com.martdev.ui.reusable.TextCompose
@@ -62,7 +63,7 @@ sealed interface UserRegistrationTag {
 @Composable
 fun UserRegistrationScreen(
     goToLogin: () -> Unit = {},
-    goToVerification: (String) -> Unit = {}
+    goToVerification: (String, String) -> Unit = {_,_ ->},
 ) {
 
     val viewModel: UserRegistrationViewModel = koinViewModel()
@@ -75,12 +76,12 @@ fun UserRegistrationScreen(
 
     UserRegistration(
         responseData = response,
-        goToVerification = {
-            goToVerification(it)
+        goToVerification = {  emailID, email ->
+            goToVerification(emailID, email)
             viewModel.resetResponseState()
         },
         loginUserClicked = goToLogin,
-        signUpUserClicked = {email, password, username ->
+        signUpUserClicked = { email, password, username ->
             viewModel.registerUser(email, password, username)
         }
     )
@@ -88,8 +89,8 @@ fun UserRegistrationScreen(
 
 @Composable
 internal fun UserRegistration(
-    responseData: ResponseData<Nothing> = ResponseData.NoResponse,
-    goToVerification: (String) -> Unit = {},
+    responseData: ResponseData<UserRegistrationDataResponse> = ResponseData.NoResponse,
+    goToVerification: (String, String) -> Unit = {_, _ -> },
     loginUserClicked: () -> Unit = {},
     signUpUserClicked: (String, String, String) -> Unit = { _, _, _ -> }
 ) {
@@ -114,7 +115,7 @@ internal fun UserRegistration(
         if (responseData is ResponseData.Error) {
             error = responseData.message
         } else if (responseData is ResponseData.Success) {
-            goToVerification(email)
+            goToVerification(responseData.data!!.emailID, email)
         }
     }
 

@@ -5,6 +5,7 @@ import com.martdev.remote.client.AUTH_VERIFY_PATH
 import com.martdev.remote.util.badRequestJsonResponse
 import com.martdev.remote.util.badRequestMessage
 import com.martdev.remote.util.getMockClient
+import com.martdev.remote.util.internalServerError
 import io.ktor.http.HttpStatusCode
 import io.mockk.EqMatcher
 import io.mockk.every
@@ -22,7 +23,7 @@ class UserVerificationRemoteSourceImplTest {
     private val verifyUserResponseJson = "verifyUserResponsePayload.json"
     private val request = UserVerificationRequestPayload(
         code = "code",
-        email = "t@g.com",
+        emailID = "emailID",
         token = "token"
     )
 
@@ -123,7 +124,7 @@ class UserVerificationRemoteSourceImplTest {
             UserVerificationRemoteSourceImpl(client).verifyUser(request).first()
 
         if (result is NetworkResult.Failure) {
-            assertEquals("Internal Server Error", result.error)
+            assertEquals(internalServerError, result.error)
         }
 
         verify {

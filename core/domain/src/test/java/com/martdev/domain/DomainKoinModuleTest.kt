@@ -3,12 +3,21 @@ package com.martdev.domain
 import com.martdev.domain.login.UserLoginDataSource
 import com.martdev.domain.login.UserLoginUseCase
 import com.martdev.domain.login.userLoginUseCaseModule
+import com.martdev.domain.photodata.PhotoDataSource
+import com.martdev.domain.photodata.PhotoDataUseCase
+import com.martdev.domain.photodata.photoUseCaseModule
 import com.martdev.domain.registration.UserRegistrationDataSource
 import com.martdev.domain.registration.UserRegistrationUseCase
 import com.martdev.domain.registration.userRegistrationUseCaseModule
+import com.martdev.domain.resendOTP.ResendOTPDataSource
+import com.martdev.domain.resendOTP.ResendOTPUseCase
+import com.martdev.domain.resendOTP.resendOTPUseCaseModule
 import com.martdev.domain.verification.UserVerificationDataSource
 import com.martdev.domain.verification.UserVerificationUseCase
 import com.martdev.domain.verification.userVerificationUseCaseModule
+import com.martdev.domain.videodata.VideoDataSource
+import com.martdev.domain.videodata.VideoDataUseCase
+import com.martdev.domain.videodata.videoUseCaseModule
 import io.mockk.mockkClass
 import org.junit.Rule
 import org.junit.Test
@@ -25,9 +34,12 @@ class DomainKoinModuleTest : KoinTest {
     @get:Rule
     val koinTestRule = KoinTestRule.create {
         modules(
+            photoUseCaseModule,
             userLoginUseCaseModule,
             userRegistrationUseCaseModule,
-            userVerificationUseCaseModule
+            userVerificationUseCaseModule,
+            videoUseCaseModule,
+            resendOTPUseCaseModule
         )
     }
 
@@ -64,5 +76,34 @@ class DomainKoinModuleTest : KoinTest {
         assertNotNull(mock)
         assertNotNull(useCase)
         assertEquals(mock, useCase.userVerificationDataSource)
+    }
+
+    @Test
+    fun `inject photo data source in photo use case`() {
+
+        val mock = declareMock<PhotoDataSource>()
+        val useCase = get<PhotoDataUseCase>()
+        assertNotNull(mock)
+        assertNotNull(useCase)
+        assertEquals(mock, useCase.photoDataSource)
+    }
+
+    @Test
+    fun `inject video data source in video use case`() {
+
+        val mock = declareMock<VideoDataSource>()
+        val useCase = get<VideoDataUseCase>()
+        assertNotNull(mock)
+        assertNotNull(useCase)
+        assertEquals(mock, useCase.videoDataSource)
+    }
+
+    @Test
+    fun `inject resend otp data source in resend otp usecase`() {
+        val mock = declareMock<ResendOTPDataSource>()
+        val useCase = get<ResendOTPUseCase>()
+        assertNotNull(mock)
+        assertNotNull(useCase)
+        assertEquals(mock, useCase.resendOTPDataSource)
     }
 }

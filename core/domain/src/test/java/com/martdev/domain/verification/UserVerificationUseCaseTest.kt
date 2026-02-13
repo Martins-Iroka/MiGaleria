@@ -27,6 +27,8 @@ class UserVerificationUseCaseTest {
 
     private lateinit var useCase: UserVerificationUseCase
 
+    private val code = "code"
+    private val emailID = "emailID"
     @Before
     fun setup() {
         clearMocks(source)
@@ -35,19 +37,19 @@ class UserVerificationUseCaseTest {
 
     @Test
     fun `verify code response data is successful`() = runTest {
-        val request = UserVerificationDataRequest("code", "email")
+        val request = UserVerificationDataRequest(code, emailID)
         val requestSlot = slot<UserVerificationDataRequest>()
 
         every {
             source.verifyUser(capture(requestSlot))
         } answers {
             assertEquals(request, requestSlot.captured)
-            assertEquals("code", requestSlot.captured.code)
-            assertEquals("email", requestSlot.captured.email)
+            assertEquals(code, requestSlot.captured.code)
+            assertEquals(emailID, requestSlot.captured.emailID)
             flowOf(ResponseData.Success(null))
         }
 
-        val r = useCase("code", "email").first()
+        val r = useCase(code, emailID).first()
 
         assertTrue(r is ResponseData.Success)
         assertEquals(null, r.data)
@@ -59,19 +61,19 @@ class UserVerificationUseCaseTest {
 
     @Test
     fun `verify code response data is error`() = runTest {
-        val request = UserVerificationDataRequest("code", "email")
+        val request = UserVerificationDataRequest(code, emailID)
         val requestSlot = slot<UserVerificationDataRequest>()
 
         every {
             source.verifyUser(capture(requestSlot))
         } answers {
             assertEquals(request, requestSlot.captured)
-            assertEquals("code", requestSlot.captured.code)
-            assertEquals("email", requestSlot.captured.email)
+            assertEquals(code, requestSlot.captured.code)
+            assertEquals(emailID, requestSlot.captured.emailID)
             flowOf(ResponseData.Error("error"))
         }
 
-        val r = useCase("code", "email").first()
+        val r = useCase("code", emailID).first()
 
         assertTrue(r is ResponseData.Error)
         assertEquals("error", r.message)

@@ -1,17 +1,12 @@
 package com.martdev.domain.videodata
 
-import kotlinx.coroutines.flow.Flow
-
 class VideoDataUseCase(
-    private val videoDataSource: VideoDataSource
+    val videoDataSource: VideoDataSource
 ) {
 
-    fun getVideoDataById(id: Long): Flow<VideoData> = videoDataSource.getVideoDataById(id)
+    fun getVideoPosts(limit: Int, offset: Int) = videoDataSource.getVideoPosts(limit, offset)
 
-    fun getVideoImageUrlAndId() = videoDataSource.getVideoImageUrlAndId()
+    fun postComment(postId: String, content: String) = videoDataSource.postComment(postId, content)
 
-    suspend fun refreshVideos() = videoDataSource.refreshVideos()
-
-    suspend fun updateBookmarkStatus(videoId: Long, isBookmarked: Boolean) =
-        videoDataSource.updateBookmarkStatus(videoId, isBookmarked)
+    fun getCommentsByPostId(postId: String) = videoDataSource.getCommentsByPostID(postId)
 }

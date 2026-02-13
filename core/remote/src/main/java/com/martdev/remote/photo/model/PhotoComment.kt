@@ -19,5 +19,6 @@ data class PhotoPostCommentResponse(
     val content: String,
     @SerialName("created_at")
     val createdAt: String,
-    val username: String
+    val username: String,
+    val id: Long
 )

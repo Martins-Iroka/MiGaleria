@@ -1,7 +1,7 @@
 package com.martdev.remote.util
 
-import com.martdev.remote.datastore.AuthToken
-import com.martdev.remote.datastore.TokenStorage
+import com.martdev.remote.datastore.token.AuthToken
+import com.martdev.remote.datastore.token.TokenStorage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
