@@ -65,7 +65,9 @@ fun PhotoDetailCompose(
 
     val viewModel: PhotoViewModel = koinViewModel()
 
-    val photoPostComments by viewModel.photoComments.collectAsStateWithLifecycle()
+    val photoPostComments by viewModel.photoComments.collectAsStateWithLifecycle(
+        ResponseData.NoResponse
+    )
     val sendCommentResponse by viewModel.createCommentsResponse.collectAsStateWithLifecycle()
 
     BackHandler {
