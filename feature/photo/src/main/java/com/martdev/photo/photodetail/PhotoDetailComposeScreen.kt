@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.martdev.photo
+package com.martdev.photo.photodetail
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -50,9 +50,11 @@ import coil3.request.crossfade
 import com.martdev.common.convertUTCToLocalDateTime
 import com.martdev.domain.ResponseData
 import com.martdev.domain.photodata.PhotoPostComments
+import com.martdev.photo.PhotoViewModel
 import com.martdev.ui.reusable.CustomLayout
 import com.martdev.ui.reusable.TextCompose
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 //write unit and ui test for the new implementations
 //refactor the userId storing logic
@@ -64,10 +66,14 @@ fun PhotoDetailCompose(
 ) {
 
     val viewModel: PhotoViewModel = koinViewModel()
+    val viewModel2: PhotoDetailViewModel = koinViewModel {
+        parametersOf(postID.toString())
+    }
 
     val photoPostComments by viewModel.photoComments.collectAsStateWithLifecycle(
         ResponseData.NoResponse
     )
+    val ppc by viewModel2.photoComments.collectAsStateWithLifecycle()
     val sendCommentResponse by viewModel.createCommentsResponse.collectAsStateWithLifecycle()
 
     BackHandler {

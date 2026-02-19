@@ -2,6 +2,8 @@ package com.martdev.photo
 
 import com.martdev.data.photosource.photoDataModule
 import com.martdev.domain.photodata.photoUseCaseModule
+import com.martdev.photo.photodetail.PhotoDetailCompose
+import com.martdev.photo.photodetail.PhotoDetailViewModel
 import com.martdev.ui.reusable.AppNavigator
 import com.martdev.ui.reusable.NavigateTo
 import org.koin.androidx.scope.dsl.activityRetainedScope
@@ -14,6 +16,7 @@ import org.koin.dsl.navigation3.navigation
 val photoModule = module {
     includes(photoUseCaseModule, photoDataModule)
     viewModelOf(::PhotoViewModel)
+    viewModelOf(::PhotoDetailViewModel)
     activityRetainedScope {
         navigation<NavigateTo.Photo> {
             val navigator = get<AppNavigator>()
