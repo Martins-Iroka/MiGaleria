@@ -1,42 +1,32 @@
 <p align="center">
-   <a href="https://github.com/Martins-Iroka/MiGaleria/actions/workflows/AndroidBuild.yml"><img alt="Build Status" src="https://github.com/Martins-Iroka/MiGaleria/actions/workflows/android-ci.yml/badge.svg"/></a>
+   <a href="https://github.com/Martins-Iroka/MiGaleria/actions/workflows/AndroidBuild.yml"><img alt="Build Status" src="https://github.com/Martins-Iroka/MiGaleria/actions/workflows/AndroidBuild.yml/badge.svg"/></a>
 </p>
 
 # MiGaleria
+MiGaleria is a gallery application that showcases curated photos and videos from the Pexels API. It's built with modern Android development in mind, following Clean Architecture principles.
 
-> **⚠️ Note: This project is currently under refactoring.** Some features may be temporarily unavailable or undergoing significant changes as we improve the codebase architecture and modernize the tech stack.
-
-MiGaleria is a spanish word for My Gallery (according to Google of course). The application retrieves 
-curated and popular photos and videos from [Pexels](https://www.pexels.com/) to be displayed to a user.
-A user can also search for photos and videos using a keyword, e.g nature or programming. Please don't
-search for Batman or The Avengers, you will be disappointed. The application is written with clean 
-architecture in mind.
-
-## ScreenShots
-![Photo Tab](screenshot/Photo_tab_screen_shot.jpg)
-![Video Tab](screenshot/Video_tab_screen_shot.jpg)
-![VideoPlayer](screenshot/VideoPlayer_screen_shot.jpg)
-![VideoPlayer](screenshot/VideoPlayer_screen_shot2.jpg)
+## Backend
+The backend for this project is powered by [MyGallery-Backend](https://github.com/Martins-Iroka/MyGallery-Backend), a Golang server that handles API requests to Pexels.
 
 ## Features
-* Get curated and popular photos and videos
-* User can play videos directly from the application all thanks to Exoplayer
-* Supports dark mode
-* Offline support - Using the room database, the application saves the contents from the server offline.
- But contents can't be downloaded or streamed.
-* Download contents from the application to local storage
+* Discover curated and popular photos and videos.
+* In-app video playback powered by ExoPlayer.
+* Offline caching of content using Room.
 
-## Libraries
-* MVVM with Android Architectural Components ([Room](https://developer.android.com/topic/libraries/architecture/room), [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel), [LiveData](https://developer.android.com/topic/libraries/architecture/livedata))
-* [Retrofit](https://github.com/square/retrofit)
-* [Glide](https://github.com/bumptech/glide)
-* [Moshi](https://github.com/square/moshi)
-* [Ktor](https://ktor.io/)
-* [Kotlin Coroutines](https://developer.android.com/kotlin/coroutines)
-* [DataBinding](https://developer.android.com/topic/libraries/data-binding)
-* [Navigation](https://developer.android.com/guide/navigation)
-* [Exoplayer](https://github.com/google/ExoPlayer)
-* [AdnetworkManager](https://github.com/wise4rmgod/AdnetwrokManager)
+## Tech Stack & Libraries
+* **UI:** [Jetpack Compose](https://developer.android.com/jetpack/compose) for modern, declarative UI development.
+* **Architecture:** [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html), MVVM
+* **Asynchronous Programming:** [Kotlin Coroutines](https://developer.android.com/kotlin/coroutines) for managing background threads.
+* **Dependency Injection:** [Koin](https://insert-koin.io/) for managing dependencies.
+* **Networking:** [Ktor Client](https://ktor.io/docs/client-overview.html) for making network requests.
+* **Data Serialization:** [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization) for parsing JSON.
+* **Database:** [Room](https://developer.android.com/training/data-storage/room) for local data storage.
+* **Image Loading:** [Coil](https://coil-kt.github.io/coil/) for loading images.
+* **Navigation:** [Jetpack Navigation](https://developer.android.com/guide/navigation) for navigating between screens.
+* **Video Playback:** [ExoPlayer](https://github.com/google/ExoPlayer) for video streaming.
+* **Pagination:** [Paging 3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview) for paginating content.
+* **Logging:** [Timber](https://github.com/JakeWharton/timber) for logging.
+
 
 ## License
 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
