@@ -53,7 +53,7 @@ class PhotoDetailViewModelTest {
 
             val finalResult = awaitItem()
 
-            assertTrue(finalResult is PhotoDetailUiState.Successful)
+            assertTrue(finalResult is PhotoDetailUiState.Success)
             assertThat(finalResult.comments).isNotEmpty()
         }
     }

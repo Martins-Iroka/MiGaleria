@@ -12,7 +12,8 @@ import kotlinx.coroutines.flow.stateIn
 
 sealed interface PhotoDetailUiState {
     object Loading : PhotoDetailUiState
-    data class Successful(val comments: List<PhotoPostComments>) : PhotoDetailUiState
+    object NoResponse : PhotoDetailUiState
+    data class Success(val comments: List<PhotoPostComments>) : PhotoDetailUiState
     data class Error(val message: String) : PhotoDetailUiState
 }
 
@@ -27,8 +28,8 @@ class PhotoDetailViewModel(
         when(it) {
             is ResponseData.Error -> PhotoDetailUiState.Error(it.message)
             ResponseData.Loading -> PhotoDetailUiState.Loading
-            ResponseData.NoResponse -> {}
-            is ResponseData.Success<List<PhotoPostComments>> -> PhotoDetailUiState.Successful(it.data.orEmpty())
+            is ResponseData.Success<List<PhotoPostComments>> -> PhotoDetailUiState.Success(it.data.orEmpty())
+            else -> PhotoDetailUiState.NoResponse
         }
     }.catch {
         emit(PhotoDetailUiState.Error(it.localizedMessage?: "An error occurred"))

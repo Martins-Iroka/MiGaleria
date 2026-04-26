@@ -6,9 +6,11 @@ import com.martdev.photo.photodetail.PhotoDetailCompose
 import com.martdev.photo.photodetail.PhotoDetailViewModel
 import com.martdev.ui.reusable.AppNavigator
 import com.martdev.ui.reusable.NavigateTo
+import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.scope.dsl.activityRetainedScope
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 import org.koin.dsl.navigation3.navigation
 
@@ -31,9 +33,13 @@ val photoModule = module {
 
         navigation<NavigateTo.PhotoDetail> {
             val navigator = get<AppNavigator>()
+            val viewModel2: PhotoDetailViewModel = koinViewModel {
+                parametersOf(it.postId.toString())
+            }
             PhotoDetailCompose(
                 it.postId,
-                it.imageUrl
+                it.imageUrl,
+                viewModel2
             ) {
                 navigator.goBack()
             }
