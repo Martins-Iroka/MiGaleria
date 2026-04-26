@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.martdev.photo
+package com.martdev.photo.photodetail
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -50,6 +50,7 @@ import coil3.request.crossfade
 import com.martdev.common.convertUTCToLocalDateTime
 import com.martdev.domain.ResponseData
 import com.martdev.domain.photodata.PhotoPostComments
+import com.martdev.photo.PhotoViewModel
 import com.martdev.ui.reusable.CustomLayout
 import com.martdev.ui.reusable.TextCompose
 import org.koin.androidx.compose.koinViewModel
@@ -60,12 +61,19 @@ import org.koin.androidx.compose.koinViewModel
 fun PhotoDetailCompose(
     postID: Long,
     imageUrl: String,
+    viewModel2: PhotoDetailViewModel,
     goBack: () -> Unit = {}
 ) {
 
     val viewModel: PhotoViewModel = koinViewModel()
+    /*val viewModel2: PhotoDetailViewModel = koinViewModel {
+        parametersOf(postID.toString())
+    }*/
 
-    val photoPostComments by viewModel.photoComments.collectAsStateWithLifecycle()
+    val photoPostComments by viewModel.photoComments.collectAsStateWithLifecycle(
+        ResponseData.NoResponse
+    )
+    val ppc by viewModel2.photoComments.collectAsStateWithLifecycle(PhotoDetailUiState.Loading)
     val sendCommentResponse by viewModel.createCommentsResponse.collectAsStateWithLifecycle()
 
     BackHandler {
@@ -75,7 +83,7 @@ fun PhotoDetailCompose(
     LaunchedEffect(Unit) {
         viewModel.getCommentsByPostId(postID.toString())
     }
-    PhotoDetail(imageUrl, photoPostComments, sendCommentResponse) {
+    PhotoDetail(imageUrl, photoPostComments, sendCommentResponse, ppc) {
         viewModel.postComment(postID.toString(), it)
     }
 }
@@ -85,6 +93,7 @@ internal fun PhotoDetail(
     imageUrl: String,
     comments: ResponseData<List<PhotoPostComments>> = ResponseData.NoResponse,
     sendCommentResponse: ResponseData<Nothing> = ResponseData.NoResponse,
+    uiState: PhotoDetailUiState = PhotoDetailUiState.NoResponse,
     sendComment: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -152,15 +161,15 @@ internal fun PhotoDetail(
                             contentPadding = PaddingValues(16.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            when (comments) {
-                                is ResponseData.Loading -> {
+                            when (uiState) {
+                                is PhotoDetailUiState.Loading -> {
                                     item {
                                         CircularProgressIndicator()
                                     }
                                 }
 
-                                is ResponseData.Success -> {
-                                    if (comments.data.isNullOrEmpty()) {
+                                is PhotoDetailUiState.Success -> {
+                                    if (uiState.comments.isEmpty()) {
                                         item {
                                             Column(
                                                 Modifier.fillMaxSize(),
@@ -172,7 +181,7 @@ internal fun PhotoDetail(
                                             }
                                         }
                                     } else {
-                                        items(items = comments.data.orEmpty(), key = {
+                                        items(items = uiState.comments, key = {
                                             it.id
                                         }) {
                                             CommentCompose(it.content, it.username, it.createdAt)
@@ -180,19 +189,19 @@ internal fun PhotoDetail(
                                     }
                                 }
 
-                                is ResponseData.Error -> {
+                                is PhotoDetailUiState.Error -> {
                                     item {
                                         Column(
                                             Modifier.fillMaxSize(),
                                             verticalArrangement = Arrangement.Center,
                                             horizontalAlignment = Alignment.CenterHorizontally) {
 
-                                            TextCompose(comments.message)
+                                            TextCompose(uiState.message)
 
                                         }
                                     }
                                 }
-                                ResponseData.NoResponse -> {
+                                PhotoDetailUiState.NoResponse -> {
                                     item {
                                         Column(
                                             Modifier.fillMaxSize(),

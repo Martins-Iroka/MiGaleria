@@ -48,8 +48,7 @@ class UserLoginViewModelTest {
             flowOf(ResponseData.Success(null))
         }
 
-        viewmodel.loginRes.test {
-            assertEquals(ResponseData.NoResponse, awaitItem())
+        viewmodel.loginResponse.test {
 
             viewmodel.loginUser("email", "password")
 
@@ -73,9 +72,7 @@ class UserLoginViewModelTest {
             flowOf(ResponseData.Error("Error"))
         }
 
-        viewmodel.loginRes.test {
-            assertEquals(ResponseData.NoResponse, awaitItem())
-
+        viewmodel.loginResponse.test {
             viewmodel.loginUser("email", "password")
 
             assertEquals(ResponseData.Loading, awaitItem())

@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -20,6 +22,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -65,7 +68,9 @@ fun UserLoginScreen(
 
     val viewModel: UserLoginViewModel = koinViewModel()
 
-    val response by viewModel.loginRes.collectAsStateWithLifecycle()
+    val response by viewModel.loginResponse.collectAsStateWithLifecycle(
+        initialValue = ResponseData.NoResponse
+    )
 
     BackHandler {
         goBack()
@@ -74,7 +79,7 @@ fun UserLoginScreen(
     LaunchedEffect(response) {
         if (response is ResponseData.Success) {
             goToPhoto()
-            viewModel.reset()
+//            viewModel.reset()
         }
     }
 
@@ -99,18 +104,21 @@ internal fun UserLogin(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
+    val snackBackHostState = remember { SnackbarHostState() }
+
     LaunchedEffect(responseData) {
         if (responseData is ResponseData.Error) {
-            error = responseData.message
+            snackBackHostState.showSnackbar(message = responseData.message)
         }
     }
 
-    CustomLayout(message = error) {
+    CustomLayout(message = error, snackBarHostState = snackBackHostState) {
         Column(
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize()
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState())
                 .testTag(UserLoginTag.LoginScreenTag.toString()),
             horizontalAlignment = Alignment.Start
         ) {

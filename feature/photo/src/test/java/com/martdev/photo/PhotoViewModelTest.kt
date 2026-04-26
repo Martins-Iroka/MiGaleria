@@ -183,7 +183,6 @@ class PhotoViewModelTest {
         )
 
         viewmodel.photoComments.test {
-            assertThat(awaitItem()).isEqualTo(ResponseData.NoResponse)
 
             viewmodel.getCommentsByPostId("1")
 
@@ -206,7 +205,6 @@ class PhotoViewModelTest {
         )
 
         viewmodel.photoComments.test {
-            assertThat(awaitItem()).isEqualTo(ResponseData.NoResponse)
 
             viewmodel.getCommentsByPostId("1")
 
@@ -229,7 +227,6 @@ class PhotoViewModelTest {
         }
 
         viewmodel.photoComments.test {
-            assertThat(awaitItem()).isEqualTo(ResponseData.NoResponse)
 
             viewmodel.getCommentsByPostId("1")
 

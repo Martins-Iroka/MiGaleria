@@ -8,7 +8,9 @@ import androidx.paging.cachedIn
 import com.martdev.domain.ResponseData
 import com.martdev.domain.photodata.PhotoDataUseCase
 import com.martdev.domain.photodata.PhotoPostComments
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
@@ -18,10 +20,10 @@ class PhotoViewModel(
     private val photoUseCase: PhotoDataUseCase
 ) : ViewModel() {
 
-    private val _photoComments = MutableStateFlow<ResponseData<List<PhotoPostComments>>>(
-        ResponseData.NoResponse
+    private val _photoComments = MutableSharedFlow<ResponseData<List<PhotoPostComments>>>(
+//        ResponseData.NoResponse
     )
-    val photoComments = _photoComments.asStateFlow()
+    val photoComments = _photoComments.asSharedFlow()
 
     private val _createCommentsResponse = MutableStateFlow<ResponseData<Nothing>>(ResponseData.NoResponse)
     val createCommentsResponse = _createCommentsResponse.asStateFlow()
@@ -38,11 +40,11 @@ class PhotoViewModel(
         viewModelScope.launch {
             photoUseCase.getCommentsByPostId(postId = postId)
                 .onStart {
-                    _photoComments.value = ResponseData.Loading
+                    _photoComments.emit(ResponseData.Loading)
                 }.catch {
-                    _photoComments.value = ResponseData.Error(it.localizedMessage?: "An error occurred")
+                    _photoComments.emit(ResponseData.Error(it.localizedMessage?: "An error occurred"))
                 }.collect {
-                    _photoComments.value = it
+                    _photoComments.emit(it)
                 }
         }
     }

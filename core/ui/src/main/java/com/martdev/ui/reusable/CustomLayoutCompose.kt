@@ -6,31 +6,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 
 @Composable
 fun CustomLayout(
     message: String= "",
     modifier: Modifier = Modifier,
+    snackBarHostState: SnackbarHostState= SnackbarHostState(),
     bottomView: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
-
-    val snackBackHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(message) {
-        if (message.isNotEmpty()) {
-            snackBackHostState.showSnackbar(message = message)
-        }
-    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         bottomBar = bottomView,
         snackbarHost = {
-        SnackbarHost(hostState = snackBackHostState)
+        SnackbarHost(hostState = snackBarHostState)
     }) {
         content(it)
     }
